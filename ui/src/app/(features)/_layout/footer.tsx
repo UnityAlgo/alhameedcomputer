@@ -495,9 +495,9 @@ export const Footer = () => {
                             </div>
                         </div> */}
 
-                        <div className="text-blue-100 text-xs">
+                        <Link href={"https://unityalgo.com/"} className="text-blue-100 text-xs" target="_blank">
                             Powered by UnityAlgo ®
-                        </div>
+                        </Link>
                     </div>
                 </div>
             </div>

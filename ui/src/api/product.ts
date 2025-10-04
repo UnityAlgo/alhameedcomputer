@@ -61,16 +61,16 @@ export const useProductReviews = (id: string) => {
   });
 };
 
-export const useSearchProducts = (query: string) => {
+export const useSearchProducts = (args: Record<string, string>) => {
+
   return useQuery({
-    queryKey: ["products", query],
+    queryKey: ["products", args],
     queryFn: async () => {
       const res = await axiosClient.get("api/products/search?", {
-        params: { search: query },
+        params: args,
       });
       return res.data;
     },
-    // enabled: query.length > 0,
     retry: 1,
   });
 

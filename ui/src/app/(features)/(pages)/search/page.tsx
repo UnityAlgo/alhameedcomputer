@@ -15,15 +15,24 @@ const serializeParams = (params: URLSearchParams) => {
 const Index = () => {
     const params = useSearchParams();
     const searchProducts = useSearchProducts(serializeParams(params));
+    // console.log(params)
+    // console.log(serializeParams(params))
+    // console.log(searchProducts.data);   
 
-    console.log(searchProducts.data);
+    const results = searchProducts.data?.results;
+    console.log(results)
     return <div className='max-w-6xl mx-auto'>
-        <div className='flex gap-2 py-4'>
-            <div className='w-52 pr-4 hidden lg:block shrink-0'>
-                <SearchFilter attributes={searchProducts.data?.results?.attributes} />
-            </div>
-            <ProductGrid products={searchProducts.data?.results?.products} />
-        </div>
+        {
+            results ? (
+                <div className='flex gap-2 py-4'>
+                    <div className='w-52 pr-4 hidden lg:block shrink-0'>
+                        <SearchFilter attributes={results.filters} />
+                    </div>
+                    <ProductGrid products={searchProducts.data?.results?.products} />
+                </div>
+            )
+                : <></>
+        }
     </div>
 }
 
