@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+
+
+@theme {
+  --font-poppins: var(--font-poppins), sans-serif;
+  --color-primary: #020021;
+  --color-primary-foreground: #fff;
+  --color-accent-foreground: #6b7280;
+  --color-accent: #d8d8d8;
+  --color-border: #d8d8d8;
+  --color-privacy-foreground: #bcbdd4;
+
+
+  --color-sucess: #15803d;
+  --color-warning: #fbbf24;
+  --color-destructive: #ef4444;
+}
+
+html {
+  scroll-behavior: smooth;
+  @apply font-poppins;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
