@@ -28,6 +28,8 @@ class Product(BaseModel):
         UOM, on_delete=models.SET_NULL, related_name="products", null=True, blank=True
     )
     rating = models.FloatField(default=0.0)
+    published = models.BooleanField(default=False)
+    featured = models.BooleanField(default=False)
 
     def __str__(self):
         return self.product_name
@@ -112,7 +114,6 @@ class ProductPrice(BaseModel):
         if self.valid_to:
             return self.valid_from <= now <= self.valid_to
         return self.valid_from <= now
-
 
 
 price_subquery = ProductPrice.objects.filter(product=OuterRef("id")).values("price")[:1]

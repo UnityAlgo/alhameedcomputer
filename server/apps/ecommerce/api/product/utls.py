@@ -1,7 +1,9 @@
-from rest_framework.pagination import PageNumberPagination  
+from rest_framework.pagination import PageNumberPagination
 
 
 class ProductPagination(PageNumberPagination):
-    page_size = 50
     page_size_query_param = "page_size"
     max_page_size = 100
+
+    def __init__(self, page_size=20):
+        self.page_size = page_size

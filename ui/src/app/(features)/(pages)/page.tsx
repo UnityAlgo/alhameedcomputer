@@ -11,7 +11,7 @@ export default function Home() {
       <Carousel />
       <Category />
       <RelatedProducts />
-      <BrandSlider />
+      {/* <BrandSlider /> */}
     </main>
   );
 };

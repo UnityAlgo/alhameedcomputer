@@ -30,11 +30,12 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
     priceMax = 1000,
     defaultPriceRange = { min: 0, max: 1000 }
 }) => {
+    console.log(attributes)
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
-    const brands = attributes?.brands || [];
+    const brands = attributes?.brand || [];
     const categories = attributes?.categories || [];
 
     // Initialize state from URL params
@@ -54,7 +55,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
         };
     });
 
-    // Create URL search params from filter state
+    
     const createSearchParams = useCallback((filters: FilterState) => {
         const params = new URLSearchParams();
 
@@ -204,7 +205,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
             )} */}
 
             {/* Price Range Filter */}
-            <div className="border-b border-gray-200 dark:border-gray-700 pb-6">
+            {/* <div className="border-b border-gray-200 dark:border-gray-700 pb-6">
                 <div className="font-bold mb-4">Price Range</div>
                 <RangeSelector
                     label="Price"
@@ -216,7 +217,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
                     formatValue={formatPrice}
                     showValues={true}
                 />
-            </div>
+            </div> */}
 
             {/* Brand Filter */}
             {brands.length > 0 && (

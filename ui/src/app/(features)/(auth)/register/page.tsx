@@ -4,6 +4,7 @@ import { Eye, EyeOff, Mail, Lock, ArrowRight, User } from "lucide-react";
 import Link from "next/link";
 import { useRegisterMutation } from "../_hooks";
 import toast from "react-hot-toast";
+import { Header } from "@/components/layout/header";
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -31,6 +32,83 @@ export default function RegisterPage() {
       }
     );
   };
+  
+  return (
+    <div>
+      <Header />
+
+
+      <div className="max-w-3xl mx-auto">
+        <form >
+          <div className="flex gap-4 mb-2">
+            <div className="flex-1">
+              <input
+                type="text"
+                placeholder="First Name"
+                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-md outline-none focus:ring-1 focus:ring-gray-400"
+                required
+                name="first_name"
+              />
+            </div>
+            <div className="flex-1">
+              <input
+                type="text"
+                placeholder="Last Name"
+                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-md outline-none focus:ring-1 focus:ring-gray-400"
+                required
+                name="last_name"
+              />
+            </div>
+          </div>
+
+
+          <div className="mb-2">
+            <input
+              type="text"
+              placeholder="Username"
+              className="w-full text-sm px-2 py-1 bg-gray-100 border border-gray-300 rounded-md outline-none focus:ring-1 focus:ring-gray-400"
+              required
+              name="username"
+            />
+          </div>
+
+
+          <div>
+            <input
+              type="email"
+              placeholder="Email"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-md outline-none focus:ring-1 focus:ring-gray-400"
+              required
+              name="email"
+            />
+          </div>
+
+          <div>
+            <input
+              type="text"
+              placeholder="Phone Number"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-md outline-none focus:ring-1 focus:ring-gray-400"
+              required
+              name="phone_number"
+            />
+          </div>
+
+          <div>
+            <input
+              type="password"
+              placeholder="Password"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-md outline-none focus:ring-1 focus:ring-gray-400"
+              required
+              name="password"
+            />
+          </div>
+
+        </form>
+
+      </div>
+
+    </div>
+  )
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center p-4 relative overflow-hidden">
