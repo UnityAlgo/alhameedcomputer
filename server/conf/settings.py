@@ -8,11 +8,14 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
-"""
+""" 
 
+import os
 from pathlib import Path
 from datetime import timedelta
+from dotenv import load_dotenv
 
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,14 +24,23 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-l+o+lc&aw11+2&eb)8h=9vm)f+oh#+$&eidc6=)z#u_jt6hxpt"
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ["*"]
+DEBUG = False
+ALLOWED_HOSTS = ["http://72.60.210.63/"]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000/",
+    "http://72.60.210.63/",
+    "https://alhameedcomputers.com/",
+    "http://alhameedcomputers.com/"
+]
+
+ALLOWED_HOSTS = [
+    "http://localhost:3000/",
+    "http://72.60.210.63/",
+    "https://alhameedcomputers.com/",
+    "http://alhameedcomputers.com/"
 ]
 
 
@@ -60,16 +72,6 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-]
-
-CSRF_TRUSTED_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000"]
-
-CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_ALL_ORIGINS = True
-
 ROOT_URLCONF = "conf.urls"
 
 TEMPLATES = [
@@ -95,22 +97,10 @@ WSGI_APPLICATION = "conf.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    # "default": {
-    #     "ENGINE": "django.db.backends.postgresql",
-    #     "NAME": "neondb",
-    #     "USER": "neondb_owner",
-    #     "PASSWORD": "npg_mQWbKXDGd47q",
-    #     "HOST": "ep-nameless-paper-adb3f0hq-pooler.c-2.us-east-1.aws.neon.tech",
-    #     "PORT": "5432",
-    #     "OPTIONS": {
-    #         "sslmode": "require",
-    #         "channel_binding": "require",
-    #     },
-    # }
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "unitystore",
-        "USER": "devuser",
+        "NAME": "production_db",
+        "USER": "unityalgo",
         "PASSWORD": "123",
         "HOST": "localhost",
         "PORT": "5432",
@@ -168,19 +158,14 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     )
+    # ,"DEFAULT_PERMISSION_CLASSES": (
+    #     "rest_framework.permissions.IsAuthenticated",
+    # ),
 }
 
-# REST_FRAMEWORK = {
-#     "DEFAULT_AUTHENTICATION_CLASSES": (
-#         "rest_framework_simplejwt.authentication.JWTAuthentication",
-#     ),
-#     "DEFAULT_PERMISSION_CLASSES": (
-#         "rest_framework.permissions.IsAuthenticated",
-#     ),
-# }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=30),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
