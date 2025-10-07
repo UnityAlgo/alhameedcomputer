@@ -20,7 +20,6 @@ export const useProductsList = (params?: ProductParams) => {
   return useQuery({
     queryKey: ["get-products", params],
     queryFn: async (): Promise<ProductType[]> => {
-      console.log("Fetching products with params:", params);
       const { data } = await axios.get(`${API_URL}api/products`, {
         params,
       });
@@ -51,9 +50,9 @@ export const useProductReviews = (id: string) => {
   return useQuery({
     queryKey: ["product-reviews", id],
     queryFn: async () => {
-      console.log("Fetching reviews for product id:", id);
+      
       const { data } = await axios.get(`${API_URL}api/products/${id}/reviews`);
-      console.log("Reviews fetched:", data);
+      
       return data;
     },
     enabled: !!id,
@@ -61,16 +60,16 @@ export const useProductReviews = (id: string) => {
   });
 };
 
-export const useSearchProducts = (query: string) => {
+export const useSearchProducts = (args: Record<string, string>) => {
+
   return useQuery({
-    queryKey: ["products", query],
+    queryKey: ["products", args],
     queryFn: async () => {
       const res = await axiosClient.get("api/products/search?", {
-        params: { search: query },
+        params: args,
       });
       return res.data;
     },
-    // enabled: query.length > 0,
     retry: 1,
   });
 

@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCategories } from "@/api/category";
+import Link from "next/link";
 
 const CategoryCarousel: React.FC<{
   autoPlayInterval?: number;
@@ -131,7 +132,7 @@ const CategoryCarousel: React.FC<{
           }}
         >
           {categories.concat(categories).map((category, index) => (
-            <div
+            <Link href={`search?categories=${category.id}`}
               key={index}
               className="flex-shrink-0"
               style={{ width: `${itemWidth}px` }}
@@ -152,7 +153,7 @@ const CategoryCarousel: React.FC<{
                   </h3>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

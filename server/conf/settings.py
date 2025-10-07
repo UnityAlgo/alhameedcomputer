@@ -28,8 +28,20 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
+ALLOWED_HOSTS = ["http://72.60.210.63/"]
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000/",
+    "http://72.60.210.63/",
+    "https://alhameedcomputers.com/",
+    "http://alhameedcomputers.com/"
+]
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "http://localhost:3000/",
+    "http://72.60.210.63/",
+    "https://alhameedcomputers.com/",
+    "http://alhameedcomputers.com/"
+]
 
 
 # Application definition

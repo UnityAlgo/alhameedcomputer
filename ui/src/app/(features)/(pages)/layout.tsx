@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
-import { Header } from "../_layout/header";
-import { Footer } from "../_layout/footer";
-import { HeadLink } from "../_layout/head-link";
+import { Header } from "@/components/layout/header";
+import { Footer } from "@/components/layout/footer";
 
 export default function MainLayout({ children }: { children: ReactNode }) {
   return (

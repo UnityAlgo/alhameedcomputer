@@ -1,5 +1,12 @@
 from django.contrib import admin
-from .models.product import Product, ProductImage, Brand, ProductPrice , PriceList, Currency
+from .models.product import (
+    Product,
+    ProductImage,
+    Brand,
+    ProductPrice,
+    PriceList,
+    Currency,
+)
 from .models.category import Category
 from .models.customer import Customer
 from .models.order import Order, OrderItem
@@ -20,9 +27,11 @@ class CategoryAdmin(admin.ModelAdmin):
 
 admin.site.register(Currency)
 
+
 @admin.register(PriceList)
 class PriceListAdmin(admin.ModelAdmin):
     list_display = ("price_list_name", "currency", "disabled", "buying", "selling")
+
 
 # ---------- PRODUCT ----------
 class ProductImageInline(admin.TabularInline):
@@ -44,7 +53,13 @@ class ProductAdmin(admin.ModelAdmin):
         "rating",
         "created_at",
     )
-    search_fields = ("product_name", "short_description", "description", "brand__name", "category__name")
+    search_fields = (
+        "product_name",
+        "short_description",
+        "description",
+        "brand__name",
+        "category__name",
+    )
     list_filter = ("category", "uom", "brand")
     ordering = ("-created_at",)
     inlines = [ProductImageInline, ProductPriceInline]
@@ -58,27 +73,16 @@ class BrandAdmin(admin.ModelAdmin):
     ordering = ("name",)
 
 
-# ---------- CUSTOMER ----------
-@admin.register(Customer)
-class CustomerAdmin(admin.ModelAdmin):
-    list_display = ("user", "phone_number", "city", "country", "created_at")
-    search_fields = (
-        "user__email",
-        "user__full_name",
-        "phone_number",
-    )
-    list_filter = ("city", "country")
-    ordering = ("-created_at",)
+admin.site.register(Customer)
 
-
-# ---------- ORDER ----------
-class OrderItemInline(admin.TabularInline):
-    model = OrderItem
-    extra = 1
 
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
+    class OrderItemInline(admin.TabularInline):
+        model = OrderItem
+        extra = 1
+
     list_display = ("id", "customer", "status", "total_amount", "order_date")
     list_filter = ("status", "order_date")
     search_fields = ("id", "customer__user__email", "customer__user__first_name")

@@ -1,7 +1,7 @@
 from apps.ecommerce.api.product.public import ProductAPIView
 
 from django.urls import path
-from apps.ecommerce.api.product.search import SearchProductAPIView
+from apps.ecommerce.api.product.search import SearchProductAPIView, SuggestionsAPIView
 from apps.ecommerce.api.category.views import CategoryAPIView, CategoryDetailAPIView
 from apps.ecommerce.api.review.views import ProductReviewDetailAPIView, ProductReviewListCreateAPIView
 from apps.ecommerce.api.cart.views import (
@@ -38,7 +38,7 @@ from apps.ecommerce.api.address.views import (
 urlpatterns = [
     path("api/products", ProductAPIView.as_view()),
     path("api/products/search", SearchProductAPIView.as_view()),
-
+    path("api/products/suggestions", SuggestionsAPIView.as_view()),
     # Categories
     path("api/categories", CategoryAPIView.as_view(), name="category-list"),
     path("api/categories/<uuid:pk>/", CategoryDetailAPIView.as_view(), name="category-detail"),

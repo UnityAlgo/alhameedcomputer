@@ -1,26 +1,21 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import Link from "next/link";
-import { Heart, Star, ArrowRight, Tag } from 'lucide-react';
+import React from 'react';
 import { useProductsList } from "@/api/product";
-import { ProductCard, ProductType } from '@/components/products/product-card';
+import { ProductCard } from '@/components/products/product-card';
+import { Spinner } from '@/components/ui/spinner';
 
 
 const RelatedProducts = () => {
-    const [isMobile, setIsMobile] = useState(false);
-
     const { data, isLoading, error } = useProductsList();
 
-    useEffect(() => {
-        const checkMobile = () => setIsMobile(window.innerWidth < 640);
-        checkMobile();
-        window.addEventListener("resize", checkMobile);
-        return () => window.removeEventListener("resize", checkMobile);
-    }, []);
+    if (isLoading) {
+        return <div className='py-16 flex justify-center flex-col items-center'>
+            <Spinner size='lg' className='mb-4' />
+            <div>Loading Products...</div>
+        </div>;
+    }
 
-    if (isLoading) return <p>Loading...</p>;
-    
     if (error) {
         console.error("Product API error:", error);
         return <p>Something went wrong!</p>;
@@ -28,12 +23,20 @@ const RelatedProducts = () => {
 
 
     if (!data || !data.length) {
-        return <div></div>
+        return (<div className="flex justify-center py-16">
+            <div className='text-center'>
+                <img src={"https://cdn-icons-png.flaticon.com/512/17597/17597096.png"} className='w-32 h-32 mx-auto' />
+                <div >No products available.</div>
+            </div>
+        </div>)
     }
 
     return (
         <section className="py-8">
-            {/* className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-2 md:gap-4 sm:grid-cols-3" */}
+            <div className='mb-4 font-semibold'>
+                NEW ARRIVALS
+            </div>
+
             <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 gap-2" >
                 {data.map((product) => (
                     <ProductCard key={product.id} product={product} />
