@@ -86,12 +86,13 @@ class SuggestionsAPIView(APIView):
     """
 
     def get(self, request, *args, **kwargs):
-        # Get and sanitize search query
         search_query = request.GET.get("query", "").strip()
 
-        # Validate input
         if not search_query:
-            return Response({"suggestions": [], "count": 0}, status=status.HTTP_200_OK)
+            return Response(
+                {"suggestions": ["Gaming PC", "Gaming Moniter"], "count": 0},
+                status=status.HTTP_200_OK,
+            )
 
         # Limit query length to prevent abuse
         if len(search_query) > 100:

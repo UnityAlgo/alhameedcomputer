@@ -1,248 +1,189 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { Eye, EyeOff, Mail, Lock, ArrowRight, User } from "lucide-react";
+
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRegisterMutation } from "../_hooks";
+import { useRouter } from 'next/navigation';
 import toast from "react-hot-toast";
-import { Header } from "@/components/layout/header";
+import { useMutation } from "@tanstack/react-query";
+import { API_URL } from "@/api";
+import { Spinner } from "@/components/ui/spinner";
 
-export default function RegisterPage() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [mounted, setMounted] = useState(false);
 
-  const { mutate: register, isPending } = useRegisterMutation();
+const useRegisterMutation = () => {
+  return useMutation({
+    mutationKey: ["register-user"],
+    mutationFn: (payload: object) => {
+      return axios.post(API_URL + "api/user/register", payload)
+    }
+  })
+}
 
-  useEffect(() => setMounted(true), []);
 
-  const handleRegister = (e: React.FormEvent) => {
-    e.preventDefault();
+const validatePhoneNumber = (phone: string): boolean => {
+  const cleaned = phone.replace(/[\s\-()]/g, '');
 
-    register(
-      { username, email, password },
-      {
-        onSuccess: () => {
-          toast.success("Account created successfully!");
-        },
-        onError: (err: any) => {
-          toast.error(err.response?.data?.detail || "Registration failed");
-        },
-      }
-    );
+  // Pakistani phone number patterns:
+  // +92XXXXXXXXXX (10 digits after +92)
+  // 92XXXXXXXXXX (10 digits after 92)
+  // 03XXXXXXXXX (11 digits starting with 03)
+  const patterns = [
+    /^\+92[3-9]\d{9}$/,
+    /^92[3-9]\d{9}$/,
+    /^0?3[0-9]\d{8}$/
+  ];
+
+  return patterns.some(pattern => pattern.test(cleaned));
+};
+
+
+const Index = () => {
+  const router = useRouter();
+  const [errorMsg, setErrorMsg] = useState("");
+  const mutation = useRegisterMutation();
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+
+    if (!validatePhoneNumber(formData.get("phone_number") as string)) {
+      setErrorMsg("Please enter a valid phone number (e.g., 03XX-XXXXXXX or +92XXX-XXXXXXX)");
+      return;
+    }
+
+    const values = {
+      first_name: formData.get("first_name") as string,
+      last_name: formData.get("last_name") as string,
+      username: formData.get("username") as string,
+      email: formData.get("email") as string,
+      phone_number: formData.get("phone_number") as string,
+      password: formData.get("password") as string,
+    };
+
+    mutation.mutate(values)
   };
-  
+
+  useEffect(() => {
+    if (mutation.isError) {
+      const error = mutation.error?.response?.data;
+      if (error?.message) {
+        setErrorMsg(error.message)
+      }
+      else if (typeof error === "object") {
+        for (const key of Object.keys(error)) {
+          if (error[key]?.[0]) {
+            setErrorMsg(error[key]?.[0])
+          }
+        }
+      }
+      else {
+        setErrorMsg("There was an issue while registering the user.")
+      }
+    }
+    if (mutation.isSuccess) {
+      toast.success("You’ve successfully registered. Welcome aboard!");
+      router.push("/")
+    }
+  }, [mutation.isPending, mutation.isError])
+
   return (
     <div>
-      <Header />
+      {/* <Header /> */}
 
-
-      <div className="max-w-3xl mx-auto">
-        <form >
-          <div className="flex gap-4 mb-2">
-            <div className="flex-1">
-              <input
-                type="text"
-                placeholder="First Name"
-                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-md outline-none focus:ring-1 focus:ring-gray-400"
-                required
-                name="first_name"
-              />
-            </div>
-            <div className="flex-1">
-              <input
-                type="text"
-                placeholder="Last Name"
-                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-md outline-none focus:ring-1 focus:ring-gray-400"
-                required
-                name="last_name"
-              />
-            </div>
+      <div className="max-w-[35rem] mx-auto">
+        <div className="py-12">
+          <div className="text-center mb-6">
+            <h1 className="text-xl font-semibold">Create Your Account</h1>
           </div>
 
-
-          <div className="mb-2">
-            <input
-              type="text"
-              placeholder="Username"
-              className="w-full text-sm px-2 py-1 bg-gray-100 border border-gray-300 rounded-md outline-none focus:ring-1 focus:ring-gray-400"
-              required
-              name="username"
-            />
-          </div>
-
-
-          <div>
-            <input
-              type="email"
-              placeholder="Email"
-              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-md outline-none focus:ring-1 focus:ring-gray-400"
-              required
-              name="email"
-            />
-          </div>
-
-          <div>
-            <input
-              type="text"
-              placeholder="Phone Number"
-              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-md outline-none focus:ring-1 focus:ring-gray-400"
-              required
-              name="phone_number"
-            />
-          </div>
-
-          <div>
-            <input
-              type="password"
-              placeholder="Password"
-              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-md outline-none focus:ring-1 focus:ring-gray-400"
-              required
-              name="password"
-            />
-          </div>
-
-        </form>
-
-      </div>
-
-    </div>
-  )
-
-  return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center p-4 relative overflow-hidden">
-      {mounted && (
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-blue-400 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute top-0 right-0 w-96 h-96 bg-purple-400 rounded-full blur-3xl animate-pulse delay-1000"></div>
-          <div className="absolute -bottom-8 left-20 w-96 h-96 bg-pink-400 rounded-full blur-3xl animate-pulse delay-2000"></div>
-        </div>
-      )}
-
-      <div className="w-full flex items-center justify-center relative z-10">
-        <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden w-full max-w-4xl flex flex-col lg:flex-row">
-          {/* <div className="lg:w-1/2 bg-gradient-to-br from-blue-600 via-black to-red-600 p-2 lg:p-8 flex flex-col justify-between text-white relative overflow-hidden"> */}
-          <div className="lg:w-1/2 bg-gradient-to-br from-blue-100 to-white p-2 lg:p-8 flex flex-col justify-between text-white relative overflow-hidden">
-            <div className="absolute inset-0 bg-black/10"></div>
-            <div className="relative z-10">
-              <div className="sm:mb-4">
-                <Link href="/" className="flex-shrink-0 text-center">
-                  <div className="h-20 md:h-30 flex items-center justify-center">
-                    <img
-                      src="/cover-logo.png"
-                      alt="Al Hameed Computers"
-                      className="h-full w-auto object-contain"
-                    />
-                  </div>
-                </Link>
-              </div>
-              <div className="hidden lg:block">
-                <h2 className="text-gray-700 text-2xl font-bold mt-4 text-center">Create Account</h2>
-                <p className="text-gray-600 my-2 text-center">
-                  Join Al Hameed Computers and start shopping today.
-                </p>
-                <div className="space-y-4 my-8">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 bg-purple-300 rounded-full flex-shrink-0"></div>
-                    <span className="text-gray-500 text-sm ">Secure & Fast Checkout</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 bg-pink-300 rounded-full flex-shrink-0"></div>
-                    <span className="text-gray-500 text-sm ">Premium Quality Products</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 bg-gray-600 rounded-full flex-shrink-0"></div>
-                    <span className="text-gray-500 text-sm ">24/7 Customer Support</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="lg:w-1/2 p-6 md:p-8 lg:p-12">
-            <form onSubmit={handleRegister} className="space-y-4 max-w-md mx-auto">
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <User className="h-4 w-4 sm:h-5 sm:w-5 text-gray-900" />
-                </div>
+          <form onSubmit={handleSubmit}>
+            <div className="flex gap-4 mb-2">
+              <div className="flex-1">
                 <input
                   type="text"
-                  value={username}
-                  autoComplete="username"
-                  onChange={(e) => setUsername(e.target.value)}
-                  className="w-full pl-10 pr-2 py-3 sm:pl-12 sm:pr-4 sm:py-4 border border-gray-200 rounded-lg sm:rounded-2xl  focus:ring-0 focus:border-transparent transition-all duration-200 bg-gray-50/50 backdrop-blur-sm text-gray-900 placeholder-gray-500 text-sm sm:text-base"
-                  placeholder="Username"
+                  placeholder="First Name"
+                  className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-md outline-none focus:ring-1 focus:ring-gray-400"
                   required
+                  name="first_name"
                 />
               </div>
-
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Mail className="h-4 w-4 sm:h-5 sm:w-5 text-gray-900" />
-                </div>
+              <div className="flex-1">
                 <input
-                  type="email"
-                  value={email}
-                  autoComplete="email"
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-2 py-3 sm:pl-12 sm:pr-4 sm:py-4 border border-gray-200 rounded-lg sm:rounded-2xl  focus:ring-0 focus:border-transparent transition-all duration-200 bg-gray-50/50 backdrop-blur-sm text-gray-900 placeholder-gray-500 text-sm sm:text-base"
-                  placeholder="Email Address"
+                  type="text"
+                  placeholder="Last Name"
+                  className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-md outline-none focus:ring-1 focus:ring-gray-400"
                   required
+                  name="last_name"
                 />
               </div>
+            </div>
 
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Lock className="h-4 w-4 sm:h-5 sm:w-5 text-gray-900" />
-                </div>
-                <input
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  autoComplete="current-password"
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-2 py-3 sm:pl-12 sm:pr-4 sm:py-4 border border-gray-200 rounded-lg sm:rounded-2xl  focus:ring-0 focus:border-transparent transition-all duration-200 bg-gray-50/50 backdrop-blur-sm text-gray-900 placeholder-gray-500 text-sm sm:text-base"
-                  placeholder="Password"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
-                >
-                  {showPassword ? (
-                    <Eye className="w-4 h-4 sm:h-5 sm:w-5" />
-                  ) : (
-                    <EyeOff className="w-4 h-4 sm:h-5 sm:w-5" />
-                  )}
-                </button>
-              </div>
+            <div className="mb-2">
+              <input
+                type="text"
+                placeholder="Username"
+                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-md outline-none focus:ring-1 focus:ring-gray-400"
+                required
+                name="username"
+              />
+            </div>
 
+            <div className="mb-2">
+              <input
+                type="email"
+                placeholder="Email"
+                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-md outline-none focus:ring-1 focus:ring-gray-400"
+                required
+                name="email"
+              />
+            </div>
+
+            <div className="mb-2">
+              <input
+                type="text"
+                placeholder="Phone Number"
+                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-md outline-none focus:ring-1 focus:ring-gray-400"
+                required
+                name="phone_number"
+              />
+            </div>
+
+            <div className="mb-4">
+              <input
+                type="password"
+                placeholder="Password"
+                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-md outline-none focus:ring-1 focus:ring-gray-400"
+                required
+                name="password"
+              />
+            </div>
+
+
+            <div>
+              <div className="py-2 text-sm font-medium text-destructive">{errorMsg}</div>
               <button
+                disabled={mutation.isPending}
                 type="submit"
-                disabled={isPending}
-                className="w-full bg-gradient-to-r from-gray-900 to-black text-white py-2 sm:py-4 rounded-lg sm:rounded-2xl font-medium sm:font-semibold hover:from-black hover:to-gray-900 transition-all duration-200 flex items-center justify-center cursor-pointer text-xs sm:text-base space-x-2"
+                className="bg-primary text-primary-foreground text-center w-full rounded-md py-2 mb-4 flex items-center justify-center gap-2"
               >
-                {isPending ? (
-                  <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                ) : (
-                  <>
-                    <span>Create Account</span>
-                    <ArrowRight className="h-3.5 w-3.5 sm:h-5 sm:w-5" />
-                  </>
-                )}
-              </button>
+                {
+                  mutation.isPending ? <Spinner color="light" size="md" /> : <span>Sign Up</span>
+                }
 
-              <p className="text-center text-gray-600 text-xs sm:text-base">
-                Already have an account?{" "}
-                <Link href="/login" className="text-gray-900 hover:text-blue-800 font-semibold transition-colors cursor-pointer">
-                  Sign in
+
+              </button>
+              <div className="text-center text-sm">
+                Already have an Account?{" "}
+                <Link href="/login" className="text-blue-700 font-medium">
+                  Log In
                 </Link>
-              </p>
-            </form>
-          </div>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
-    </div >
+    </div>
   );
 }
+
+export default Index;

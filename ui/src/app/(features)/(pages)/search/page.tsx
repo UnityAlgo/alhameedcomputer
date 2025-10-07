@@ -11,7 +11,6 @@ import { integer } from '@/utils';
 const serializeParams = (params: URLSearchParams) => {
     const entries = Array.from(params.entries());
     const filtersObject = Object.fromEntries(entries);
-
     return filtersObject;
 }
 
@@ -34,8 +33,6 @@ const Index = () => {
         const updateed = new URLSearchParams(params.toString());
         updateed.set("page", page.toString());
         router.push(`${pathname}?${updateed.toString()}`);
-        console.log(`${pathname}?${updateed.toString()}`)
-        // window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
     const handleNext = () => {

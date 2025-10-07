@@ -11,13 +11,27 @@ axiosClient.interceptors.request.use((config) => {
     const { access } = JSON.parse(tokens);
     if (access) {
       config.headers.Authorization = `Bearer ${access}`;
-      console.log("Sending access token:", access);
     }
-  } else {
-    console.log("No tokens found in localStorage");
   }
   return config;
 });
+
+axiosClient.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+    if (error.response.status === 401 && !originalRequest._retry) {
+      // originalRequest._retry = true;
+
+      // localStorage.removeItem('token');
+      // window.location.href = '/login';
+
+      // return Promise.reject(error);
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 
 export default axiosClient;
