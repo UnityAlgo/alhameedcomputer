@@ -8,7 +8,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
-""" 
+"""
 
 import os
 from pathlib import Path
@@ -27,22 +27,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-ALLOWED_HOSTS = ["http://72.60.210.63/"]
+DEBUG = os.getenv("DEBUG", True)
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000/",
-    "http://72.60.210.63/",
-    "https://alhameedcomputers.com/",
-    "http://alhameedcomputers.com/"
+    "http://72.60.210.63",
+    "http://alhameedcomputers.com",
+    "http://localhost:3000",
+    "https://alhameedcomputers.com",
+    "https://www.alhameedcomputers.com",
+    "http://www.alhameedcomputers.com",
 ]
 
 ALLOWED_HOSTS = [
-    "http://localhost:3000/",
-    "http://72.60.210.63/",
-    "https://alhameedcomputers.com/",
-    "http://alhameedcomputers.com/"
+    "localhost",
+    "127.0.0.1",
+    "72.60.210.63",
+    "alhameedcomputers.com",
+    "www.alhameedcomputers.com",
+    "admin.alhameedcomputers.com",
 ]
-
 
 # Application definition
 
@@ -97,13 +99,25 @@ WSGI_APPLICATION = "conf.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
+    # "default": {
+    #     "ENGINE": "django.db.backends.postgresql",
+    #     "NAME": "production_db",
+    #     "USER": "unityalgo",
+    #     "PASSWORD": "123",
+    #     "HOST": "localhost",
+    #     "PORT": "5432",
+    # },
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "production_db",
-        "USER": "unityalgo",
-        "PASSWORD": "123",
-        "HOST": "localhost",
+        "NAME": "neondb",
+        "USER": "neondb_owner",
+        "PASSWORD": "npg_mQWbKXDGd47q",
+        "HOST": "ep-nameless-paper-adb3f0hq-pooler.c-2.us-east-1.aws.neon.tech",
         "PORT": "5432",
+        "OPTIONS": {
+            "sslmode": "require",
+            "channel_binding": "require",
+        },
     }
 }
 
@@ -143,7 +157,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
-
+STATIC_ROOT = "staticfiles/"
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
@@ -157,10 +171,8 @@ AUTH_USER_MODEL = "user_auth.User"
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-    )
-    # ,"DEFAULT_PERMISSION_CLASSES": (
-    #     "rest_framework.permissions.IsAuthenticated",
-    # ),
+    ),
+    "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
 }
 
 

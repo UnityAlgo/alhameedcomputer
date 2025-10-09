@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCategories } from "@/api/category";
 import Link from "next/link";
+import { Spinner } from "@/components/ui/spinner";
 
 const CategoryCarousel: React.FC<{
   autoPlayInterval?: number;
@@ -75,7 +76,7 @@ const CategoryCarousel: React.FC<{
 
   const onTouchEnd = () => {
     if (!touchStart || !touchEnd) return;
-    
+
     const distance = touchStart - touchEnd;
     const isLeftSwipe = distance > 50;
     const isRightSwipe = distance < -50;
@@ -89,16 +90,10 @@ const CategoryCarousel: React.FC<{
   };
 
   if (isLoading) {
-    return (
-      <div className="mt-8">
-        <div className="flex items-center justify-center h-48 bg-gradient-to-br from-slate-50 to-gray-100 rounded-2xl border border-gray-100 shadow-sm">
-          <div className="flex flex-col items-center space-y-3">
-            <div className="w-7 h-7 border-3 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-            <p className="text-gray-600 text-sm font-medium">Loading categories...</p>
-          </div>
-        </div>
-      </div>
-    );
+    return <div className='py-16 flex justify-center flex-col items-center'>
+      <Spinner size='lg' className='mb-4' />
+      <div>Loading Categories...</div>
+    </div>;
   }
 
   if (isError || !categories.length) {
@@ -117,7 +112,7 @@ const CategoryCarousel: React.FC<{
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div 
+      <div
         className="relative overflow-hidden rounded-xl"
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
@@ -165,11 +160,10 @@ const CategoryCarousel: React.FC<{
               <button
                 key={index}
                 onClick={() => goToSlide(index)}
-                className={`h-2 rounded-full transition-all duration-300 cursor-pointer hover:scale-110 ${
-                  index === currentIndex
-                    ? "bg-gradient-to-r from-blue-500 to-blue-600 w-8 shadow-md"
-                    : "bg-gray-300 hover:bg-gray-400 w-2"
-                }`}
+                className={`h-2 rounded-full transition-all duration-300 cursor-pointer hover:scale-110 ${index === currentIndex
+                  ? "bg-gradient-to-r from-blue-500 to-blue-600 w-8 shadow-md"
+                  : "bg-gray-300 hover:bg-gray-400 w-2"
+                  }`}
                 aria-label={`Go to slide ${index + 1}`}
               />
             ))}

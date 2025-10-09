@@ -1,7 +1,8 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import axiosClient from "@/_api/axiosClient";
+import axios from "axios";
+import { API_URL } from ".";
 
 export type Category = {
   id: string;
@@ -17,7 +18,7 @@ export const useCategories = () => {
   return useQuery<Category[]>({
     queryKey: ["categories"],
     queryFn: async () => {
-      const res = await axiosClient.get("api/categories");
+      const res = await axios.get(API_URL + "api/categories");
       return res.data;
     },
   });

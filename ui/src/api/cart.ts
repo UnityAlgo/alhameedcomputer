@@ -1,18 +1,18 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axiosClient from "@/_api/axiosClient";
+import { axiosClient } from "@/api";
 
-// -------- Fetch Cart --------
+
 export const useCart = () => {
   return useQuery({
-    queryKey: ["cart"],
+    queryKey: ["get-cart"],
     queryFn: async () => {
       const res = await axiosClient.get("api/cart/");
       return res.data;
     },
+    // retry: 3
   });
 };
 
-// -------- Add Item --------
 export const useAddToCart = () => {
   const queryClient = useQueryClient();
 

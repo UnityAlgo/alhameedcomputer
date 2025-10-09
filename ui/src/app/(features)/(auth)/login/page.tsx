@@ -62,9 +62,10 @@ export default function Index() {
     if (mutation.isError) {
       const message = mutation.error.response?.message || "Invalid login credentials"
       setErrorMsg(message);
+      console.log(message)
       toast.error(message);
     }
-  }, [mutation.isSuccess])
+  }, [mutation.isSuccess, mutation.isError])
 
   return (
     <div>

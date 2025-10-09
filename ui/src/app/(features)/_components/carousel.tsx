@@ -20,7 +20,7 @@ const HERO_SLIDES: Slide[] = [
 
 
 
-const Carousel = ({ slides }: { slides: Slide[] }) => {
+const Carousel = ({ slides, autoPlay=true }: { slides: Slide[],  }) => {
   const [index, setIndex] = useState(0);
   const count = slides.length;
   const intervalRef = useRef<number | null>(null);
@@ -30,10 +30,13 @@ const Carousel = ({ slides }: { slides: Slide[] }) => {
 
   const startAutoPlay = () => {
     if (intervalRef.current) return;
-    intervalRef.current = window.setInterval(next, 3000);
+    if (autoPlay) {
+      intervalRef.current = window.setInterval(next, 3000);
+    }
   };
 
   const stopAutoPlay = () => {
+
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
@@ -56,7 +59,7 @@ const Carousel = ({ slides }: { slides: Slide[] }) => {
         style={{ transform: `translateX(-${index * 100}%)` }}
       >
         {slides.map((s, i) => (
-          <div key={i} className="min-w-full relative h-[150px] md:h-[360px]">
+          <div key={i} className="min-w-full relative h-[250px] md:h-[360px]">
             <img
               src={s.img}
               alt={`Slide ${i + 1}`}
