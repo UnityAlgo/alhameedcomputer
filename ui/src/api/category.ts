@@ -2,7 +2,8 @@
 
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { API_URL } from ".";
+import { API_URL } from "@/api";
+
 
 export type Category = {
   id: string;
@@ -13,7 +14,7 @@ export type Category = {
   updated_at: string;
 };
 
-// -------- Fetch Categories --------
+
 export const useCategories = () => {
   return useQuery<Category[]>({
     queryKey: ["categories"],

@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 
 from apps.ecommerce.models.cart import Cart, CartItem
 from apps.ecommerce.models.product import Product
-from apps.ecommerce.models.customer import Customer 
+from apps.ecommerce.models.customer import Customer
 from apps.ecommerce.serializers.cart import (
     CartSerializer,
     CartItemAddSerializer,
@@ -28,7 +28,6 @@ class CartRetrieveAPIView(generics.RetrieveAPIView):
         return Cart.objects.get_or_create(customer=customer)[0]
 
 
-# Add item to cart
 class CartAddItemAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -37,37 +36,40 @@ class CartAddItemAPIView(APIView):
 
         if not serializer.is_valid():
             return Response(
-                {"success": False, "message": "Validation failed", "errors": serializer.errors},
+                {
+                    "success": False,
+                    "message": "Validation failed",
+                    "errors": serializer.errors,
+                },
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        user = request.user
-        if not user.is_authenticated:
-            raise NotAuthenticated("You must be logged in to add to cart.")
-
-        customer, _ = Customer.objects.get_or_create(user=user)
+        customer, _ = Customer.objects.get_or_create(user=request.user)
         cart, _ = Cart.objects.get_or_create(customer=customer)
-
         product = get_object_or_404(Product, id=serializer.validated_data["product_id"])
 
-        unit_price = getattr(product, "final_price", None) or getattr(product, "price", None)
-        if unit_price is None:
-            return Response(
-                {"success": False, "message": "Product price is not available"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+        # unit_price = getattr(product, "final_price", None) or getattr(product, "price", None)
+        # if unit_price is None:
+        #     return Response(
+        #         {"success": False, "message": "Product price is not available"},
+        #         status=status.HTTP_400_BAD_REQUEST,
+        #     )
 
         cart.add_item(
             product=product,
             quantity=serializer.validated_data["quantity"],
-            price=unit_price,
+            price=product.get_price(),
         )
 
         cart.calculate_totals()
         cart.save()
 
         return Response(
-            {"success": True, "message": "Item added to cart successfully", "data": CartSerializer(cart).data},
+            {
+                "success": True,
+                "message": "Item added to cart successfully",
+                "data": CartSerializer(cart).data,
+            },
             status=status.HTTP_200_OK,
         )
 
@@ -80,7 +82,11 @@ class CartUpdateItemAPIView(APIView):
         serializer = CartItemUpdateSerializer(data=request.data, partial=True)
         if not serializer.is_valid():
             return Response(
-                {"success": False, "message": "Validation failed", "errors": serializer.errors},
+                {
+                    "success": False,
+                    "message": "Validation failed",
+                    "errors": serializer.errors,
+                },
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -112,12 +118,13 @@ class CartUpdateItemAPIView(APIView):
             status=status.HTTP_200_OK,
         )
 
+
 # Remove item from cart
 class CartRemoveItemAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def delete(self, request, item_id, *args, **kwargs):
-        customer, _ = Customer.objects.get_or_create(user=request.user)  
+        customer, _ = Customer.objects.get_or_create(user=request.user)
         cart = get_object_or_404(Cart, customer=customer)
         item = get_object_or_404(CartItem, id=item_id, cart=cart)
         item.delete()
@@ -125,11 +132,14 @@ class CartRemoveItemAPIView(APIView):
         cart.calculate_totals()
         cart.save()
 
-        return Response({
-            "success": True,
-            "message": "Item removed from cart successfully",
-            "data": CartSerializer(cart).data
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {
+                "success": True,
+                "message": "Item removed from cart successfully",
+                "data": CartSerializer(cart).data,
+            },
+            status=status.HTTP_200_OK,
+        )
 
 
 # Clear cart
@@ -137,15 +147,18 @@ class CartClearAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        customer, _ = Customer.objects.get_or_create(user=request.user) 
+        customer, _ = Customer.objects.get_or_create(user=request.user)
         cart = get_object_or_404(Cart, customer=customer)
 
         cart.items.all().delete()
         cart.calculate_totals()
         cart.save()
 
-        return Response({
-            "success": True,
-            "message": "Cart cleared successfully",
-            "data": CartSerializer(cart).data
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {
+                "success": True,
+                "message": "Cart cleared successfully",
+                "data": CartSerializer(cart).data,
+            },
+            status=status.HTTP_200_OK,
+        )

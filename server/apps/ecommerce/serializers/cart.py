@@ -2,12 +2,19 @@ from rest_framework import serializers
 from apps.ecommerce.models.cart import Cart, CartItem
 from apps.ecommerce.models.product import Product
 
+
 class ProductNestedSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(source="cover_image")
 
     class Meta:
         model = Product
-        fields = ["id", "product_name", "image", "description", "category", "price", "final_price"]
+        fields = [
+            "id",
+            "product_name",
+            "image",
+            "description",
+            "category",
+        ]
 
 
 class CartItemSerializer(serializers.ModelSerializer):
@@ -21,12 +28,20 @@ class CartItemSerializer(serializers.ModelSerializer):
     def get_subtotal(self, obj):
         return obj.price * obj.quantity
 
+
 class CartSerializer(serializers.ModelSerializer):
     items = CartItemSerializer(many=True, read_only=True)
 
     class Meta:
         model = Cart
-        fields = ["id", "grand_total", "total_qty", "updated_at", "items"]
+        fields = [
+            "id",
+            "grand_total",
+            "total_amount",
+            "total_qty",
+            "updated_at",
+            "items",
+        ]
 
 
 class CartItemAddSerializer(serializers.Serializer):
@@ -35,11 +50,11 @@ class CartItemAddSerializer(serializers.Serializer):
 
     def validate(self, data):
         if data["quantity"] <= 0:
-            raise serializers.ValidationError(
-                {"quantity": "Quantity must be greater than zero"}
-            )
+            data["quantity"] = 1
+
         if not Product.objects.filter(id=data["product_id"]).exists():
             raise serializers.ValidationError({"product_id": "Invalid product ID"})
+
         return data
 
 

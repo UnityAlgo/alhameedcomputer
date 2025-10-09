@@ -15,12 +15,15 @@ import {
 import Link from "next/link";
 import { useOrders } from "@/api/orders";
 import BuyNowButton from "@/components/products/BuyButton";
+import { API_URL } from "@/api";
+import { formatCurrency } from "@/utils";
 
 interface OrderItem {
   id: string;
   productId: string;
   name: string;
   price: number;
+  amount: number;
   quantity: number;
   image?: string;
   size?: string;
@@ -65,7 +68,7 @@ export const OrdersPage: React.FC = () => {
       price: parseFloat(i.price),
       quantity: parseInt(i.quantity),
       image: i.product?.cover_image
-        ? `${process.env.NEXT_PUBLIC_DJANGO_API_URL}${i.product.cover_image}`
+        ? `${API_URL}${i.product.cover_image}`
         : undefined,
       size: i.size || undefined,
       color: i.color || undefined,
@@ -195,16 +198,6 @@ export const OrdersPage: React.FC = () => {
 
         <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 p-2 sm:p-4 mb-4 sm:mb-6">
           <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
-            {/* <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <input
-                type="text"
-                placeholder="Search orders, products..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-sm"
-              />
-            </div> */}
 
             <div className="flex justify-between w-full gap-2">
               <div className="flex gap-2">
@@ -376,10 +369,10 @@ export const OrdersPage: React.FC = () => {
 
                               <div className="text-right">
                                 <div className="font-bold text-gray-900">
-                                  ${(item.price * item.quantity).toFixed(2)}
+                                  {formatCurrency(item.price)}
                                 </div>
                                 <div className="text-sm text-gray-600">
-                                  ${item.price.toFixed(2)} each
+                                  {formatCurrency(item.price)}
                                 </div>
                               </div>
                             </div>
@@ -387,7 +380,7 @@ export const OrdersPage: React.FC = () => {
                         ))}
                       </div>
                       <div className="mt-4 flex flex-col sm:flex-row justify-end gap-2">
-                        <BuyNowButton
+                        {/* <BuyNowButton
                           items={order.items.map((i) => ({
                             productId: i.productId,
                             productName: i.name,
@@ -395,10 +388,10 @@ export const OrdersPage: React.FC = () => {
                           }))}
                           className="bg-black text-white cursor-pointer px-4 py-2 text-xs rounded-lg text-center"
                           label="Buy Again"
-                        />
-                        <button className="border border-red-600 text-red-600 cursor-pointer px-4 py-2 text-xs rounded-lg">
+                        /> */}
+                        {/* <button className="border border-red-600 text-red-600 cursor-pointer px-4 py-2 text-xs rounded-lg">
                           Cancel
-                        </button>
+                        </button> */}
                       </div>
                     </div>
                   </div>

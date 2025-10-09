@@ -19,11 +19,9 @@ class RegisterUserAPIView(APIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
 
-        from django.conf import settings
-
-        if "apps.ecommerce" in settings.INSTALLED_APPS:
-            from apps.ecommerce.models.customer import Customer
-
-            Customer.objects.create(user=user)
+        # from django.conf import settings
+        # if "apps.ecommerce" in settings.INSTALLED_APPS:
+        from apps.ecommerce.models.customer import Customer
+        Customer.objects.create(user=user)
 
         return Response(status=status.HTTP_201_CREATED)

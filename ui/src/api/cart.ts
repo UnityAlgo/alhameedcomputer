@@ -22,7 +22,8 @@ export const useAddToCart = () => {
       return res.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cart"] });
+      queryClient.invalidateQueries({ queryKey: ["get-cart"] });
+      
     },
     onError: (error: any) => {
       throw error.response?.data?.detail || "Failed to add to cart";
@@ -43,7 +44,7 @@ export const useUpdateCartItem = () => {
       return res.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cart"] });
+      queryClient.invalidateQueries({ queryKey: ["get-cart"] });
     },
   });
 };
@@ -58,7 +59,7 @@ export const useRemoveCartItem = () => {
       return res.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cart"] });
+      queryClient.invalidateQueries({ queryKey: ["get-cart"] });
     },
   });
 };
@@ -73,7 +74,7 @@ export const useClearCart = () => {
       return res.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cart"] });
+      queryClient.invalidateQueries({ queryKey: ["get-cart"] });
     },
   });
 };

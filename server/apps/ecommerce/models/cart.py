@@ -10,12 +10,14 @@ class Cart(BaseModel):
     )
     grand_total = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     total_qty = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
     def __str__(self):
-        return self.customer.user.email 
+        return self.customer.user.email
 
     def calculate_totals(self):
         self.grand_total = sum(item.amount for item in self.items.all())
+        self.total_amount = sum(item.amount for item in self.items.all())
         self.total_qty = sum(item.quantity for item in self.items.all())
 
     def save(self, *args, **kwargs):
@@ -23,7 +25,7 @@ class Cart(BaseModel):
         super().save(*args, **kwargs)
 
     def add_item(self, product, quantity, price=None):
-        if not price: 
+        if not price:
             price = product.final_price
 
         item, created = CartItem.objects.get_or_create(
@@ -56,7 +58,7 @@ class CartItem(BaseModel):
         self.amount = self.price * self.quantity
 
     def save(self, *args, **kwargs):
-        if not self.price: 
+        if not self.price:
             self.price = self.product.final_price
         self.calculate_total_amount()
         super().save(*args, **kwargs)

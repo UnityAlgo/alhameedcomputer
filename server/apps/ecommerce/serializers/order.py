@@ -6,11 +6,13 @@ from apps.ecommerce.serializers.product import ProductListSerializer
 
 class OrderItemSerializer(serializers.ModelSerializer):
     product = ProductListSerializer(read_only=True)
-    subtotal = serializers.DecimalField(source="amount", max_digits=10, decimal_places=2, read_only=True)
+    # subtotal = serializers.DecimalField(
+    #     source="amount", max_digits=10, decimal_places=2, read_only=True
+    # )
 
     class Meta:
         model = OrderItem
-        fields = ["id", "product", "quantity", "price", "subtotal"]
+        fields = ["id", "product", "quantity", "price", "amount"]
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -26,6 +28,7 @@ class OrderSerializer(serializers.ModelSerializer):
             "status",
             "total_amount",
             "total_qty",
+            "total_taxes_and_charges",
             "order_date",
             "items",
         ]

@@ -1,6 +1,5 @@
-import { API_URL } from "@/_api/index";
+import { API_URL, axiosClient } from "@/api";
 import { useQuery } from "@tanstack/react-query";
-import axiosClient from "@/_api/axiosClient";
 import axios from "axios";
 import { ProductType } from "@/components/products/product-card";
 
@@ -50,9 +49,9 @@ export const useProductReviews = (id: string) => {
   return useQuery({
     queryKey: ["product-reviews", id],
     queryFn: async () => {
-      
+
       const { data } = await axios.get(`${API_URL}api/products/${id}/reviews`);
-      
+
       return data;
     },
     enabled: !!id,

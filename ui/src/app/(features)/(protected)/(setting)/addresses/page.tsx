@@ -17,10 +17,30 @@ const Index = () => {
     }
   };
 
+  if (!addresses.length) {
+    return (
+      <div>
+
+        <div className="text-center py-16 flex items-center gap-4 justify-center">
+          <div>
+
+            <div className="mb-2">No address added</div>
+            <AddAddressForm
+              open={isPopoverOpen}
+              setOpen={setIsPopoverOpen}
+              editingAddress={editingAddress}
+              setEditingAddress={setEditingAddress}
+            />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="max-w-6xl mx-auto p-4 sm:p-6">
       <div className="flex items-center justify-between mb-6 relative">
-        <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Saved Addresses</h2>
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Your Addresses</h2>
         <div className="hidden sm:block">
           <AddAddressForm
             open={isPopoverOpen}

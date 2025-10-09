@@ -8,13 +8,16 @@ type Slide = {
 
 const HERO_SLIDES: Slide[] = [
     {
-        img: "https://www.redragonzone.com/cdn/shop/files/1920_760_f84ae06f-5aec-48c8-917c-e133713617ee_1920x.png?v=1755504227",
+        img: "/images/cover-1.jpeg",
     },
     {
-        img: "https://www.redragonzone.com/cdn/shop/files/zone_K719_PRO_1920x760_901273fd-c53d-49a3-a817-1571e6890350_1920x.webp?v=1750149059",
+        img: "/images/cover-2.jpeg",
     },
     {
-        img: "https://www.redragonzone.com/cdn/shop/files/1920_760_d6c55281-2bdc-4cd8-90a7-a07381df304c_1920x.png?v=1755504066",
+        img: "/images/cover-3.jpeg",
+    },
+    {
+        img: "/images/cover-4.jpeg",
     },
 ];
 

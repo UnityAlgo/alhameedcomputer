@@ -11,9 +11,8 @@ import {
 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/hooks/index";
-import { useCart } from "@/hooks/useCart";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Brand } from "@/components";
+
 import axios from "axios";
 import { API_URL } from "@/api";
 
@@ -28,8 +27,8 @@ export const Header = () => {
 
           <Link href="/">
             <div className="flex items-center gap-2">
-              <img src="/cover-logo.png" alt="UnityStore" className="h-16 w-16 object-contain hidden md:block" />
-              <div className="font-bold sm:text-xl">AH Computers</div>
+              <img src="/logo.png" alt="UnityStore" className="h-16 w-16 object-contain hidden md:block" />
+
             </div>
           </Link>
 
@@ -45,12 +44,12 @@ export const Header = () => {
               <ShoppingCart className="size-5" />
             </Link>
 
-            {isAuthenticated ? (
+            {isAuthenticated && user ? (
               <Popover>
                 <PopoverTrigger asChild>
                   <div className="flex gap-2 items-center">
                     <UserRound className="size-5" />
-                    <div className="hidden md:block cursor-pointer text-sm">Hussain</div>
+                    <div className="hidden md:block cursor-pointer text-sm">{user.username}</div>
                   </div>
                 </PopoverTrigger>
 
@@ -86,6 +85,8 @@ export const Header = () => {
     </>
   );
 };
+
+
 
 const Searchbar = () => {
   const params = useSearchParams();

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axiosClient from "@/_api/axiosClient";
+import { axiosClient } from "@/api";
 
 export interface Address {
   id: string;

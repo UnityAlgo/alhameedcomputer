@@ -2,6 +2,7 @@ from uuid import uuid4
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 
+
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
@@ -34,6 +35,7 @@ class User(AbstractUser):
     updated_at = models.DateTimeField(auto_now=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     email = models.EmailField(unique=True)
+    phone_number = models.CharField(max_length=50, null=True, blank=True)
     dob = models.DateField(null=True, blank=True)
     username = models.CharField(max_length=50, unique=False, null=False)
     mobile = models.CharField(max_length=50, unique=True, null=True, blank=True)
@@ -44,4 +46,3 @@ class User(AbstractUser):
 
     def __str__(self) -> str:
         return str(self.email)
-
