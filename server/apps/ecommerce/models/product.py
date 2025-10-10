@@ -51,7 +51,7 @@ class Product(BaseModel):
         if price_list:
             queryset_filter &= Q(price_list=price_list)
 
-        product_price = (
+        product_price: ProductPrice = (
             self.prices.filter(
                 Q(valid_from__lte=timezone.now())
                 | Q(valid_from__isnull=True) & Q(valid_to__gte=timezone.now())

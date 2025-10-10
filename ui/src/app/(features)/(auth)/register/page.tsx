@@ -82,7 +82,7 @@ const Index = () => {
     }
     if (mutation.isSuccess) {
       toast.success("You’ve successfully registered. Welcome aboard!");
-      router.push("/")
+      router.push("/login")
     }
   }, [mutation.isPending, mutation.isError])
 

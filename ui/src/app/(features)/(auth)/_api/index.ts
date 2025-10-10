@@ -1,4 +1,4 @@
-import axiosClient from "@/_api/axiosClient";
+import { axiosClient } from "@/api";
 
 interface LoginBody {
   email: string;

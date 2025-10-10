@@ -73,8 +73,7 @@ export const generateMetadata = async ({ params }: { params: { id: string } }) =
 export default async function ProductPage({ params }: { params: { id: string } }) {
   const response = await axios.get(API_URL + "api/products?id=" + params.id);
   const product = response.data
-
-
+    
   return (
     <div className="max-w-6xl mx-auto">
       <div className="px-2 md:px-4 py-4">

@@ -8,19 +8,22 @@ type Slide = {
 
 const HERO_SLIDES: Slide[] = [
     {
-        img: "https://www.redragonzone.com/cdn/shop/files/1920_760_f84ae06f-5aec-48c8-917c-e133713617ee_1920x.png?v=1755504227",
+        img: "/images/cover-1.jpeg",
     },
     {
-        img: "https://www.redragonzone.com/cdn/shop/files/zone_K719_PRO_1920x760_901273fd-c53d-49a3-a817-1571e6890350_1920x.webp?v=1750149059",
+        img: "/images/cover-2.jpeg",
     },
     {
-        img: "https://www.redragonzone.com/cdn/shop/files/1920_760_d6c55281-2bdc-4cd8-90a7-a07381df304c_1920x.png?v=1755504066",
+        img: "/images/cover-3.jpeg",
+    },
+    {
+        img: "/images/cover-4.jpeg",
     },
 ];
 
 
 
-const Carousel = ({ slides }: { slides: Slide[] }) => {
+const Carousel = ({ slides, autoPlay=true }: { slides: Slide[],  }) => {
   const [index, setIndex] = useState(0);
   const count = slides.length;
   const intervalRef = useRef<number | null>(null);
@@ -30,10 +33,13 @@ const Carousel = ({ slides }: { slides: Slide[] }) => {
 
   const startAutoPlay = () => {
     if (intervalRef.current) return;
-    intervalRef.current = window.setInterval(next, 3000);
+    if (autoPlay) {
+      intervalRef.current = window.setInterval(next, 3000);
+    }
   };
 
   const stopAutoPlay = () => {
+
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
@@ -56,7 +62,7 @@ const Carousel = ({ slides }: { slides: Slide[] }) => {
         style={{ transform: `translateX(-${index * 100}%)` }}
       >
         {slides.map((s, i) => (
-          <div key={i} className="min-w-full relative h-[150px] md:h-[360px]">
+          <div key={i} className="min-w-full relative h-[250px] md:h-[360px]">
             <img
               src={s.img}
               alt={`Slide ${i + 1}`}

@@ -1,18 +1,18 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axiosClient from "@/_api/axiosClient";
+import { axiosClient } from "@/api";
 
-// -------- Fetch Cart --------
+
 export const useCart = () => {
   return useQuery({
-    queryKey: ["cart"],
+    queryKey: ["get-cart"],
     queryFn: async () => {
       const res = await axiosClient.get("api/cart/");
       return res.data;
     },
+    // retry: 3
   });
 };
 
-// -------- Add Item --------
 export const useAddToCart = () => {
   const queryClient = useQueryClient();
 
@@ -22,7 +22,8 @@ export const useAddToCart = () => {
       return res.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cart"] });
+      queryClient.invalidateQueries({ queryKey: ["get-cart"] });
+      
     },
     onError: (error: any) => {
       throw error.response?.data?.detail || "Failed to add to cart";
@@ -43,7 +44,7 @@ export const useUpdateCartItem = () => {
       return res.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cart"] });
+      queryClient.invalidateQueries({ queryKey: ["get-cart"] });
     },
   });
 };
@@ -58,7 +59,7 @@ export const useRemoveCartItem = () => {
       return res.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cart"] });
+      queryClient.invalidateQueries({ queryKey: ["get-cart"] });
     },
   });
 };
@@ -73,7 +74,7 @@ export const useClearCart = () => {
       return res.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cart"] });
+      queryClient.invalidateQueries({ queryKey: ["get-cart"] });
     },
   });
 };

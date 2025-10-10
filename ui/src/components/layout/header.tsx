@@ -11,83 +11,82 @@ import {
 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/hooks/index";
-import { useCart } from "@/hooks/useCart";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Brand } from "@/components";
+
 import axios from "axios";
 import { API_URL } from "@/api";
 
 export const Header = () => {
   const { isAuthenticated, user, handleLogout } = useAuth();
-  const { cart } = useCart();
+  // const { cart } = useCart();
 
   return (
     <>
       <header className="shadow-sm">
-        <div className="flex items-center justify-between max-w-6xl mx-auto px-2 md:px-4 py-4">
-          <Link href="/" className="flex-shrink-0">
-            <Brand />
+        <div className="md:flex md:items-center md:justify-between max-w-6xl mx-auto px-2 md:px-4 py-4 grid grid-cols-2 gap-2">
+
+          <Link href="/">
+            <div className="flex items-center gap-2">
+              <img src="/logo.png" alt="UnityStore" className="h-16 w-16 object-cover" />
+
+            </div>
           </Link>
 
-          <div className="flex items-center gap-8">
+          <div className="col-span-2 order-3 md:order-none" >
             <Searchbar />
-
-            <div className="flex items-center gap-4">
-              <Link
-                href="/cart"
-                className=""
-              >
-                <ShoppingCart className="h-4 md:h-5 md:w-5 w-4" />
-                {cart.length > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center text-[10px]">
-                    {cart.length}
-                  </span>
-                )}
-              </Link>
-
-              {isAuthenticated ? (
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <div className="flex gap-2 items-center">
-                      <UserRound className="h-4 md:h-5 md:w-5 w-4" />
-                      <div className="cursor-pointer text-sm">Hussain</div>
-                    </div>
-                  </PopoverTrigger>
-
-                  <PopoverContent className="w-40 bg-white border border-gray-200 rounded-md shadow-sm">
-                    <ul className="text-sm text-gray-700">
-                      <li>
-                        <Link href="/profile" className="block px-4 py-2 hover:bg-gray-100">
-                          My Profile
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="/orders" className="block px-4 py-2 hover:bg-gray-100">
-                          My Orders
-                        </Link>
-                      </li>
-
-                      <li className="border-t border-accent">
-                        <button onClick={handleLogout}
-                          className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600 items-center flex gap-2 cursor-pointer outline-none">
-                          <LogOut className="h-4 w-4" />
-                          Logout
-                        </button>
-                      </li>
-
-                    </ul>
-                  </PopoverContent>
-                </Popover>
-              ) : <Link href="/login" className="text-sm">Sign In</Link>}
-            </div>
-
           </div>
-        </div>
 
-      </header >
+          <div className="flex items-center justify-end gap-4 grid-rows-1 col-span-1">
+            <Link
+              href="/cart"
+              className=""
+            >
+              <ShoppingCart className="size-5" />
+            </Link>
+
+            {isAuthenticated && user ? (
+              <Popover>
+                <PopoverTrigger asChild>
+                  <div className="flex gap-2 items-center">
+                    <UserRound className="size-5" />
+                    <div className="hidden md:block cursor-pointer text-sm">{user.username}</div>
+                  </div>
+                </PopoverTrigger>
+
+                <PopoverContent className="w-40 bg-white border border-gray-200 rounded-md shadow-sm">
+                  <ul className="text-sm text-gray-700">
+                    <li>
+                      <Link href="/profile" className="block px-4 py-2 hover:bg-gray-100">
+                        My Profile
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/orders" className="block px-4 py-2 hover:bg-gray-100">
+                        My Orders
+                      </Link>
+                    </li>
+
+                    <li className="border-t border-accent">
+                      <button onClick={handleLogout}
+                        className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600 items-center flex gap-2 cursor-pointer outline-none">
+                        <LogOut className="h-4 w-4" />
+                        Logout
+                      </button>
+                    </li>
+
+                  </ul>
+                </PopoverContent>
+              </Popover>
+            ) : <Link href="/login" className="text-sm">Sign In</Link>}
+          </div>
+
+        </div>
+      </header>
     </>
   );
 };
+
+
 
 const Searchbar = () => {
   const params = useSearchParams();
@@ -100,8 +99,6 @@ const Searchbar = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // Fetch suggestions from API
   const fetchSuggestions = async (searchQuery: string) => {
     if (!searchQuery.trim()) {
       setSuggestions([]);
@@ -137,7 +134,7 @@ const Searchbar = () => {
     if (query.trim()) {
       debounceTimerRef.current = setTimeout(() => {
         fetchSuggestions(query);
-      }, 300); // 300ms delay
+      }, 300);
     } else {
       setSuggestions([]);
     }
@@ -149,7 +146,7 @@ const Searchbar = () => {
     };
   }, [query]);
 
-  // Click outside to close dropdown
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -205,7 +202,7 @@ const Searchbar = () => {
     }
   };
 
-  // Highlight matching text
+
   const highlightMatch = (text: string, searchQuery: string) => {
     if (!searchQuery.trim()) return text;
 
@@ -224,13 +221,14 @@ const Searchbar = () => {
   };
 
   const showDropdown = isOpen && (suggestions.length > 0 || isLoading || error);
+  // const showDropdown = true;
 
   return (
     <form
-      className="flex items-center justify-between border border-accent rounded-full py-2 pl-3 pr-4 text-sm w-48 sm:w-80 lg:w-2xl relative"
+      className="flex items-center justify-between border border-accent rounded-md md:rounded-full py-2 md:pl-3 pr-4 text-sm w-full md:w-2xl relative shrink-0 "
       onSubmit={handleSearch}
     >
-      <div className="flex-1 relative">
+      <div className="flex-1">
         <input
           ref={inputRef}
           type="text"
@@ -246,9 +244,14 @@ const Searchbar = () => {
         {showDropdown && (
           <div
             ref={dropdownRef}
-            className="bg-white shadow-lg border border-accent rounded-md mt-2 z-50 absolute left-0 right-0 top-full"
+            className="bg-white shadow-lg border border-accent rounded-md mt-4 z-50 absolute left-0 right-0  w-full min-w-full "
           >
-            <div className="max-h-60 overflow-y-auto">
+
+            <div className="md:max-h-72 overflow-y-auto">
+              {/* <div className="px-3 py-2 text-sm text-gray-500">
+                No suggestions found
+              </div> */}
+
               {isLoading && (
                 <div className="flex items-center justify-center py-4 text-gray-500">
                   <Loader2 className="h-5 w-5 animate-spin mr-2" />

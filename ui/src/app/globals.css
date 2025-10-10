@@ -1,7 +1,5 @@
 @import "tailwindcss";
 
-
-
 @theme {
   --font-poppins: var(--font-poppins), sans-serif;
   --color-primary: #020021;
@@ -24,4 +22,21 @@ html {
 
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+
+.ql-toolbar.ql-snow {
+  @apply border-none border-b;
+}
+
+.ql-container.ql-snow {
+  border: none !important;
+}
+
+.ql-editor li {
+  padding-left: 1rem !important;
+}
+
+.ql-editor ol {
+  padding-left: 0 !important;
 }

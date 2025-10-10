@@ -3,6 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from 'next/navigation';
 import {
   Minus,
   Plus,
@@ -22,6 +23,7 @@ import {
   useClearCart,
 } from "@/api/cart";
 import { useCreateOrder } from "@/api/orders";
+import { decimal, float, formatCurrency } from "@/utils";
 
 type CartItem = {
   id: string;
@@ -46,17 +48,10 @@ const Page = () => {
   const updateCartItem = useUpdateCartItem();
   const removeCartItem = useRemoveCartItem();
   const clearCart = useClearCart();
+  const router = useRouter();
 
   const cartItems: CartItem[] = cartData?.items || [];
 
-  const subtotal = cartItems.reduce((sum, item) => {
-    const price = Number(item.product.final_price) || Number(item.product.price);
-    return sum + price * item.quantity;
-  }, 0);
-
-  const shipping = subtotal > 50 ? 0 : 9.99;
-  const tax = subtotal * 0.08;
-  const total = subtotal + shipping + tax;
 
   const updateQuantity = (itemId: string, newQuantity: number) => {
     const safeQuantity = Math.max(1, parseInt(String(newQuantity), 10));
@@ -114,6 +109,7 @@ const Page = () => {
     createOrder.mutate(undefined, {
       onSuccess: (data) => {
         toast.success("Your order has been created!");
+        router.push("/orders")
       },
       onError: (err: any) => {
         console.error("Order create error:", err.response?.data || err);
@@ -169,14 +165,16 @@ const Page = () => {
             <ArrowLeft className="h-4 w-4" />
             Continue Shopping
           </Link>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+
+
+          {/* <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 sm:mb-0">
               Shopping Cart ({cartItems.length} items)
             </h1>
             <div className="text-sm text-gray-500">
               Free shipping on your first order
             </div>
-          </div>
+          </div> */}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
@@ -184,8 +182,7 @@ const Page = () => {
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
               {cartItems.map((item, index) => {
                 const price =
-                  Number(item.product.final_price) ||
-                  Number(item.product.price);
+                  formatCurrency(item.product.price);
                 return (
                   <div key={item.id}>
                     <div className="p-2 md:p-4">
@@ -226,11 +223,11 @@ const Page = () => {
                             <div className="text-right">
                               <div className="flex items-center gap-2 justify-end">
                                 <span className="text-lg font-bold text-gray-900">
-                                  ${price.toFixed(2)}
+                                  {formatCurrency(item.price)}
                                 </span>
                               </div>
                               <p className="text-xs text-gray-500 mt-1">
-                                ${(price * item.quantity).toFixed(2)} total
+                                {formatCurrency(item.amount)} total
                               </p>
                             </div>
                           </div>
@@ -262,16 +259,16 @@ const Page = () => {
 
 
                             <div className="flex items-center gap-2">
-                              <button
+                              {/* <button
                                 onClick={() => moveToWishlist(item.id)}
                                 className="text-xs text-gray-500 hover:text-red-500 flex items-center gap-1 transition-colors"
                               >
                                 <Heart className="h-3 w-3" />
                                 Save
-                              </button>
+                              </button> */}
                               <button
                                 onClick={() => removeItem(item.id)}
-                                className="text-xs text-gray-500 hover:text-red-500 flex items-center gap-1 transition-colors"
+                                className="text-xs text-red-500 flex items-center gap-1 transition-colors"
                               >
                                 <Trash2 className="h-3 w-3" />
                                 Remove
@@ -290,7 +287,7 @@ const Page = () => {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="flex items-center gap-3 p-4 bg-white rounded-lg border border-gray-200">
+              {/* <div className="flex items-center gap-3 p-4 bg-white rounded-lg border border-gray-200">
                 <div className="p-2 bg-green-100 rounded-lg">
                   <Truck className="h-5 w-5 text-green-600" />
                 </div>
@@ -302,7 +299,7 @@ const Page = () => {
                     On orders your first order
                   </p>
                 </div>
-              </div>
+              </div> */}
 
               <div className="flex items-center gap-3 p-4 bg-white rounded-lg border border-gray-200">
                 <div className="p-2 bg-blue-100 rounded-lg">
@@ -312,7 +309,7 @@ const Page = () => {
                   <p className="text-sm font-medium text-gray-900">
                     Easy Returns
                   </p>
-                  <p className="text-xs text-gray-500">30-day return policy</p>
+                  <p className="text-xs text-gray-500">15-day return policy</p>
                 </div>
               </div>
 
@@ -339,26 +336,23 @@ const Page = () => {
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Subtotal</span>
-                  <span className="font-medium">${subtotal.toFixed(2)}</span>
+                  <span className="font-medium">{formatCurrency(cartData.total_amount)}</span>
                 </div>
 
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Shipping</span>
                   <span className="font-medium">
-                    {shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}
+                    {formatCurrency(500)}
+
                   </span>
                 </div>
 
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Tax</span>
-                  <span className="font-medium">${tax.toFixed(2)}</span>
-                </div>
 
                 <hr className="border-gray-200" />
 
                 <div className="flex justify-between text-lg font-bold">
                   <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>{formatCurrency(float(cartData.grand_total) + 500)}</span>
                 </div>
               </div>
 
@@ -376,7 +370,7 @@ const Page = () => {
 
               <div className="text-center">
                 <Link
-                  href="/products"
+                  href="/"
                   className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
                 >
                   Continue Shopping

@@ -14,11 +14,12 @@ from .models.cart import Cart, CartItem
 from .models.review import ProductReview
 from .models.base import UOM
 from apps.user_auth.models.base import Address
+from unfold.admin import ModelAdmin
 
 
 # ---------- CATEGORY ----------
 @admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
+class CategoryAdmin(ModelAdmin):
     list_display = ("name", "parent", "created_at", "updated_at")
     search_fields = ("name",)
     list_filter = ("parent",)
@@ -29,7 +30,7 @@ admin.site.register(Currency)
 
 
 @admin.register(PriceList)
-class PriceListAdmin(admin.ModelAdmin):
+class PriceListAdmin(ModelAdmin):
     list_display = ("price_list_name", "currency", "disabled", "buying", "selling")
 
 
@@ -45,7 +46,7 @@ class ProductPriceInline(admin.TabularInline):
 
 
 @admin.register(Product)
-class ProductAdmin(admin.ModelAdmin):
+class ProductAdmin(ModelAdmin):
     list_display = (
         "product_name",
         "brand",
@@ -67,7 +68,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 # ---------- BRAND ----------
 @admin.register(Brand)
-class BrandAdmin(admin.ModelAdmin):
+class BrandAdmin(ModelAdmin):
     list_display = ("name", "created_at", "updated_at")
     search_fields = ("name",)
     ordering = ("name",)
@@ -76,30 +77,29 @@ class BrandAdmin(admin.ModelAdmin):
 admin.site.register(Customer)
 
 
-
 @admin.register(Order)
-class OrderAdmin(admin.ModelAdmin):
+class OrderAdmin(ModelAdmin):
     class OrderItemInline(admin.TabularInline):
         model = OrderItem
         extra = 1
 
-    list_display = ("id", "customer", "status", "total_amount", "order_date")
+    list_display = ("order_id", "customer", "status", "total_amount", "order_date")
     list_filter = ("status", "order_date")
-    search_fields = ("id", "customer__user__email", "customer__user__first_name")
+    search_fields = ("order_id", "customer__user__email", "customer__user__first_name")
     ordering = ("-order_date",)
     inlines = [OrderItemInline]
 
 
 # ---------- CART ----------
 @admin.register(Cart)
-class CartAdmin(admin.ModelAdmin):
+class CartAdmin(ModelAdmin):
     list_display = ("customer", "grand_total", "total_qty", "updated_at")
     search_fields = ("customer__user__email", "customer__user__first_name")
     ordering = ("-updated_at",)
 
 
 @admin.register(CartItem)
-class CartItemAdmin(admin.ModelAdmin):
+class CartItemAdmin(ModelAdmin):
     list_display = ("cart", "product", "quantity", "price", "amount")
     search_fields = ("product__product_name", "cart__customer__user__email")
     ordering = ("-id",)
@@ -107,7 +107,7 @@ class CartItemAdmin(admin.ModelAdmin):
 
 # ---------- REVIEW ----------
 @admin.register(ProductReview)
-class ProductReviewAdmin(admin.ModelAdmin):
+class ProductReviewAdmin(ModelAdmin):
     list_display = ("product", "customer", "rating", "created_at")
     list_filter = ("rating", "created_at")
     search_fields = (
@@ -120,7 +120,7 @@ class ProductReviewAdmin(admin.ModelAdmin):
 
 # ---------- UOM ----------
 @admin.register(UOM)
-class UOMAdmin(admin.ModelAdmin):
+class UOMAdmin(ModelAdmin):
     list_display = ("name", "created_at", "updated_at")
     search_fields = ("name",)
     ordering = ("name",)
@@ -130,7 +130,7 @@ class UOMAdmin(admin.ModelAdmin):
 
 
 @admin.register(Address)
-class AddressAdmin(admin.ModelAdmin):
+class AddressAdmin(ModelAdmin):
     list_display = (
         "id",
         "user",

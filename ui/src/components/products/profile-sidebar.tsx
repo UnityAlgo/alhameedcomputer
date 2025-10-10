@@ -20,7 +20,7 @@ const ProfileSidebar = () => {
     { id: "overview", label: "Profile", icon: User, href: "/profile" },
     { id: "orders", label: "Orders", icon: Package, href: "/orders" },
     { id: "addresses", label: "Addresses", icon: MapPin, href: "/addresses" },
-    { id: "wishlist", label: "Wishlist", icon: Heart, href: "/wishlist" },
+    // { id: "wishlist", label: "Wishlist", icon: Heart, href: "/wishlist" },
     { id: "logout", label: "Logout", icon: LogOut, action: handleLogout },
   ];
 

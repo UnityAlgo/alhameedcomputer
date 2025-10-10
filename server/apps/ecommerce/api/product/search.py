@@ -17,15 +17,16 @@ class SearchProductAPIView(APIView):
         search_query = str(request.get("query", "")).strip()
         min_price = request.get("min_price", 0)
         max_price = request.get("max_price", 0)
-        category = request.get("category")
-
+        categories = (
+            request.get("categories").split(",") if request.get("categories") else []
+        )
         queryset_filters = Q(published=True)
 
         if search_query:
             queryset_filters &= Q(product_name__icontains=search_query)
 
-        if category:
-            queryset_filters &= Q(category__id=category)
+        if categories:
+            queryset_filters &= Q(category__id__in=categories)
 
         if min_price:
             queryset_filters &= Q(price__gte=min_price)
