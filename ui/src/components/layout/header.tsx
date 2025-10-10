@@ -27,7 +27,7 @@ export const Header = () => {
 
           <Link href="/">
             <div className="flex items-center gap-2">
-              <img src="/logo.png" alt="UnityStore" className="h-16 w-16 object-contain hidden md:block" />
+              <img src="/logo.png" alt="UnityStore" className="h-16 w-16 object-cover" />
 
             </div>
           </Link>

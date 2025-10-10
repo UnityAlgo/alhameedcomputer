@@ -56,7 +56,7 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
         <button className="bg-sucess text-primary-foreground py-2 px-6 rounded-md" onClick={handleAddToCart}>
 
           {/* Add to cart  */}
-          {isLoading ? <Spinner color="light" size="md" /> : <span>Add to cart</span>}
+          {isLoading ? <><Spinner color="light" size="md" /> Adding</> : <span>Add to cart</span>}
         </button>
 
       </div>

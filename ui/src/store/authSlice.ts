@@ -13,6 +13,7 @@ interface AuthState {
   isAuthenticated: boolean;
   accessToken: string | null;
   refreshToken: string | null;
+  isLoading: boolean; // Add loading state
 }
 
 interface AuthPayload {
@@ -28,6 +29,7 @@ const initialState: AuthState = {
   isAuthenticated: false,
   accessToken: null,
   refreshToken: null,
+  isLoading: true, // Start with loading true
 };
 
 const authSlice = createSlice({
@@ -40,7 +42,8 @@ const authSlice = createSlice({
       state.accessToken = tokens.access;
       state.refreshToken = tokens.refresh;
       state.isAuthenticated = true;
-      state.user = user; 
+      state.user = user;
+      state.isLoading = false; // Set loading to false after login
 
       localStorage.setItem("tokens", JSON.stringify(tokens));
       localStorage.setItem("user", JSON.stringify(user));
@@ -51,6 +54,7 @@ const authSlice = createSlice({
       state.accessToken = null;
       state.refreshToken = null;
       state.isAuthenticated = false;
+      state.isLoading = false; // Keep loading false
       localStorage.removeItem("tokens");
       localStorage.removeItem("user");
     },
@@ -61,10 +65,28 @@ const authSlice = createSlice({
 
       if (tokens && user) {
         try {
-          state.accessToken = JSON.parse(tokens).access;
-          state.refreshToken = JSON.parse(tokens).refresh;
-          state.user = JSON.parse(user);
-          state.isAuthenticated = true;
+          const parsedTokens = JSON.parse(tokens);
+          const parsedUser = JSON.parse(user);
+
+          // Optional: Validate token expiration
+          const decodedToken: any = jwtDecode(parsedTokens.access);
+          const currentTime = Date.now() / 1000;
+
+          if (decodedToken.exp && decodedToken.exp < currentTime) {
+            // Token expired, clear storage
+            state.user = null;
+            state.accessToken = null;
+            state.refreshToken = null;
+            state.isAuthenticated = false;
+            localStorage.removeItem("tokens");
+            localStorage.removeItem("user");
+          } else {
+            // Token valid, load user data
+            state.accessToken = parsedTokens.access;
+            state.refreshToken = parsedTokens.refresh;
+            state.user = parsedUser;
+            state.isAuthenticated = true;
+          }
         } catch (error) {
           console.error("Invalid storage data:", error);
           state.user = null;
@@ -75,6 +97,9 @@ const authSlice = createSlice({
           localStorage.removeItem("user");
         }
       }
+
+      // Always set loading to false after checking
+      state.isLoading = false;
     },
   },
 });

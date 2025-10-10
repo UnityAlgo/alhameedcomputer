@@ -51,7 +51,7 @@ const Index = () => {
     return <div className='max-w-6xl mx-auto'>
         {
             results ? (
-                <div className='py-4'>
+                <div className='py-4 px-2'>
                     <div className='flex gap-2'>
                         <div className='w-52 pr-4 hidden lg:block shrink-0'>
                             <SearchFilter attributes={results.attributes} />
