@@ -17,36 +17,23 @@ from dotenv import load_dotenv
 
 load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
+# SECURITY
 SECRET_KEY = os.getenv("SECRET_KEY", "insecure-secret-key")
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", True)
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://72.60.210.63",
-    "http://alhameedcomputers.com",
-    "https://alhameedcomputers.com",
-]
+DEBUG = True
+CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
 
 ALLOWED_HOSTS = [
-    "127.0.0.1",
     "localhost",
-    "localhost:3000",
-    "72.60.210.63",
-    "alhameedcomputers.com",
-    "admin.alhameedcomputers.com",
+    "127.0.0.1",
 ]
 
-
-# Application definition
-
+# Applications
 INSTALLED_APPS = [
     "unfold",
     "django.contrib.admin",
@@ -58,10 +45,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     "ckeditor",
-    "rest_framework_simplejwt",
-    "apps.user_auth",
-    "apps.ecommerce",
 ]
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -100,40 +85,28 @@ WSGI_APPLICATION = "conf.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "production_db",
-        "USER": "unityalgo",
-        "PASSWORD": "123",
-        "HOST": "localhost",
-        "PORT": "5432",
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 
 
 # Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = []
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/4.2/topics/i18n/
-
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "UTC"
-
 USE_I18N = True
-
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-
+# Static files & Media Files
 STATIC_URL = "static/"
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
+STATIC_ROOT = "staticfiles/"
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
@@ -145,10 +118,8 @@ AUTH_USER_MODEL = "user_auth.User"
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-    )
-    # ,"DEFAULT_PERMISSION_CLASSES": (
-    #     "rest_framework.permissions.IsAuthenticated",
-    # ),
+    ),
+    "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
 }
 
 
@@ -184,17 +155,4 @@ SIMPLE_JWT = {
     "TOKEN_BLACKLIST_SERIALIZER": "rest_framework_simplejwt.serializers.TokenBlacklistSerializer",
     "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
-}
-
-# Media Files
-
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
-
-
-UNFOLD_ADMIN_CONFIG = {
-    "SITE_TITLE": "UnityAlgo Admin",
-    "SITE_HEADER": "Welcome to UnityAlgo Admin",
-    "SITE_URL": "/",
-    "THEME": "dark",
 }

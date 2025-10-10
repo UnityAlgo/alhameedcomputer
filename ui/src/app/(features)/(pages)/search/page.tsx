@@ -56,11 +56,22 @@ const Index = () => {
                         <div className='w-52 pr-4 hidden lg:block shrink-0'>
                             <SearchFilter attributes={results.attributes} />
                         </div>
-                        <div>
+
+                        <div className="flex-1">
                             {params.get("query") && <div className='mb-4 text-sm'>
                                 {results.total_count} items found for <span className='font-medium'>'{params.get("query")}'</span>
                             </div>}
 
+                            {results.products.length ? <ProductGrid products={results.products} /> : <div className="flex items-center justify-center ">
+                                <div className="text-center">
+                                    <img src="https://cdn-icons-png.flaticon.com/512/6107/6107764.png" className="max-w-32" />
+                                    <div>No Results Found</div>
+                                    <div>Try a different keyword</div>
+                                </div>
+                            </div>}
+
+
+                            {/*  */}
                             <ProductGrid products={results.products} />
                         </div>
                     </div>

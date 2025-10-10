@@ -13,7 +13,7 @@ interface AuthState {
   isAuthenticated: boolean;
   accessToken: string | null;
   refreshToken: string | null;
-  isLoading: boolean; // Add loading state
+  // isLoading: boolean; // Add loading state
 }
 
 interface AuthPayload {
@@ -29,12 +29,31 @@ const initialState: AuthState = {
   isAuthenticated: false,
   accessToken: null,
   refreshToken: null,
-  isLoading: true, // Start with loading true
+  // isLoading: true,
 };
+
+const getInitialState = (): AuthState => {
+  const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens") as string) : null
+  const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user") as string) : null
+  if (!user || !tokens) {
+    return {
+      isAuthenticated: false,
+      user: null,
+      accessToken: null,
+      refreshToken: null,
+    }
+  }
+  return {
+    isAuthenticated: true,
+    user,
+    accessToken: tokens.access,
+    refreshToken: tokens.refresh,
+  }
+}
 
 const authSlice = createSlice({
   name: "auth",
-  initialState,
+  initialState: getInitialState(),
   reducers: {
     login: (state, action: PayloadAction<AuthPayload>) => {
       const { tokens, user } = action.payload;
@@ -43,7 +62,7 @@ const authSlice = createSlice({
       state.refreshToken = tokens.refresh;
       state.isAuthenticated = true;
       state.user = user;
-      state.isLoading = false; // Set loading to false after login
+      // state.isLoading = false; // Set loading to false after login
 
       localStorage.setItem("tokens", JSON.stringify(tokens));
       localStorage.setItem("user", JSON.stringify(user));
@@ -54,7 +73,7 @@ const authSlice = createSlice({
       state.accessToken = null;
       state.refreshToken = null;
       state.isAuthenticated = false;
-      state.isLoading = false; // Keep loading false
+      // state.isLoading = false; // Keep loading false
       localStorage.removeItem("tokens");
       localStorage.removeItem("user");
     },
@@ -99,7 +118,7 @@ const authSlice = createSlice({
       }
 
       // Always set loading to false after checking
-      state.isLoading = false;
+      // state.isLoading = false;
     },
   },
 });

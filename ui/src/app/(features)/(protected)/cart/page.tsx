@@ -48,17 +48,10 @@ const Page = () => {
   const updateCartItem = useUpdateCartItem();
   const removeCartItem = useRemoveCartItem();
   const clearCart = useClearCart();
+  const router = useRouter();
 
   const cartItems: CartItem[] = cartData?.items || [];
 
-  const router = useRouter();
-  // const subtotal = cartItems.reduce((sum, item) => {
-  //   return sum + float(item.product.price) * float(item.quantity);
-  // }, 0);
-
-  // const shipping = subtotal > 50 ? 0 : 9.99;
-  // const tax = subtotal * 0.08;
-  // const total = subtotal + shipping + tax;
 
   const updateQuantity = (itemId: string, newQuantity: number) => {
     const safeQuantity = Math.max(1, parseInt(String(newQuantity), 10));
