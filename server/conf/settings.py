@@ -48,7 +48,22 @@ ALLOWED_HOSTS = [
 
 # Application definition
 
+UNFOLD_APPS = [
+    "unfold.contrib.inlines",  # optional, if special inlines are needed
+    "unfold",  # before django.contrib.admin
+    "unfold.contrib.filters",  # optional, if special filters are needed
+    "unfold.contrib.forms",  # optional, if special form elements are needed
+    "unfold.contrib.inlines",  # optional, if special inlines are needed
+    "unfold.contrib.import_export",  # optional, if django-import-export package is used
+    "unfold.contrib.guardian",  # optional, if django-guardian package is used
+    "unfold.contrib.simple_history",  # optional, if django-simple-history package is used
+    "unfold.contrib.location_field",  # optional, if django-location-field package is used
+    "unfold.contrib.constance",  # optional, if django-constance package is used
+    # "django.contrib.admin",  # required
+]
+
 INSTALLED_APPS = [
+    "unfold",  # before django.contrib.admin
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -61,7 +76,9 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "apps.user_auth",
     "apps.ecommerce",
+    # *UNFOLD_APPS,
 ]
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -99,18 +116,18 @@ WSGI_APPLICATION = "conf.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    # "default": {
-    #     "ENGINE": "django.db.backends.sqlite3",
-    #     "NAME": BASE_DIR / "db.sqlite3",
-    # }
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "production_db",
-        "USER": "unityalgo",
-        "PASSWORD": "123",
-        "HOST": "localhost",
-        "PORT": "5432",
-    },
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
+    # "default": {
+    #     "ENGINE": "django.db.backends.postgresql",
+    #     "NAME": "production_db",
+    #     "USER": "unityalgo",
+    #     "PASSWORD": "123",
+    #     "HOST": "localhost",
+    #     "PORT": "5432",
+    # },
     # "default": {
     #     "ENGINE": "django.db.backends.postgresql",
     #     "NAME": "neondb",

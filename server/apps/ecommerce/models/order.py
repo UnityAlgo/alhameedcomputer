@@ -35,8 +35,8 @@ class Order(BaseModel):
     )
 
     def __str__(self):
-        return f"Order {self.order_id or self.pk} - {self.customer}"
-
+        return self.order_id or self.id
+    
     def generate_order_id(self):
         return "#" + str(Order.objects.count() + 1).zfill(5)
         # now = timezone.now()
@@ -54,8 +54,8 @@ class Order(BaseModel):
         self.total_qty = sum(item.quantity or 0 for item in self.items.all())
 
     def save(self, *args, **kwargs):
-        if not self.order_id:
-            self.order_id = self.generate_order_id()
+        # if not self.order_id:
+        self.order_id = self.generate_order_id()
         self.calculate_total()
         super().save(*args, **kwargs)
 
