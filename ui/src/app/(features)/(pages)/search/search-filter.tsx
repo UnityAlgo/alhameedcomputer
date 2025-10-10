@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Checkbox } from "@/components/ui/checkbox";
-import { RangeSelector } from "@/components/ui/range";
+// import { RangeSelector } from "@/components/ui/range";
 
 interface MinMaxRange {
     min: number;
@@ -55,7 +55,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
         };
     });
 
-    
+
     const createSearchParams = useCallback((filters: FilterState) => {
         const params = new URLSearchParams();
 
@@ -153,8 +153,6 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
         onFiltersChange?.(filterState);
     }, []);
 
-    // Format price for display
-    const formatPrice = (value: number): string => `$${value.toLocaleString()}`;
 
     return (
         <div className="space-y-6">

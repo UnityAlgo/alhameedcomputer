@@ -1,3 +1,4 @@
+import { safeLocalStorage } from "@/utils";
 import axios from "axios";
 
 const API_URL = process.env.NEXT_PUBLIC_DJANGO_API_URL;
@@ -7,7 +8,7 @@ const axiosClient = axios.create({
 });
 
 axiosClient.interceptors.request.use((config) => {
-    const tokens = localStorage.getItem("tokens");
+    const tokens = safeLocalStorage.getItem("tokens");
     if (tokens) {
         const { access } = JSON.parse(tokens);
         if (access) {
@@ -22,7 +23,7 @@ axiosClient.interceptors.response.use(
     (response) => response,
     async (error) => {
         const originalRequest = error.config;
-        const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens") as string) : null;
+        const tokens = safeLocalStorage.getItem("tokens") ? JSON.parse(safeLocalStorage.getItem("tokens") as string) : null;
         if (!tokens || !tokens?.access || !tokens.refresh) {
             return Promise.reject(error);
         }
@@ -33,12 +34,12 @@ axiosClient.interceptors.response.use(
             const response = await axios.post(API_URL + "api/login/refresh", { refresh })
 
             if (response.status != 200) {
-                localStorage.removeItem("token");
+                safeLocalStorage.removeItem("token");
                 window.location.href = "/"
             }
 
             const updatedTokens = { "access": response.data.access, refresh }
-            localStorage.setItem("tokens", JSON.stringify(updatedTokens))
+            safeLocalStorage.setItem("tokens", JSON.stringify(updatedTokens))
 
             originalRequest.headers.Authorization = `Bearer ${response.data.access}`;
             return axiosClient(originalRequest);

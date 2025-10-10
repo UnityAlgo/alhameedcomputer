@@ -1,12 +1,13 @@
 "use client";
 
+import { safeLocalStorage } from "@/utils";
 import { useEffect, useState } from "react";
 
 export function useCart() {
   const [cart, setCart] = useState<any[]>([]);
 
   useEffect(() => {
-    const stored = localStorage.getItem("cart");
+    const stored = safeLocalStorage.getItem("cart");
     if (stored) {
       try {
         setCart(JSON.parse(stored));
@@ -18,7 +19,7 @@ export function useCart() {
 
   useEffect(() => {
     const handleStorage = () => {
-      const stored = localStorage.getItem("cart");
+      const stored = safeLocalStorage.getItem("cart");
       if (stored) {
         try {
           setCart(JSON.parse(stored));
@@ -33,14 +34,14 @@ export function useCart() {
 
   const updateCart = (newCart: any[]) => {
     setCart(newCart);
-    localStorage.setItem("cart", JSON.stringify(newCart));
+    safeLocalStorage.setItem("cart", JSON.stringify(newCart));
 
     window.dispatchEvent(new Event("cartUpdated"));
   };
 
   useEffect(() => {
     const handleCartUpdate = () => {
-      const stored = localStorage.getItem("cart");
+      const stored = safeLocalStorage.getItem("cart");
       if (stored) {
         try {
           setCart(JSON.parse(stored));

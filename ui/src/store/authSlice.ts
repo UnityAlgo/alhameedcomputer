@@ -1,6 +1,7 @@
 "use client";
 import { jwtDecode } from "jwt-decode";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { safeLocalStorage } from "@/utils";
 
 interface User {
   id: string;
@@ -33,8 +34,8 @@ const initialState: AuthState = {
 };
 
 const getInitialState = (): AuthState => {
-  const tokens = localStorage.getItem("tokens") ? JSON.parse(localStorage.getItem("tokens") as string) : null
-  const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user") as string) : null
+  const tokens = safeLocalStorage.getItem("tokens") ? JSON.parse(safeLocalStorage.getItem("tokens") as string) : null
+  const user = safeLocalStorage.getItem("user") ? JSON.parse(safeLocalStorage.getItem("user") as string) : null
   if (!user || !tokens) {
     return {
       isAuthenticated: false,
@@ -64,8 +65,8 @@ const authSlice = createSlice({
       state.user = user;
       // state.isLoading = false; // Set loading to false after login
 
-      localStorage.setItem("tokens", JSON.stringify(tokens));
-      localStorage.setItem("user", JSON.stringify(user));
+      safeLocalStorage.setItem("tokens", JSON.stringify(tokens));
+      safeLocalStorage.setItem("user", JSON.stringify(user));
     },
 
     logout: (state) => {
@@ -74,13 +75,13 @@ const authSlice = createSlice({
       state.refreshToken = null;
       state.isAuthenticated = false;
       // state.isLoading = false; // Keep loading false
-      localStorage.removeItem("tokens");
-      localStorage.removeItem("user");
+      safeLocalStorage.removeItem("tokens");
+      safeLocalStorage.removeItem("user");
     },
 
     loadFromStorage: (state) => {
-      const tokens = localStorage.getItem("tokens");
-      const user = localStorage.getItem("user");
+      const tokens = safeLocalStorage.getItem("tokens");
+      const user = safeLocalStorage.getItem("user");
 
       if (tokens && user) {
         try {
@@ -97,8 +98,8 @@ const authSlice = createSlice({
             state.accessToken = null;
             state.refreshToken = null;
             state.isAuthenticated = false;
-            localStorage.removeItem("tokens");
-            localStorage.removeItem("user");
+            safeLocalStorage.removeItem("tokens");
+            safeLocalStorage.removeItem("user");
           } else {
             // Token valid, load user data
             state.accessToken = parsedTokens.access;
@@ -112,8 +113,8 @@ const authSlice = createSlice({
           state.accessToken = null;
           state.refreshToken = null;
           state.isAuthenticated = false;
-          localStorage.removeItem("tokens");
-          localStorage.removeItem("user");
+          safeLocalStorage.removeItem("tokens");
+          safeLocalStorage.removeItem("user");
         }
       }
 
