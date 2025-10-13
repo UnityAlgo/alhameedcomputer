@@ -2,70 +2,63 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
+import { Spinner } from "@/components/ui/spinner";
 import { useMutation } from "@tanstack/react-query";
 import { API_URL } from "@/api";
-import { Spinner } from "@/components/ui/spinner";
-import { Dispatch, UnknownAction } from "@reduxjs/toolkit";
-import { login } from "@/store/authSlice";
+import axios from "axios";
+import useAuthStore, { useLogin } from "@/features/auth";
 
-const useLoginMutation = (dispatch?: Dispatch<UnknownAction>) => {
-  return useMutation({
-    mutationFn: (payload: object) => {
-      return axios.post(API_URL + "api/login", payload);
-    },
-    onSuccess: (response) => {
 
-      const payload = {
-        tokens: response.data.tokens,
-        user: response.data.user
-      }
-      dispatch?.(login(payload))
-
-    }
-  })
-}
+// const useLoginMutation = (dispatch?: Dispatch<UnknownAction>) => {
+//   return useMutation({
+//     mutationFn: (payload: object) => {
+//       return axios.post(API_URL + "api/login", payload);
+//     },
+//     onSuccess: (response) => {
+//       const payload = {
+//         tokens: response.data.tokens,
+//         user: response.data.user
+//       }
+//       // dispatch?.(login(payload))
+//     }
+//   })
+// }
 
 
 export default function Index() {
   const router = useRouter();
-  const dispatch = useDispatch();
-  const mutation = useLoginMutation(dispatch);
+  const authStore = useAuthStore();
+  const mutation = useLogin(authStore);
   const [errorMsg, setErrorMsg] = useState("");
 
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (errorMsg) {
-      setErrorMsg("");
-    }
-
-    const form = new FormData(event.target);
+    const form = new FormData(event.currentTarget);
 
     const payload = {
-      "email": form.get("email"),
-      "password": form.get("password"),
+      "email": form.get("email") as string,
+      "password": form.get("password") as string,
     }
-    mutation.mutate(payload);
 
+    mutation.mutate(payload);
   };
 
-  useEffect(() => {
-    if (mutation.isSuccess) {
-      toast.success("Successfully logged in!");
-      router.push("/");
-    }
-    if (mutation.isError) {
-      const message = mutation.error.response?.message || "Invalid login credentials"
-      setErrorMsg(message);
-      console.log(message)
-      toast.error(message);
-    }
-  }, [mutation.isSuccess, mutation.isError])
+  // useEffect(() => {
+  //   if (mutation.isSuccess) {
+  //     toast.success("Successfully logged in!");
+  //     router.push("/");
+  //   }
+  //   if (mutation.isError) {
+  //     const message = mutation.error.response?.message || "Invalid login credentials"
+  //     setErrorMsg(message);
+  //     console.log(message)
+  //     toast.error(message);
+  //   }
+  // }, [mutation.isSuccess, mutation.isError])
 
   return (
     <div>
@@ -78,7 +71,6 @@ export default function Index() {
 
 
         <form onSubmit={handleSubmit}>
-
           <div className="mb-2">
             <input
               type="email"
