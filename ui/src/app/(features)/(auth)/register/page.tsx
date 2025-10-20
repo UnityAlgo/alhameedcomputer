@@ -78,7 +78,7 @@ const formsLayout =
     {
       "label": "Phone Number",
       "type": "text",
-      "name": "phone_number",
+      "name": "mobile",
       "placeholder": "Phone Number",
       "required": true,
       validator: (value: string) => validatePhoneNumber(value),

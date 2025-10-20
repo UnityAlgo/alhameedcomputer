@@ -11,9 +11,10 @@ import {
   LogOut,
   LayoutDashboardIcon,
 } from "lucide-react";
+import useAuthStore from "@/features/auth";
 
 const ProfileSidebar = () => {
-  const { isAuthenticated, user, handleLogout } = useAuth();
+  const { isAuthenticated, user, logout } = useAuthStore();
   const pathname = usePathname();
 
   const tabs = [
@@ -21,7 +22,7 @@ const ProfileSidebar = () => {
     { id: "orders", label: "Orders", icon: Package, href: "/orders" },
     { id: "addresses", label: "Addresses", icon: MapPin, href: "/addresses" },
     // { id: "wishlist", label: "Wishlist", icon: Heart, href: "/wishlist" },
-    { id: "logout", label: "Logout", icon: LogOut, action: handleLogout },
+    { id: "logout", label: "Logout", icon: LogOut, action: logout },
   ];
 
   return (

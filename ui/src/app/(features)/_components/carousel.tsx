@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useRef, useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -23,7 +24,7 @@ const HERO_SLIDES: Slide[] = [
 
 
 
-const Carousel = ({ slides, autoPlay=true }: { slides: Slide[],  }) => {
+const Carousel = ({ slides, autoPlay=true }: { slides: Slide[], autoPlay: boolean  }) => {
   const [index, setIndex] = useState(0);
   const count = slides.length;
   const intervalRef = useRef<number | null>(null);
@@ -72,10 +73,9 @@ const Carousel = ({ slides, autoPlay=true }: { slides: Slide[],  }) => {
         ))}
       </div>
 
-      {/* Navigation Buttons */}
       <button
         onClick={prev}
-        className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-1.5 md:p-2 rounded-full shadow-lg transition-all hover:scale-110"
+        className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white text-gray-800 p-1.5 md:p-2 rounded-full shadow-lg transition-all hover:scale-110"
         aria-label="Previous slide"
       >
         <ChevronLeft className="w-4 h-4 md:w-6 md:h-6" />
@@ -83,7 +83,7 @@ const Carousel = ({ slides, autoPlay=true }: { slides: Slide[],  }) => {
       
       <button
         onClick={next}
-        className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-1.5 md:p-2 rounded-full shadow-lg transition-all hover:scale-110"
+        className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white text-gray-800 p-1.5 md:p-2 rounded-full shadow-lg transition-all hover:scale-110"
         aria-label="Next slide"
       >
         <ChevronRight className="w-4 h-4 md:w-6 md:h-6" />

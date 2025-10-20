@@ -8,8 +8,8 @@ import BuyNowButton from "@/components/products/BuyButton";
 import { useAddToCart } from "@/api/cart";
 import toast from "react-hot-toast";
 import { Spinner } from "@/components/ui/spinner";
-import { useAuth } from "@/hooks";
 import { useRouter } from "next/navigation";
+import useAuthStore from "@/features/auth";
 
 interface ProductDetailsProps {
   product: Product;
@@ -18,7 +18,7 @@ interface ProductDetailsProps {
 export const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   const [isLoading, setLoading] = useState(false);
   const addToCart = useAddToCart();
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user } = useAuthStore();
   const router = useRouter();
 
   const handleAddToCart = () => {

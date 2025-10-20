@@ -28,7 +28,7 @@ from apps.ecommerce.api.brand.views import (
 )
 
 from apps.ecommerce.api.customer.views import (  
-    CustomerProfileAPIView
+    ProfileAPIView
 )
 
 from apps.ecommerce.api.address.views import (  
@@ -71,7 +71,7 @@ urlpatterns = [
     path("api/brands/<uuid:pk>", BrandDetailAPIView.as_view(), name="brand-detail"),
  
     # Customer Profile
-    path("api/profile", CustomerProfileAPIView.as_view(), name="customer-profile"),
+    path("api/profile", ProfileAPIView.as_view(), name="customer-profile"),
 
     # Address Management
     path("api/addresses", AddressListCreateAPIView.as_view(), name="address-list-create"),

@@ -12,22 +12,6 @@ import axios from "axios";
 import useAuthStore, { useLogin } from "@/features/auth";
 
 
-// const useLoginMutation = (dispatch?: Dispatch<UnknownAction>) => {
-//   return useMutation({
-//     mutationFn: (payload: object) => {
-//       return axios.post(API_URL + "api/login", payload);
-//     },
-//     onSuccess: (response) => {
-//       const payload = {
-//         tokens: response.data.tokens,
-//         user: response.data.user
-//       }
-//       // dispatch?.(login(payload))
-//     }
-//   })
-// }
-
-
 export default function Index() {
   const router = useRouter();
   const authStore = useAuthStore();
@@ -46,24 +30,28 @@ export default function Index() {
 
     mutation.mutate(payload);
   };
+  useEffect(() => {
+    if (mutation.isError) {
+      const message = "Invalid login credentials"
+      setErrorMsg(message);
+      toast.error(message);
+    }
 
-  // useEffect(() => {
-  //   if (mutation.isSuccess) {
-  //     toast.success("Successfully logged in!");
-  //     router.push("/");
-  //   }
-  //   if (mutation.isError) {
-  //     const message = mutation.error.response?.message || "Invalid login credentials"
-  //     setErrorMsg(message);
-  //     console.log(message)
-  //     toast.error(message);
-  //   }
-  // }, [mutation.isSuccess, mutation.isError])
+    if (mutation.isSuccess) {
+      setErrorMsg("");
+      toast.success("Login successful");
+      setTimeout(() => {
+        // router.push("/");
+      }, 300)
+    }
+
+  }, [mutation.isSuccess, mutation.isError])
+
 
   return (
     <div>
 
-      <div className="max-w-[30rem] mx-auto py-12">
+      <div className="max-w-[30rem] mx-auto py-12 px-4">
         <div className="text-center mb-6">
           <h1 className="text-xl font-semibold mb-2">Login</h1>
           <p className="text-sm">Enter your email and password to securely access your account.</p>
@@ -99,11 +87,7 @@ export default function Index() {
               type="submit"
               className="bg-primary text-primary-foreground text-center w-full rounded-md py-2 mb-4 flex items-center justify-center gap-2"
             >
-              {
-                mutation.isPending ? <Spinner color="light" size="md" /> : <span>Log In</span>
-              }
-
-
+              {mutation.isPending ? <Spinner color="light" size="md" /> : <span>Log In</span>}
             </button>
             <div className="text-center text-sm">
               Not have an Account? {" "}

@@ -1,10 +1,19 @@
-import { create, StoreApi, UseBoundStore } from 'zustand';
-import { clearAuthCookies, setAuthCookies } from '@/lib/auth-actions';
+import axios from 'axios';
+import { jwtDecode } from "jwt-decode";
+import { create } from 'zustand';
 import { useMutation } from '@tanstack/react-query';
 
-import axios from 'axios';
 import { API_URL } from '@/api';
+import { safeLocalStorage } from '@/utils';
 
+type User = {
+    id: string;
+    email: string;
+    username: string;
+    mobile?: string;
+    dob?: string;
+    full_name?: string;
+}
 
 type AuthTokens = {
     access: string;
@@ -12,25 +21,55 @@ type AuthTokens = {
 }
 
 interface AuthStore {
-    user: { id: string; username: string; email: string } | null;
+    isAuthenticated: boolean;
+    user: User | null;
     tokens?: AuthTokens | null;
     login: (payload: { tokens: AuthTokens }) => void;
     logout: () => void;
 }
 
+const getAuthTokens = () => {
+    const tokens = safeLocalStorage.getItem("tokens");
+
+    if (!tokens) {
+        return null;
+    }
+
+    return JSON.parse(tokens) as AuthTokens;
+}
+
+
+const getUser = (): User | null => {
+    const tokens = safeLocalStorage.getItem("tokens");
+
+    if (!tokens) {
+        return null;
+    }
+
+    const decoded = jwtDecode(JSON.parse(tokens).access) as User;
+    return {
+        email: decoded.email,
+        id: decoded.id,
+        username: decoded.username,
+        full_name: decoded.full_name,
+        mobile: decoded.mobile,
+        dob: decoded.dob,
+    };
+}
 const useAuthStore = create<AuthStore>((set, get) => ({
-    user: null,
-    tokens: null,
+    tokens: getAuthTokens(),
+    user: getUser(),
+    isAuthenticated: !!getAuthTokens(),
+
     login: async (payload: { tokens: AuthTokens }) => set(() => {
-        setAuthCookies(payload.tokens);
+        safeLocalStorage.setItem("tokens", JSON.stringify(payload.tokens));
         return {
             tokens: payload.tokens,
         };
     }),
     logout: () => set(() => {
-        clearAuthCookies();
+        safeLocalStorage.removeItem("tokens");
         return {
-            user: null,
             tokens: null,
         }
     }),

@@ -39,7 +39,7 @@ const ProductCard = ({ product }: { product: ProductType }) => (
     >
         <div className="rounded-md border border-border shadow-sm transition-all"
         >
-            <div className="h-[240px] ">
+            <div className="h-[200px] md:h-[240px]">
                 <img
                     src={product.cover_image || "/images/no-image.jpg"}
                     alt={product.product_name}
@@ -52,9 +52,8 @@ const ProductCard = ({ product }: { product: ProductType }) => (
                         {product.product_name}
                     </h4>
                 </div>
-
                 <div><Rating count={product.rating} /></div>
-                <div className="font-medium">{formatCurrency(product.price)}</div>
+                <div className="font-medium text-sm md:text-base">{formatCurrency(product.price)}</div>
             </div>
         </div>
     </Link>

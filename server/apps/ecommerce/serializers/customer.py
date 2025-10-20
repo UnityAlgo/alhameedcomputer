@@ -2,6 +2,22 @@ from rest_framework import serializers
 from apps.ecommerce.models.customer import Customer
 
 
+class ProfileSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(source="user.email", read_only=True)
+    full_name = serializers.CharField(source="user.username", required=False)
+    mobile = serializers.CharField(source="user.mobile", required=False)
+
+    class Meta:
+        model = Customer
+        fields = [
+            "id",
+            "full_name",
+            "email",
+            "mobile",
+            "created_at",
+        ]
+
+
 class CustomerProfileSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(source="user.email", read_only=True)
     full_name = serializers.CharField(source="user.username", required=False)

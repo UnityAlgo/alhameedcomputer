@@ -1,6 +1,29 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { axiosClient } from "@/api";
 
+const useCartQuery = () => {
+  return useQuery({
+    queryKey: ["get-cart"],
+    queryFn: async () => {
+      const request = await axiosClient.get("api/customer/cart");
+      return request.data;
+    },
+    retry: 3
+  });
+};
+
+const useCartMutation = () => {
+  return useMutation({
+    mutationFn: async (payload: { product: string; quantity: number, action: string }) => {
+      const request = await axiosClient.post(`api/customer/cart`, payload);
+      return request.data;
+    }
+  });
+};
+
+
+export { useCartQuery, useCartMutation };
+
 
 export const useCart = () => {
   return useQuery({
@@ -23,7 +46,7 @@ export const useAddToCart = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["get-cart"] });
-      
+
     },
     onError: (error: any) => {
       throw error.response?.data?.detail || "Failed to add to cart";

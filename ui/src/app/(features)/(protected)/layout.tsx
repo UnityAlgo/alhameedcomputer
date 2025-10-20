@@ -1,14 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-// import { useAuth } from "@/hooks/index";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 // import { cookies } from 'next/headers'
 
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
+  // console.log("layout rendered");
   // const { isAuthenticated, user } = useAuth();
   // const router = useRouter();
 

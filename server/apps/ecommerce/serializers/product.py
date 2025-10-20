@@ -46,13 +46,15 @@ class ProductSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         images = []
         for image_obj in obj.images.all():
-            if image_obj.image:
-                url = (
-                    request.build_absolute_uri(image_obj.image.url)
-                    if request
-                    else image_obj.image.url
-                )
-                images.append(url)
+            if not image_obj.image:
+                continue
+            url = (
+                request.build_absolute_uri(image_obj.image.url)
+                if request
+                else image_obj.image.url
+            )
+            images.append(url)
+
         return images
 
     def get_cover_image(self, obj: Product):

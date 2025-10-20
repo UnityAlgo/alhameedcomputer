@@ -1,6 +1,7 @@
 "use client";
+
 import React, { useState, useEffect, useRef } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+// import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCategories } from "@/api/category";
 import Link from "next/link";
 import { Spinner } from "@/components/ui/spinner";
@@ -17,14 +18,11 @@ const CategoryCarousel: React.FC<{
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
   const getItemWidth = () => {
-    if (typeof window !== 'undefined') {
-      const width = window.innerWidth;
-      if (width < 480) return 110; // xs
-      if (width < 640) return 120; // sm
-      if (width < 768) return 130; // md
-      if (width < 1024) return 150; // lg
-      return 150; // xl and up
-    }
+    const width = window.innerWidth || 0;
+    if (width < 480) return 110; // xs
+    if (width < 640) return 120; // sm
+    if (width < 768) return 130; // md
+    if (width < 1024) return 150; // lg
     return 150;
   };
 

@@ -15,11 +15,16 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 
 import axios from "axios";
 import { API_URL } from "@/api";
+import useAuthStore from "@/features/auth";
 
 export const Header = () => {
-  const { isAuthenticated, user, handleLogout } = useAuth();
-  // const { cart } = useCart();
+  const { isAuthenticated, user, logout } = useAuthStore();
 
+
+  const handleLogout = () => {
+    logout()
+    window.location.href = "/login";
+  }
   return (
     <>
       <header className="shadow-sm">
@@ -27,8 +32,8 @@ export const Header = () => {
 
           <Link href="/">
             <div className="flex items-center gap-2">
-              <img src="/logo.png" alt="UnityStore" className="h-16 w-16 object-cover" />
-
+              <img src="/logo.png" alt="UnityStore" className="h-16 w-16 object-cover hidden md:block" />
+              <span className="text-xl font-bold text-red-800 md:hidden">AH Computers</span>
             </div>
           </Link>
 
@@ -37,10 +42,7 @@ export const Header = () => {
           </div>
 
           <div className="flex items-center justify-end gap-4 grid-rows-1 col-span-1">
-            <Link
-              href="/cart"
-              className=""
-            >
+            <Link href="/cart" >
               <ShoppingCart className="size-5" />
             </Link>
 
@@ -77,7 +79,9 @@ export const Header = () => {
                   </ul>
                 </PopoverContent>
               </Popover>
-            ) : <Link href="/login" className="text-sm">Sign In</Link>}
+            ) :
+              <Link href="/login" className="text-sm">Sign In</Link>
+            }
           </div>
 
         </div>

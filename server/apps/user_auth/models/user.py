@@ -35,7 +35,6 @@ class User(AbstractUser):
     updated_at = models.DateTimeField(auto_now=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     email = models.EmailField(unique=True)
-    phone_number = models.CharField(max_length=50, null=True, blank=True)
     dob = models.DateField(null=True, blank=True)
     username = models.CharField(max_length=50, unique=False, null=False)
     mobile = models.CharField(max_length=50, unique=True, null=True, blank=True)

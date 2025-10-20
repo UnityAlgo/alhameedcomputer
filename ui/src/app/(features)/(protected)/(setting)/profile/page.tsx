@@ -11,18 +11,17 @@ import {
   X,
   UserRound,
 } from "lucide-react";
-import Image from "next/image";
-import { useProfile, useUpdateProfile } from "@/api/profile";
+import { useProfileQuery, useUpdateProfile } from "@/api/profile";
 
-const ProfilePage = () => {
-  const { data: profileData, isLoading } = useProfile();
+const Index = () => {
+  const { data: profileData, isLoading } = useProfileQuery();
   const updateProfile = useUpdateProfile();
   const [isEditing, setIsEditing] = useState(false);
 
   const [formData, setFormData] = useState({
     full_name: "",
     email: "",
-    phone_number: "",
+    mobile: "",
     profile_picture: undefined as File | undefined,
   });
 
@@ -31,7 +30,7 @@ const ProfilePage = () => {
       setFormData({
         full_name: profileData.full_name || "",
         email: profileData.email || "",
-        phone_number: profileData.phone_number || "",
+        mobile: profileData.mobile || "",
         profile_picture: undefined,
       });
     }
@@ -48,7 +47,7 @@ const ProfilePage = () => {
       setFormData({
         full_name: profileData.full_name || "",
         email: profileData.email || "",
-        phone_number: profileData.phone_number || "",
+        mobile: profileData.mobile || "",
         profile_picture: undefined,
       });
     }
@@ -69,29 +68,9 @@ const ProfilePage = () => {
       <div className="p-4 sm:p-6 bg-gray-50 mb-6 rounded-lg">
         <div className="flex flex-col sm:flex-row items-center space-x-4 space-y-4 sm:space-y-0">
           <div className="relative">
-            <div className="w-16 h-16 rounded-full overflow-hidden bg-black/10 flex items-center justify-center">
-              {formData.profile_picture ? (
-                <Image
-                  src={URL.createObjectURL(formData.profile_picture)}
-                  alt="Preview"
-                  width={64}
-                  height={64}
-                  className="object-cover w-full h-full"
-                />
-              ) : profileData?.profile_picture ? (
-                <Image
-                  src={profileData.profile_picture}
-                  alt="Profile"
-                  width={64}
-                  height={64}
-                  className="object-cover w-full h-full"
-                />
-              ) : (
-                <UserRound className="h-8 w-8 text-gray-600" />
-              )}
-            </div>
-
-            {isEditing && (
+            <img src="https://cdn-icons-png.flaticon.com/512/552/552721.png" alt="" className="h-12 w-12" />
+    
+            {/* {isEditing && (
               <label className="absolute -bottom-1 -right-1 w-6 h-6 bg-white text-gray-600 rounded-full flex items-center justify-center shadow-sm border border-gray-200 hover:bg-gray-100 transition-colors cursor-pointer">
                 <Camera className="h-3 w-3" />
                 <input
@@ -108,7 +87,7 @@ const ProfilePage = () => {
                   }}
                 />
               </label>
-            )}
+            )} */}
           </div>
           <div className="text-center sm:text-left">
             <h3 className="font-semibold text-base sm:text-lg">
@@ -128,7 +107,7 @@ const ProfilePage = () => {
               Personal Information
             </h3>
 
-            <button
+            {/* <button
               onClick={() => {
                 if (isEditing) {
                   resetForm();
@@ -145,7 +124,7 @@ const ProfilePage = () => {
               <span className="text-xs sm:text-sm">
                 {isEditing ? "Cancel" : "Edit Profile"}
               </span>
-            </button>
+            </button> */}
           </div>
 
           <div className="space-y-6 sm:space-y-8 mt-4">
@@ -193,15 +172,15 @@ const ProfilePage = () => {
               {isEditing ? (
                 <input
                   type="tel"
-                  value={formData.phone_number}
+                  value={formData.mobile}
                   onChange={(e) =>
-                    setFormData({ ...formData, phone_number: e.target.value })
+                    setFormData({ ...formData, mobile: e.target.value })
                   }
                   className="flex-1 border border-gray-300 rounded-md px-2 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm"
                 />
               ) : (
                 <span className="text-gray-900 text-sm sm:text-base">
-                  {formData.phone_number}
+                  {formData.mobile}
                 </span>
               )}
             </div>
@@ -227,4 +206,4 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage;
+export default Index;

@@ -23,9 +23,7 @@ const Index = () => {
 
     const searchProducts = useSearchProducts(serializeParams(params));
     const results = searchProducts.data?.results;
-
     const currentPage = integer(params.get("page")) || 1;
-
     const pageCount = results ? Math.ceil(results.total_count / results.page_size) : 0;
 
 
@@ -71,8 +69,6 @@ const Index = () => {
                             </div>}
 
 
-                            {/*  */}
-                            <ProductGrid products={results.products} />
                         </div>
                     </div>
                     <div className="flex justify-end mt-4">

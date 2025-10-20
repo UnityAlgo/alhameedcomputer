@@ -1,4 +1,4 @@
-from rest_framework import serializers 
+from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from ..models import User
@@ -8,11 +8,13 @@ class AuthTokenSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user: User):
         token = super().get_token(user)
-        token["user_id"] = user.id
+        token["id"] = user.id
         token["username"] = user.username
         token["email"] = user.email
+        token["full_name"] = user.get_full_name()
+        token["mobile"] = user.mobile
+        token["dob"] = user.dob.isoformat() if user.dob else None
         return token
-    
 
 
 class LoginSerializer(serializers.Serializer):

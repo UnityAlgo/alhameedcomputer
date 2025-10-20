@@ -3,7 +3,11 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from apps.user_auth.serializers import LoginSerializer, UserSerializer
+from apps.user_auth.serializers import (
+    LoginSerializer,
+    UserSerializer,
+    AuthTokenSerializer,
+)
 
 
 class LoginAPI(APIView):
@@ -24,9 +28,11 @@ class LoginAPI(APIView):
             )
 
         user_serializer = UserSerializer(user)
-        refresh = RefreshToken.for_user(user)
-        tokens = {"access": str(refresh.access_token), "refresh": str(refresh)}
+        token_serializer = AuthTokenSerializer()
+        refresh = token_serializer.get_token(user)
 
+        tokens = {"access": str(refresh.access_token), "refresh": str(refresh)}
+        print(tokens)
         return Response(
             data={
                 "tokens": tokens,

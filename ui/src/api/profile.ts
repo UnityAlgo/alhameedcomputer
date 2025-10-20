@@ -3,18 +3,18 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { axiosClient } from "@/api";
 
-// -------- Fetch Profile --------
-export const useProfile = () => {
+
+export const useProfileQuery = () => {
   return useQuery({
     queryKey: ["profile"],
     queryFn: async () => {
       const res = await axiosClient.get("api/profile");
       return res.data;
     },
+    retry: 3,
   });
 };
 
-// -------- Update Profile --------
 export const useUpdateProfile = () => {
   const queryClient = useQueryClient();
 
