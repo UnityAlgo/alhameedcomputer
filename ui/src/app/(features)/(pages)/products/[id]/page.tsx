@@ -13,6 +13,7 @@ export const generateMetadata = async ({ params }: { params: { id: string } }) =
   try {
     const response = await axios.get(API_URL + "api/products?id=" + params.id);
     const product = response.data;
+    console.log(product)
 
     const productName = product.product_name || "Product";
     const brandName = product.brand?.name || "";
@@ -73,7 +74,7 @@ export const generateMetadata = async ({ params }: { params: { id: string } }) =
 export default async function ProductPage({ params }: { params: { id: string } }) {
   const response = await axios.get(API_URL + "api/products?id=" + params.id);
   const product = response.data
-    
+
   return (
     <div className="max-w-6xl mx-auto">
       <div className="px-2 md:px-4 py-4">
@@ -92,6 +93,12 @@ export default async function ProductPage({ params }: { params: { id: string } }
                 {product.product_name}
               </h1>
               <h2 className="">{formatCurrency(product.price)}</h2>
+              {product.is_listing_item && (
+                <h2 className="text-lg font-semibold text-yellow-500 mt-3">
+                  Please confirm the price before placing your order.
+                  Contact us: <a href="tel:02136642335" className="underline">(021) 36642335</a> | <a href="tel:+923029779392" className="underline">+92 302-9779392</a>
+                </h2>
+              )}
             </div>
 
             <div dangerouslySetInnerHTML={{ __html: product.short_description }} className="prose"></div>

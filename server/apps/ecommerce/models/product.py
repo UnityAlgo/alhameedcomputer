@@ -30,6 +30,7 @@ class Product(BaseModel):
     rating = models.FloatField(default=0.0)
     published = models.BooleanField(default=False)
     featured = models.BooleanField(default=False)
+    is_listing_item = models.BooleanField(default=False)
 
     def __str__(self):
         return self.product_name

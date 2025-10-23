@@ -35,6 +35,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "category",
             "brand",
             "price",
+            "is_listing_item",
             "rating",
             "cover_image",
             "images",
