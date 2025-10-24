@@ -41,7 +41,7 @@ export default function Index() {
       setErrorMsg("");
       toast.success("Login successful");
       setTimeout(() => {
-        // router.push("/");
+        router.push("/");
       }, 300)
     }
 

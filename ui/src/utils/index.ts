@@ -32,7 +32,8 @@ function decimal(value: any, precision = 2) {
 
 function formatCurrency(value: any, currency: string = "PKR"): string {
     if (isNaN(parseFloat(value))) return "₨ 0.00";
-    return new Intl.NumberFormat("en-PH", {
+
+    return new Intl.NumberFormat("en-PK", {
         style: "currency",
         currency: currency,
     }).format(value);

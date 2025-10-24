@@ -10,14 +10,17 @@ class ProductAPIView(APIView):
         request = self.request
 
         if not request.GET.get("id"):
+            
             product_queryset = Product.objects.filter(published=True).annotate(
                 price=price_subquery
-            )[:25]
+            ).order_by("-featured")[:30]
+
+
             serializer = ProductListSerializer(
                 product_queryset, many=True, context={"request": self.request}
             )
-
             return Response(serializer.data)
+        
 
         try:
             product_queryset = Product.objects.annotate(price=price_subquery).get(

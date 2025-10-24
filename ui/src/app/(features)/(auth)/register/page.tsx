@@ -226,7 +226,7 @@ const Index = () => {
               <button
                 disabled={mutation.isPending}
                 type="submit"
-                className="bg-primary text-primary-foreground text-center w-full rounded-md py-2 mb-4 flex items-center justify-center gap-2"
+                className="bg-primary text-primary-foreground text-center w-full rounded-md py-2 mb-4 flex items-center justify-center gap-2 cursor-pointer"
               >
                 {
                   mutation.isPending ? <Spinner color="light" size="md" /> : <span>Sign Up</span>

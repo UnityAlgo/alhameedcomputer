@@ -17,6 +17,7 @@ class SearchProductAPIView(APIView):
         search_query = str(request.get("query", "")).strip()
         min_price = request.get("min_price", 0)
         max_price = request.get("max_price", 0)
+
         categories = (
             request.get("categories").split(",") if request.get("categories") else []
         )
@@ -47,7 +48,7 @@ class SearchProductAPIView(APIView):
         brands = Brand.objects.all().distinct()
         categories = Category.objects.all().distinct()
 
-        paginator = ProductPagination(page_size=10)
+        paginator = ProductPagination(page_size=30)
         paginated_products = paginator.paginate_queryset(product_queryset, self.request)
         serializer = ProductListSerializer(
             paginated_products, many=True, context={"request": self.request}

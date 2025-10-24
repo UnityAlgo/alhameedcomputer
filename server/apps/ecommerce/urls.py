@@ -17,12 +17,12 @@ from apps.ecommerce.api.order.views import (
     OrderCreateAPIView,
     OrderCancelAPIView,
 )
-from apps.ecommerce.api.wishlist.views import (
-    WishlistRetrieveAPIView,
-    WishlistAddItemAPIView,
-    WishlistRemoveItemAPIView,
-    WishlistClearAPIView,
-)
+# from apps.ecommerce.api.wishlist.views import (
+#     WishlistRetrieveAPIView,
+#     WishlistAddItemAPIView,
+#     WishlistRemoveItemAPIView,
+#     WishlistClearAPIView,
+# )
 from apps.ecommerce.api.brand.views import (  
     BrandListAPIView, BrandDetailAPIView
 )
@@ -60,11 +60,12 @@ urlpatterns = [
     path("api/products/<uuid:product_id>/reviews", ProductReviewListCreateAPIView.as_view(), name="product-reviews"),
     path("api/reviews/<uuid:pk>", ProductReviewDetailAPIView.as_view(), name="review-detail"),
 
-    # Wishlist
-    path("api/wishlist/", WishlistRetrieveAPIView.as_view(), name="wishlist-retrieve"),
-    path("api/wishlist/add/", WishlistAddItemAPIView.as_view(), name="wishlist-add-item"),
-    path("api/wishlist/<uuid:product_id>/remove/", WishlistRemoveItemAPIView.as_view(), name="wishlist-remove-item"),
-    path("api/wishlist/clear/", WishlistClearAPIView.as_view(), name="wishlist-clear"),
+
+    # # Wishlist
+    # path("api/wishlist/", WishlistRetrieveAPIView.as_view(), name="wishlist-retrieve"),
+    # path("api/wishlist/add/", WishlistAddItemAPIView.as_view(), name="wishlist-add-item"),
+    # path("api/wishlist/<uuid:product_id>/remove/", WishlistRemoveItemAPIView.as_view(), name="wishlist-remove-item"),
+    # path("api/wishlist/clear/", WishlistClearAPIView.as_view(), name="wishlist-clear"),
 
     # Brand URLs 
     path("api/brands", BrandListAPIView.as_view(), name="brand-list"),
@@ -74,8 +75,8 @@ urlpatterns = [
     path("api/profile", ProfileAPIView.as_view(), name="customer-profile"),
 
     # Address Management
-    path("api/addresses", AddressListCreateAPIView.as_view(), name="address-list-create"),
-    path("api/addresses/<uuid:pk>", AddressDetailAPIView.as_view(), name="address-detail"),
+    # path("api/addresses", AddressListCreateAPIView.as_view(), name="address-list-create"),
+    # path("api/addresses/<uuid:pk>", AddressDetailAPIView.as_view(), name="address-detail"),
 
 ]
 

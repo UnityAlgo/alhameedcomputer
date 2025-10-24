@@ -1,9 +1,8 @@
 from decimal import Decimal
 from django.db import models
 from django.utils import timezone
-from django.db.models import Avg, Q, OuterRef
+from django.db.models import Q, OuterRef
 from ckeditor.fields import RichTextField
-
 from .base import BaseModel, UOM, Currency
 from .category import Category
 
@@ -34,11 +33,6 @@ class Product(BaseModel):
 
     def __str__(self):
         return self.product_name
-
-    def update_rating(self):
-        avg_rating = self.reviews.aggregate(avg=Avg("rating"))["avg"]
-        self.rating = avg_rating if avg_rating else 0.0
-        self.save(update_fields=["rating"])
 
     @property
     def all_images(self):
@@ -77,6 +71,10 @@ class ProductImage(BaseModel):
 
     def __str__(self):
         return f"{self.product.product_name} - Image {self.display_order}"
+
+    def delete(self, *args, **kwargs):
+        self.image.delete(save=False)
+        return super().delete(*args, **kwargs)
 
 
 class PriceList(BaseModel):

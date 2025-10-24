@@ -5,20 +5,17 @@ from unfold.admin import ModelAdmin
 from .models import User
 
 
-# Admin site branding
 admin.site.site_header = "UnitytAlgo Admin"
 admin.site.site_title = "UnitytAlgo Admin"
 admin.site.index_title = "Welcome to UnityAdmin"
 
 
-# Custom User Change Form with explicit mobile field
 class UpdateUserForm(UserChangeForm):
     class Meta(UserChangeForm.Meta):
         model = User
-        fields = "__all__"  # includes 'mobile' if it's defined on the User model
+        fields = "__all__"
 
 
-# Custom User Admin
 @admin.register(User)
 class UserAdmin(ModelAdmin, BaseUserAdmin):
     form = UpdateUserForm
@@ -26,7 +23,6 @@ class UserAdmin(ModelAdmin, BaseUserAdmin):
     change_password_form = AdminPasswordChangeForm
     model = User
 
-    # Customize these based on your actual User model
     list_display = (
         "email",
         "first_name",

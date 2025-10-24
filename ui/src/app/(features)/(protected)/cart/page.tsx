@@ -24,6 +24,8 @@ import {
 } from "@/api/cart";
 import { useCreateOrder } from "@/api/orders";
 import { decimal, float, formatCurrency } from "@/utils";
+import { useQuery } from "@tanstack/react-query";
+import { axiosClient } from "@/api";
 
 type CartItem = {
   id: string;
@@ -41,6 +43,17 @@ type CartItem = {
   quantity: number;
 };
 
+
+const useAddressQuery = () => {
+  return useQuery({
+    queryKey: ["user-address"],
+    queryFn: async () => {
+      const res = await axiosClient.get("/api/user/address");
+      return res.data;
+    }
+  });
+}
+
 const Page = () => {
   const { data: cartData, isLoading, isError, error } = useCart();
   const createOrder = useCreateOrder();
@@ -52,7 +65,10 @@ const Page = () => {
 
   const cartItems: CartItem[] = cartData?.items || [];
 
+  const addressQuery = useAddressQuery();
 
+  console.log(addressQuery.data);
+  
   const updateQuantity = (itemId: string, newQuantity: number) => {
     const safeQuantity = Math.max(1, parseInt(String(newQuantity), 10));
     console.log("Updating item:", { itemId, safeQuantity });
@@ -160,21 +176,11 @@ const Page = () => {
         <div className="mb-6 sm:mb-8">
           <Link
             href="/products"
-            className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
+            className="inline-flex items-center gap-2 cursor-pointer text-sm"
           >
             <ArrowLeft className="h-4 w-4" />
             Continue Shopping
           </Link>
-
-
-          {/* <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 sm:mb-0">
-              Shopping Cart ({cartItems.length} items)
-            </h1>
-            <div className="text-sm text-gray-500">
-              Free shipping on your first order
-            </div>
-          </div> */}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
@@ -328,7 +334,7 @@ const Page = () => {
           </div>
 
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sticky top-4">
+            <div className="bg-white rounded-md shadow-sm border border-gray-200 p-3 sticky top-4">
               <h2 className="text-lg font-semibold text-gray-900 mb-6">
                 Order Summary
               </h2>
@@ -343,11 +349,8 @@ const Page = () => {
                   <span className="text-gray-600">Shipping</span>
                   <span className="font-medium">
                     {formatCurrency(500)}
-
                   </span>
                 </div>
-
-
                 <hr className="border-gray-200" />
 
                 <div className="flex justify-between text-lg font-bold">
@@ -363,15 +366,15 @@ const Page = () => {
               <button
                 onClick={handleCheckout}
                 disabled={createOrder.isPending}
-                className="w-full bg-primary hover:bg-primary/85 text-white py-3 px-4 rounded-lg font-medium transition-colors mb-4"
+                className="w-full bg-primary hover:bg-primary/85 text-white py-2 px-4 rounded-md text-sm mb-4"
               >
-                {createOrder.isPending ? "Placing Order..." : "Proceed to Checkout"}
+                {createOrder.isPending ? "Placing Order..." : "Place Order"}
               </button>
 
               <div className="text-center">
                 <Link
                   href="/"
-                  className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                  className="text-sm cursor-pointer"
                 >
                   Continue Shopping
                 </Link>
