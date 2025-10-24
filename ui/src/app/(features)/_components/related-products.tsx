@@ -6,7 +6,7 @@ import { ProductCard } from '@/components/products/product-card';
 import { Spinner } from '@/components/ui/spinner';
 
 
-const RelatedProducts = () => {
+const ProductsGird = () => {
     const { data, isLoading, error } = useProductsList();
 
     if (isLoading) {
@@ -16,13 +16,7 @@ const RelatedProducts = () => {
         </div>;
     }
 
-    if (error) {
-        console.error("Product API error:", error);
-        return <p>Something went wrong!</p>;
-    }
-
-
-    if (!data || !data.length) {
+    if (!data || !data.length || error) {
         return (<div className="flex justify-center py-16">
             <div className='text-center'>
                 <img src={"https://cdn-icons-png.flaticon.com/512/17597/17597096.png"} className='w-32 h-32 mx-auto' />
@@ -46,4 +40,4 @@ const RelatedProducts = () => {
     );
 };
 
-export default RelatedProducts; 
+export { ProductsGird }; 

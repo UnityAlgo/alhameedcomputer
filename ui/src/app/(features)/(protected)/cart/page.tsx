@@ -24,6 +24,7 @@ import {
 } from "@/api/cart";
 import { useCreateOrder } from "@/api/orders";
 import { decimal, float, formatCurrency } from "@/utils";
+import { Spinner } from "@/components/ui/spinner";
 
 type CartItem = {
   id: string;
@@ -51,7 +52,6 @@ const Page = () => {
   const router = useRouter();
 
   const cartItems: CartItem[] = cartData?.items || [];
-
 
   const updateQuantity = (itemId: string, newQuantity: number) => {
     const safeQuantity = Math.max(1, parseInt(String(newQuantity), 10));
@@ -95,14 +95,12 @@ const Page = () => {
     });
   };
 
-  const moveToWishlist = (id: string) => { };
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-600">Loading your cart...</p>
-      </div>
-    );
+    return (<div className='py-16 flex justify-center flex-col items-center'>
+      <Spinner size='lg' className='mb-4' />
+      <div>Loading...</div>
+    </div>)
   }
 
   const handleCheckout = () => {
@@ -122,8 +120,8 @@ const Page = () => {
     console.error("Cart fetch error:", error);
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-red-600">
-          Failed to load cart. Check console for details.
+        <p >
+          500 Internal Server Error
         </p>
       </div>
     );

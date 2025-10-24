@@ -1,9 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-// import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useCategories } from "@/api/category";
 import Link from "next/link";
+import { useCategories } from "@/api/category";
 import { Spinner } from "@/components/ui/spinner";
 
 const CategoryCarousel: React.FC<{
@@ -94,14 +93,15 @@ const CategoryCarousel: React.FC<{
     </div>;
   }
 
+
   if (isError || !categories.length) {
-    return (
-      <div className="mt-8">
-        <div className="flex items-center justify-center h-48 bg-gradient-to-br from-red-50 to-orange-50 rounded-2xl border border-red-100 shadow-sm">
-          <p className="text-gray-600 text-sm font-medium">No categories available</p>
-        </div>
+
+    return (<div className="flex justify-center py-16">
+      <div className='text-center'>
+        <img src={"https://cdn-icons-png.flaticon.com/512/17597/17597096.png"} className='w-32 h-32 mx-auto' />
+        <div >No categories available.</div>
       </div>
-    );
+    </div>)
   }
 
   return (

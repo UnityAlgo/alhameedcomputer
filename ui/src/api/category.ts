@@ -22,5 +22,6 @@ export const useCategories = () => {
       const res = await axios.get(API_URL + "api/categories");
       return res.data;
     },
+    retry: false
   });
 };
