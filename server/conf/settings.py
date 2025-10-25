@@ -33,9 +33,12 @@ CORS_ALLOWED_ORIGINS = [
     "http://72.60.210.63",
     "http://alhameedcomputers.com",
     "https://alhameedcomputers.com",
+    "https://www.alhameedcomputers.com",
+    "https://www.alhameedcomputers.com"
 ]
 
 ALLOWED_HOSTS = [
+    "www.alhameedcomputers.com",
     "127.0.0.1",
     "localhost",
     "localhost:3000",
@@ -131,6 +134,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = "staticfiles"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
