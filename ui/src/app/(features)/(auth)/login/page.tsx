@@ -10,42 +10,45 @@ import { useMutation } from "@tanstack/react-query";
 import { API_URL } from "@/api";
 import axios from "axios";
 import useAuthStore, { useLogin } from "@/features/auth";
+import { login } from "@/app/lib/auth";
+import { useActionState } from "react";
 
 
 export default function Index() {
-  const router = useRouter();
-  const authStore = useAuthStore();
-  const mutation = useLogin(authStore);
-  const [errorMsg, setErrorMsg] = useState("");
+  const [state, action, pending] = useActionState(login, undefined)
+  // const router = useRouter();
+  // const authStore = useAuthStore();
+  // const mutation = useLogin(authStore);
+  // const [errorMsg, setErrorMsg] = useState("");
 
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const form = new FormData(event.currentTarget);
+  // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault();
+  //   const form = new FormData(event.currentTarget);
 
-    const payload = {
-      "email": form.get("email") as string,
-      "password": form.get("password") as string,
-    }
+  //   const payload = {
+  //     "email": form.get("email") as string,
+  //     "password": form.get("password") as string,
+  //   }
 
-    mutation.mutate(payload);
-  };
-  useEffect(() => {
-    if (mutation.isError) {
-      const message = "Invalid login credentials"
-      setErrorMsg(message);
-      toast.error(message);
-    }
+  //   mutation.mutate(payload);
+  // };
+  // useEffect(() => {
+  //   if (mutation.isError) {
+  //     const message = "Invalid login credentials"
+  //     setErrorMsg(message);
+  //     toast.error(message);
+  //   }
 
-    if (mutation.isSuccess) {
-      setErrorMsg("");
-      toast.success("Login successful");
-      setTimeout(() => {
-        // router.push("/");
-      }, 300)
-    }
+  //   if (mutation.isSuccess) {
+  //     setErrorMsg("");
+  //     toast.success("Login successful");
+  //     setTimeout(() => {
+  //       // router.push("/");
+  //     }, 300)
+  //   }
 
-  }, [mutation.isSuccess, mutation.isError])
+  // }, [mutation.isSuccess, mutation.isError])
 
 
   return (
@@ -58,7 +61,7 @@ export default function Index() {
         </div>
 
 
-        <form onSubmit={handleSubmit}>
+        <form action={login}>
           <div className="mb-2">
             <input
               type="email"
