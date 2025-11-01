@@ -1,35 +1,12 @@
-"use client";
-
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
-// import { cookies } from 'next/headers'
+import { getUser } from "@/app/lib/auth";
 
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
-  // console.log("layout rendered");
-  // const { isAuthenticated, user } = useAuth();
-  // const router = useRouter();
+  const user = await getUser()
 
-  // const cookieStore = await cookies();
-  // cookieStore.get()
-
-  // if (!isAuthenticated) {
-  //   router.replace("/login");
-  // }
-
-  // // useEffect(() => {
-  // //   if (!isAuthenticated) {
-  // //     router.replace("/login");
-  // //   }
-  // // }, [isAuthenticated, router]);
-
-  // // if (!isAuthenticated || !user) {
-  // //   return (
-  // //     <div className="h-screen flex items-center justify-center">
-  // //       <div className="text-gray-600">Loading...</div>
-  // //     </div>
-  // //   );
-  // // }
+  console.log("user", user);
 
   return (
     <div>

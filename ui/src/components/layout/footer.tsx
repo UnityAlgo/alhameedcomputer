@@ -27,7 +27,7 @@ export const Footer = () => {
                     <div className="col-span-2 sm:col-span-1 space-y-2">
                         <Link href="/" className="flex items-center justify-center sm:justify-start gap-3 mb-4">
                             <Image
-                                src="/logo2.png"
+                                src="/logo-light.png"
                                 alt="Al Hameed Computers"
                                 // width={50}  
                                 // height={80}  

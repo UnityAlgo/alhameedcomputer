@@ -10,21 +10,25 @@ type Slide = {
 const HERO_SLIDES: Slide[] = [
     {
         img: "/images/cover-1.jpeg",
+        sm: "/images/cover-sm-1.jpg",
     },
     {
         img: "/images/cover-2.jpeg",
+        sm: "/images/cover-sm-2.jpg",
     },
     {
         img: "/images/cover-3.jpeg",
+        sm: "/images/cover-sm-3.jpg",
     },
     {
         img: "/images/cover-4.jpeg",
+        sm: "/images/cover-sm-4.jpg",
     },
 ];
 
 
 
-const Carousel = ({ slides, autoPlay=true }: { slides: Slide[], autoPlay: boolean  }) => {
+const Carousel = ({ slides, autoPlay=true }: { slides: Slide[], autoPlay?: boolean  }) => {
   const [index, setIndex] = useState(0);
   const count = slides.length;
   const intervalRef = useRef<number | null>(null);
@@ -67,7 +71,13 @@ const Carousel = ({ slides, autoPlay=true }: { slides: Slide[], autoPlay: boolea
             <img
               src={s.img}
               alt={`Slide ${i + 1}`}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover hidden sm:block"
+            />
+
+            <img
+              src={s.sm}
+              alt={`Slide ${i + 1}`}
+              className="w-full h-full object-cover sm:hidden"
             />
           </div>
         ))}

@@ -60,9 +60,10 @@ const Index = () => {
                                 {results.total_count} items found for <span className='font-medium'>'{params.get("query")}'</span>
                             </div>}
 
-                            {results.products.length ? <ProductGrid products={results.products} /> : <div className="flex items-center justify-center ">
+                            {results.products.length ? <ProductGrid products={results.products} /> : <div className="flex items-center justify-center py-16">
                                 <div className="text-center">
-                                    <img src="https://cdn-icons-png.flaticon.com/512/6107/6107764.png" className="max-w-32" />
+                                    <img src="https://cdn-icons-png.flaticon.com/512/6107/6107764.png"
+                                        className="w-24 mx-auto mb-4" />
                                     <div>No Results Found</div>
                                     <div>Try a different keyword</div>
                                 </div>

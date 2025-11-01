@@ -1,67 +1,23 @@
-
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import React from "react";
 import Link from "next/link";
-import toast from "react-hot-toast";
 import { Spinner } from "@/components/ui/spinner";
-import { useMutation } from "@tanstack/react-query";
-import { API_URL } from "@/api";
-import axios from "axios";
-import useAuthStore, { useLogin } from "@/features/auth";
-import { login } from "@/app/lib/auth";
+import { login } from "@/app/lib/login";
 import { useActionState } from "react";
 
-
 export default function Index() {
-  const [state, action, pending] = useActionState(login, undefined)
-  // const router = useRouter();
-  // const authStore = useAuthStore();
-  // const mutation = useLogin(authStore);
-  // const [errorMsg, setErrorMsg] = useState("");
-
-
-  // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   const form = new FormData(event.currentTarget);
-
-  //   const payload = {
-  //     "email": form.get("email") as string,
-  //     "password": form.get("password") as string,
-  //   }
-
-  //   mutation.mutate(payload);
-  // };
-  // useEffect(() => {
-  //   if (mutation.isError) {
-  //     const message = "Invalid login credentials"
-  //     setErrorMsg(message);
-  //     toast.error(message);
-  //   }
-
-  //   if (mutation.isSuccess) {
-  //     setErrorMsg("");
-  //     toast.success("Login successful");
-  //     setTimeout(() => {
-  //       // router.push("/");
-  //     }, 300)
-  //   }
-
-  // }, [mutation.isSuccess, mutation.isError])
-
+  const [state, formAction, pending] = useActionState(login, null);
 
   return (
-    <div>
-
+    <div className="min-h-[70vh]">
       <div className="max-w-[30rem] mx-auto py-12 px-4">
         <div className="text-center mb-6">
           <h1 className="text-xl font-semibold mb-2">Login</h1>
           <p className="text-sm">Enter your email and password to securely access your account.</p>
         </div>
 
-
-        <form action={login}>
+        <form action={formAction}>
           <div className="mb-2">
             <input
               type="email"
@@ -74,7 +30,7 @@ export default function Index() {
 
           <div className="mb-2">
             <input
-              type="text"
+              type="password"
               placeholder="Password"
               className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-md outline-none focus:ring-1 focus:ring-gray-400"
               required
@@ -82,27 +38,28 @@ export default function Index() {
             />
           </div>
 
-
           <div>
-            <div className="py-2 text-sm font-medium text-destructive">{errorMsg}</div>
+            {state && !state.success && (
+              <div className="py-2 text-sm font-medium text-destructive">
+                {state.error}
+              </div>
+            )}
             <button
-              disabled={mutation.isPending}
+              disabled={pending}
               type="submit"
-              className="bg-primary text-primary-foreground text-center w-full rounded-md py-2 mb-4 flex items-center justify-center gap-2"
+              className="bg-primary text-primary-foreground text-center w-full rounded-md py-2 mb-4 flex items-center justify-center gap-2 disabled:opacity-50"
             >
-              {mutation.isPending ? <Spinner color="light" size="md" /> : <span>Log In</span>}
+              {pending ? <Spinner color="light" size="md" /> : <span>Log In</span>}
             </button>
             <div className="text-center text-sm">
-              Not have an Account? {" "}
+              Not have an Account?{" "}
               <Link href="/register" className="text-blue-700 font-medium">
                 Register your account
               </Link>
             </div>
           </div>
         </form>
-
       </div>
     </div>
   );
 }
-

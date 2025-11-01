@@ -10,7 +10,6 @@ import {
   UserRound,
 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useAuth } from "@/hooks/index";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 import axios from "axios";
@@ -25,16 +24,16 @@ export const Header = () => {
     logout()
     window.location.href = "/login";
   }
+
   return (
     <>
       <header className="shadow-sm">
         <div className="md:flex md:items-center md:justify-between max-w-6xl mx-auto px-2 md:px-4 py-4 grid grid-cols-2 gap-2">
 
           <Link href="/">
-            <div className="flex items-center gap-2">
-              <img src="/logo.png" alt="UnityStore" className="h-16 w-16 object-cover hidden md:block" />
-              <span className="text-xl font-bold text-red-800 md:hidden">AH Computers</span>
-            </div>
+            <img alt="Al Hameed Computers" className="h-16 w-16 object-cover hidden md:block" src="/logo.png" />
+            <img alt="Al Hameed Computers" className="md:hidden w-32" src="/m-logo.png" />
+
           </Link>
 
           <div className="col-span-2 order-3 md:order-none" >
