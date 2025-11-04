@@ -17,17 +17,10 @@ export const generateMetadata = async ({ params }: { params: { slug: string } })
 
     const productName = product.product_name || "Product";
     const brandName = product.brand?.name || "";
-    const categoryName = product.category?.name || "";
 
-    // Create comprehensive title (under 60 chars is ideal)
-    const title = brandName
-      ? `${productName} - ${brandName} | Al Hameed Computers`
-      : `${productName} | Al Hameed Computers`;
-
-    const shortDesc = product.short_description?.replace(/<[^>]*>/g, "").trim() || "";
-    const longDesc = product.description?.replace(/<[^>]*>/g, "").trim() || "";
-    const description = shortDesc || longDesc || `Buy ${productName} ${brandName ? `by ${brandName}` : ""} at the best price in Karachi, Pakistan. Shop gaming PCs, laptops, and computer accessories at Al Hameed Computers.`;
-
+    const metaData = product.meta_data || {};
+    const title = metaData.title || productName.slice(0, 60)
+    const description = metaData.description || product.description
     const images = [product.cover_image, ...(product.images || [])]
       .filter(Boolean)
       .map(img => ({
@@ -35,17 +28,7 @@ export const generateMetadata = async ({ params }: { params: { slug: string } })
         alt: `${productName} ${brandName ? `- ${brandName}` : ""}`,
       }));
 
-    const keywords = [
-      productName,
-      brandName,
-      categoryName,
-      "buy online Pakistan",
-      "Karachi computer shop",
-      "gaming PC",
-      "best price",
-      "Al Hameed Computers",
-    ].filter(Boolean).join(", ");
-
+    const keywords = metaData.keywords || productName
     const canonicalUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/products/${slug}`;
 
     return {
@@ -64,8 +47,8 @@ export const generateMetadata = async ({ params }: { params: { slug: string } })
       },
       twitter: {
         card: "summary_large_image",
-        title: title.slice(0, 60),
-        description: description.slice(0, 160),
+        title: title,
+        description: description,
         images: images.map(img => img.url),
         site: "@alhameedcomputers",
       },
@@ -86,13 +69,12 @@ export const generateMetadata = async ({ params }: { params: { slug: string } })
       other: {
         "price:currency": "PKR",
         "price:amount": product.price?.toString() || "0",
-        "product:availability": product.in_stock !== false ? "in stock" : "out of stock",
+        "product:availability": "in stock",
         "product:condition": "new",
         "product:brand": brandName,
       },
     };
   } catch (error) {
-    console.error("Error generating metadata:", error);
     return {
       title: "Al Hameed Computers – Gaming PCs, Laptops & Accessories",
       description: "Al Hameed Computers is Karachi's trusted computer shop for gaming PCs, graphics cards, motherboards, and accessories—all at affordable and competitive prices.",

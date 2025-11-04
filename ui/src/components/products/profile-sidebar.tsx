@@ -10,6 +10,7 @@ import {
   Heart,
   LogOut,
   LayoutDashboardIcon,
+  KeyRound,
 } from "lucide-react";
 import useAuthStore from "@/features/auth";
 
@@ -19,6 +20,7 @@ const ProfileSidebar = () => {
 
   const tabs = [
     { id: "overview", label: "Profile", icon: User, href: "/profile" },
+    // { id: "change_password", label: "Change Password", icon: KeyRound, href: "/change_password" },
     { id: "orders", label: "Orders", icon: Package, href: "/orders" },
     { id: "addresses", label: "Addresses", icon: MapPin, href: "/addresses" },
     // { id: "wishlist", label: "Wishlist", icon: Heart, href: "/wishlist" },

@@ -32,6 +32,9 @@ class Product(BaseModel):
     published = models.BooleanField(default=False)
     featured = models.BooleanField(default=False)
     is_listing_item = models.BooleanField(default=False)
+    meta_keywords = models.TextField(default="",blank=True)
+    meta_title = models.CharField(max_length=60,default="",blank=True)
+    meta_description = models.CharField(max_length=160,default="",blank=True)
 
     def __str__(self):
         return self.product_name

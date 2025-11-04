@@ -24,6 +24,7 @@ class ProductSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField()
     cover_image = serializers.SerializerMethodField()
     price = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    meta_data = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
@@ -42,8 +43,16 @@ class ProductSerializer(serializers.ModelSerializer):
             "images",
             "created_at",
             "updated_at",
+            "meta_data"
         ]
 
+    def get_meta_data(self, obj: Product):
+        return {
+            "description": obj.meta_description,
+            "title": obj.meta_title,
+            "keywords": obj.meta_keywords
+        }
+    
     def get_images(self, obj: Product):
         request = self.context.get("request")
         images = []
