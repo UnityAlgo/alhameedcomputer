@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { MapPin, Phone, Mail, ChevronUp, Facebook, Twitter, Instagram, Youtube} from "lucide-react";
-import { contactEmail, contactPhone } from "@/app/global";
+import { MapPin, Phone, Mail, ChevronUp, Facebook, Twitter, Instagram, Youtube } from "lucide-react";
+import { contactEmail, contactPhone } from "@/global";
 
 export const Footer = () => {
     const scrollToTop = () => {
@@ -29,10 +29,9 @@ export const Footer = () => {
                             <Image
                                 src="/logo-light.png"
                                 alt="Al Hameed Computers"
-                                // width={50}  
-                                // height={80}  
-                                width={140}  
-                                height={140}  
+
+                                width={140}
+                                height={140}
                                 className="object-contain"
                             />
                         </Link>
@@ -45,27 +44,27 @@ export const Footer = () => {
                         <h3 className="font-bold text-lg text-white mb-4">PRODUCTS</h3>
                         <ul className="space-y-2">
                             <li>
-                                <Link href="/products/pre-build-gaming-pc" className="text-blue-100 text-sm hover:text-white transition-colors">
+                                <Link href="/search?query=Gaming+PC" className="text-blue-100 text-sm hover:text-white transition-colors">
                                     Gaming PC
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/products/graphic-card" className="text-blue-100 text-sm hover:text-white transition-colors">
+                                <Link href="/search?query=Graphic+Card" className="text-blue-100 text-sm hover:text-white transition-colors">
                                     Graphic Cards
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/products/processor" className="text-blue-100 text-sm hover:text-white transition-colors">
+                                <Link href="/search?query=Processor" className="text-blue-100 text-sm hover:text-white transition-colors">
                                     Processors
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/products/gaming-monitor" className="text-blue-100 text-sm hover:text-white transition-colors">
+                                <Link href="/search?query=Gaming+Monitor" className="text-blue-100 text-sm hover:text-white transition-colors">
                                     Gaming Monitor
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/products/gaming-headphones" className="text-blue-100 text-sm hover:text-white transition-colors">
+                                <Link href="/search?query=Gaming+Headphones" className="text-blue-100 text-sm hover:text-white transition-colors">
                                     Gaming Headphones
                                 </Link>
                             </li>
@@ -77,15 +76,20 @@ export const Footer = () => {
                         <ul className="space-y-2">
                             <li>
                                 <Link href="/login" className="text-blue-100 text-sm hover:text-white transition-colors">
-                                    Sign Up
+                                    Login
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/profile" className="text-blue-100 text-sm hover:text-white transition-colors">
-                                    My Account
+                                <Link href="/register" className="text-blue-100 text-sm hover:text-white transition-colors">
+                                    Register
                                 </Link>
                             </li>
                             <li>
+                                <Link href="/privacy-policy" className="text-blue-100 text-sm hover:text-white transition-colors">
+                                    Privacy Policy
+                                </Link>
+                            </li>
+                            {/* <li>
                                 <Link href="/cart" className="text-blue-100 text-sm hover:text-white transition-colors">
                                     Shopping Cart
                                 </Link>
@@ -94,7 +98,7 @@ export const Footer = () => {
                                 <Link href="/orders" className="text-blue-100 text-sm hover:text-white transition-colors">
                                     Order History
                                 </Link>
-                            </li>
+                            </li> */}
                         </ul>
                     </div>
 

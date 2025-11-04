@@ -25,9 +25,6 @@ class Cart(BaseModel):
         super().save(*args, **kwargs)
 
     def add_item(self, product, quantity, price=None):
-        if not price:
-            price = product.final_price
-
         item, created = CartItem.objects.get_or_create(
             cart=self,
             product=product,
@@ -55,10 +52,11 @@ class CartItem(BaseModel):
         return f"{self.product.product_name} - {self.quantity}"
 
     def calculate_total_amount(self):
+        if not self.price:
+            self.price = self.product.get_price()
+
         self.amount = self.price * self.quantity
 
     def save(self, *args, **kwargs):
-        if not self.price:
-            self.price = self.product.final_price
         self.calculate_total_amount()
         super().save(*args, **kwargs)

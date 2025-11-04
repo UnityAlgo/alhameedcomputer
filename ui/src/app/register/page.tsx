@@ -8,6 +8,8 @@ import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 import { API_URL } from "@/api";
 import { Spinner } from "@/components/ui/spinner";
+import { Header } from "@/components/layout/header";
+import { Footer } from "@/components/layout/footer";
 
 
 const useRegisterMutation = () => {
@@ -22,11 +24,6 @@ const useRegisterMutation = () => {
 
 const validatePhoneNumber = (phone: string): boolean => {
   const cleaned = phone.replace(/[\s\-()]/g, '');
-
-  // Pakistani phone number patterns:
-  // +92XXXXXXXXXX (10 digits after +92)
-  // 92XXXXXXXXXX (10 digits after 92)
-  // 03XXXXXXXXX (11 digits starting with 03)
   const patterns = [
     /^\+92[3-9]\d{9}$/,
     /^92[3-9]\d{9}$/,
@@ -185,6 +182,7 @@ const Index = () => {
 
   return (
     <div>
+      <Header />
       <div className="max-w-[35rem] mx-auto">
         <div className="py-12">
           <div className="text-center mb-6">
@@ -243,6 +241,7 @@ const Index = () => {
           </form>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

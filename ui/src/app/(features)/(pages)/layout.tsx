@@ -5,15 +5,9 @@ import { Footer } from "@/components/layout/footer";
 export default function MainLayout({ children }: { children: ReactNode }) {
   return (
     <>
-      <header>
-        <Header />
-        {/* <HeadLink /> */}
-      </header>
-      <main className="min-h-screen w-full bg-gray-50">{children}</main>
-      <footer className="border-t border-gray-200">
-        <Footer />
-      </footer>
+      <Header />
+      <main className="min-h-screen">{children}</main>
+      <Footer />
     </>
   );
 }
- 

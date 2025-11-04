@@ -5,11 +5,12 @@ import QuantitySelector from "@/components/products/QuantitySelector";
 import type { Product } from "@/app/(features)/(pages)/products/types";
 import AddToCartButton from "@/components/products/AddToCartButton";
 import BuyNowButton from "@/components/products/BuyButton";
-import { useAddToCart } from "@/api/cart";
+import { useAddCartMutation } from "@/api/cart";
 import toast from "react-hot-toast";
 import { Spinner } from "@/components/ui/spinner";
 import { useRouter } from "next/navigation";
 import useAuthStore from "@/features/auth";
+import { useCartStore } from "@/app/cart/store";
 
 interface ProductDetailsProps {
   product: Product;
@@ -17,13 +18,29 @@ interface ProductDetailsProps {
 
 export const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   const [isLoading, setLoading] = useState(false);
-  const addToCart = useAddToCart();
+  const addToCart = useAddCartMutation();
   const { isAuthenticated, user } = useAuthStore();
+  const { addItem } = useCartStore()
   const router = useRouter();
 
   const handleAddToCart = () => {
+
+    addItem({
+      id: product.id,
+      product: product,
+      quantity: 1,
+      price: product.price,
+      amount: product.price,
+    });
+
+    toast.success(product.product_name.slice(0, 15) + `.. added to cart! 🛒`);
+
+    setTimeout(() => {
+      router.push("/cart");
+    }, 500)
+
+    return
     if (!isAuthenticated) {
-      router.push("/login")
       return
     }
 

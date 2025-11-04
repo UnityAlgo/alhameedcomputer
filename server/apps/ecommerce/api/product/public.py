@@ -8,11 +8,11 @@ from apps.ecommerce.serializers.product import ProductSerializer, ProductListSer
 class ProductAPIView(APIView):
     def get(self, *args, **kwargs):
         request = self.request
-
-        if request.GET.get("id"):
+        print(request.GET.get("slug"))
+        if request.GET.get("slug"):
             try:
                 product_queryset = Product.objects.annotate(price=price_subquery).get(
-                    id=request.GET.get("id")
+                    slug=request.GET.get("slug")
                 )
                 serializer = ProductSerializer(
                     product_queryset, context={"request": self.request}
@@ -21,9 +21,11 @@ class ProductAPIView(APIView):
             except Product.DoesNotExist:
                 return Response({"detail": "Product not found."}, status=404)
 
-        product_queryset = Product.objects.filter(published=True).annotate(
-            price=price_subquery
-        ).order_by("-featured")[:30]
+        product_queryset = (
+            Product.objects.filter(published=True)
+            .annotate(price=price_subquery)
+            .order_by("-featured")[:30]
+        )
 
         serializer = ProductListSerializer(
             product_queryset, many=True, context={"request": self.request}

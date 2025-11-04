@@ -2,8 +2,8 @@ from decimal import Decimal
 from django.db import models
 from django.utils import timezone
 from django.db.models import Avg, Q, OuterRef
+from django.utils.text import slugify
 from ckeditor.fields import RichTextField
-
 from .base import BaseModel, UOM, Currency
 from .category import Category
 
@@ -19,6 +19,7 @@ class Brand(BaseModel):
 
 class Product(BaseModel):
     product_name = models.TextField()
+    slug = models.SlugField(blank=True)
     short_description = RichTextField(null=True, blank=True)
     description = RichTextField(null=True, blank=True)
     category = models.ForeignKey(Category, null=True, on_delete=models.SET_NULL)
@@ -34,6 +35,12 @@ class Product(BaseModel):
 
     def __str__(self):
         return self.product_name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.product_name.lower()[:60])
+
+        super().save(*args, **kwargs)
 
     def update_rating(self):
         avg_rating = self.reviews.aggregate(avg=Avg("rating"))["avg"]

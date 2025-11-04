@@ -15,6 +15,7 @@ export type ProductType = {
     cover_image: string;
     category: string;
     inStock: boolean;
+    slug: string;
 };
 
 
@@ -34,7 +35,7 @@ const Rating = ({ count = 0, range = 5 }) => {
 
 const ProductCard = ({ product }: { product: ProductType }) => (
     <Link
-        href={`/products/${product.id}`}
+        href={`/products/${product.slug}`}
         key={product.id}
     >
         <div className="rounded-md border border-border shadow-sm transition-all"

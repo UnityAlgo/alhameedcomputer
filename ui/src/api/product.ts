@@ -64,7 +64,7 @@ export const useSearchProducts = (args: Record<string, string>) => {
   return useQuery({
     queryKey: ["products", args],
     queryFn: async () => {
-      const res = await axiosClient.get("api/products/search?", {
+      const res = await axios.get(API_URL + "api/products/search?", {
         params: args,
       });
       return res.data;

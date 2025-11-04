@@ -15,15 +15,11 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import axios from "axios";
 import { API_URL } from "@/api";
 import useAuthStore from "@/features/auth";
+import { logout as serverLogout } from "@/app/lib/logout";
 
 export const Header = () => {
   const { isAuthenticated, user, logout } = useAuthStore();
 
-
-  const handleLogout = () => {
-    logout()
-    window.location.href = "/login";
-  }
 
   return (
     <>
@@ -48,9 +44,9 @@ export const Header = () => {
             {isAuthenticated && user ? (
               <Popover>
                 <PopoverTrigger asChild>
-                  <div className="flex gap-2 items-center">
+                  <div className="flex gap-2 items-center cursor-pointer">
                     <UserRound className="size-5" />
-                    <div className="hidden md:block cursor-pointer text-sm">{user.username}</div>
+                    <div className="hidden md:block text-sm">{user.username}</div>
                   </div>
                 </PopoverTrigger>
 
@@ -68,8 +64,10 @@ export const Header = () => {
                     </li>
 
                     <li className="border-t border-accent">
-                      <button onClick={handleLogout}
-                        className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600 items-center flex gap-2 cursor-pointer outline-none">
+                      <button 
+                        onClick={logout}
+                        className="w-full text-left px-4 py-2 text-red-700 items-center flex gap-2 cursor-pointer outline-none disabled:opacity-50"
+                      >
                         <LogOut className="h-4 w-4" />
                         Logout
                       </button>

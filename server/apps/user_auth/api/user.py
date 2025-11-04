@@ -24,3 +24,17 @@ class RegisterUserAPIView(APIView):
         Customer.objects.create(user=user)
 
         return Response(status=status.HTTP_201_CREATED)
+
+
+class UserAPIView(APIView):
+    def get(self, request):
+        user: User = request.user
+
+        if not user.is_authenticated:
+            return Response(
+                {"detail": "Authentication credentials were not provided."},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+
+        serializer = UserSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)

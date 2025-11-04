@@ -3,30 +3,51 @@ from apps.ecommerce.models.cart import Cart, CartItem
 from apps.ecommerce.models.product import Product
 
 
-class ProductNestedSerializer(serializers.ModelSerializer):
-    image = serializers.ImageField(source="cover_image")
-
-    class Meta:
-        model = Product
-        fields = [
-            "id",
-            "product_name",
-            "image",
-            "description",
-            "category",
-        ]
-
-
 class CartItemSerializer(serializers.ModelSerializer):
-    product = ProductNestedSerializer(read_only=True)
-    subtotal = serializers.SerializerMethodField()
+    product_id = serializers.CharField(source="product.id", read_only=True)
+    product_name = serializers.CharField(source="product.product_name", read_only=True)
+    product_image = serializers.SerializerMethodField()
 
     class Meta:
         model = CartItem
-        fields = ["id", "product", "quantity", "price", "amount", "subtotal"]
+        fields = [
+            "id",
+            "product_id",
+            "product_name",
+            "product_image",
+            "quantity",
+            "price",
+            "amount",
+        ]
 
-    def get_subtotal(self, obj):
-        return obj.price * obj.quantity
+    def get_product_image(self, obj):
+        if obj.product.image:
+            request = self.context.get("request")
+            if request:
+                return request.build_absolute_uri(obj.product.image.url)
+        return None
+
+
+class AddToCartSerializer(serializers.Serializer):
+    product_id = serializers.CharField(required=True)
+    quantity = serializers.DecimalField(
+        max_digits=10, decimal_places=2, required=False, default=1
+    )
+
+    def validate_product_id(self, value):
+        try:
+            product = Product.objects.get(id=value)
+            if not product.in_stock:
+                raise serializers.ValidationError("Product is out of stock")
+            return value
+        except Product.DoesNotExist:
+            raise serializers.ValidationError("Product not found")
+
+
+class UpdateCartItemSerializer(serializers.Serializer):
+    quantity = serializers.DecimalField(
+        max_digits=10, decimal_places=2, required=True, min_value=1
+    )
 
 
 class CartSerializer(serializers.ModelSerializer):
@@ -42,30 +63,3 @@ class CartSerializer(serializers.ModelSerializer):
             "updated_at",
             "items",
         ]
-
-
-class CartItemAddSerializer(serializers.Serializer):
-    product_id = serializers.CharField(max_length=255)
-    quantity = serializers.IntegerField(min_value=1)
-
-    def validate(self, data):
-        if data["quantity"] <= 0:
-            data["quantity"] = 1
-
-        if not Product.objects.filter(id=data["product_id"]).exists():
-            raise serializers.ValidationError({"product_id": "Invalid product ID"})
-
-        return data
-
-
-class CartItemUpdateSerializer(serializers.Serializer):
-    quantity = serializers.IntegerField(min_value=1, required=False)
-    action = serializers.ChoiceField(choices=["remove", "update"], default="update")
-
-    def validate(self, data):
-        if data["action"] == "update" and data.get("quantity") is not None:
-            if data["quantity"] < 0:
-                raise serializers.ValidationError(
-                    {"quantity": "Quantity must be greater than or equal to zero"}
-                )
-        return data

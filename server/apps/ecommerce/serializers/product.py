@@ -30,6 +30,7 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "product_name",
+            "slug",
             "short_description",
             "description",
             "category",
@@ -84,6 +85,8 @@ class ProductListSerializer(serializers.ModelSerializer):
             "brand",
             "cover_image",
             "uom",
+            "slug",
+            "updated_at",
             "price",
             "rating",
         ]

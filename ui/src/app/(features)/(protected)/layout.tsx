@@ -1,12 +1,16 @@
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
-import { getUser } from "@/app/lib/auth";
+import { validateAuth } from "@/app/lib/auth";
+import { redirect } from "next/navigation";
 
+export default async function ProtectedLayout({ children }: { children: React.ReactNode }) {
+  // Validate authentication on the server
+  const user = await validateAuth();
 
-export default async function Layout({ children }: { children: React.ReactNode }) {
-  const user = await getUser()
-
-  console.log("user", user);
+  // Redirect to login if not authenticated
+  // if (!user) {
+  //   redirect('/login');
+  // }
 
   return (
     <div>
