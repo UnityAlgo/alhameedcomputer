@@ -18,6 +18,7 @@ const Index = () => {
   const updateProfile = useUpdateProfile();
   const [isEditing, setIsEditing] = useState(false);
 
+  
   const [formData, setFormData] = useState({
     full_name: "",
     email: "",

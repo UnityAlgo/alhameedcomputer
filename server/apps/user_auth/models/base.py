@@ -33,6 +33,8 @@ class Address(BaseModel):
 
     def save(self, *args, **kwargs):
         if self.default:
-            Address.objects.filter(user=self.user, default=True).update(default=False)
+            Address.objects.filter(user=self.user, default=True).exclude(
+                id=self.id
+            ).update(default=False)
 
         super().save(*args, **kwargs)

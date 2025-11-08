@@ -1,11 +1,20 @@
-from rest_framework import generics, status, permissions
+from rest_framework import generics, status, permissions, serializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
-from apps.ecommerce.models.order import Order, OrderItem, OrderStatus
+from django.db import transaction
+from apps.ecommerce.models.order import (
+    Order,
+    OrderItem,
+    OrderStatus,
+    PaymentMethod,
+    ShippingRule,
+)
 from apps.ecommerce.models.cart import Cart
 from apps.ecommerce.serializers.order import OrderSerializer
 from apps.ecommerce.models.customer import Customer
+
+from apps.user_auth.models.base import Address
 
 
 class OrderAPIView(APIView):
@@ -36,6 +45,79 @@ class OrderAPIView(APIView):
             )
             serializer = OrderSerializer(orders_queryset, many=True)
         return Response(serializer.data)
+
+
+class OrderCheckoutSerializer(serializers.Serializer):
+    address_id = serializers.CharField(max_length=100)
+    payment_method = serializers.CharField(max_length=100)
+    cart = serializers.CharField(max_length=100)
+
+    shipping_rule = serializers.CharField(max_length=100, required=False)
+
+    def validate(self, data):
+        print("running validate")
+        try:
+            address = Address.objects.get(id=data["address_id"])
+        except Address.DoesNotExist:
+            raise serializers.ValidationError("Invalid address ID")
+        shipping_rule = None
+        if data.get("shipping_rule"):
+            shipping_rule = ShippingRule.objects.filter(
+                id=data.get("shipping_rule"), is_active=True
+            ).first()
+        payment_method = PaymentMethod.objects.filter(
+            name=data["payment_method"], is_active=True
+        ).first()
+
+        if not payment_method:
+            raise serializers.ValidationError("Invalid or inactive payment method")
+
+        return {
+            "address": address,
+            "payment_method": payment_method,
+            "shipping_rule": shipping_rule,
+        }
+
+
+class OrderCheckoutAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    @transaction.atomic
+    def post(self, *args, **kwargs):
+        customer = None
+        try:
+            customer = Customer.objects.get(user=self.request.user)
+        except Customer.DoesNotExist:
+            return Response(
+                {"message": "only registered customers can place orders"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        serializer = OrderCheckoutSerializer(data=self.request.data)
+        serializer.is_valid(raise_exception=True)
+
+        cart = get_object_or_404(Cart, id=self.request.data.get("cart"))
+        order = Order.objects.create(
+            customer=customer,
+            delivery_address=serializer.validated_data["address"],
+            payment_method=serializer.validated_data["payment_method"],
+            shipping_rule=serializer.validated_data.get("shipping_rule"),
+        )
+        order.save()
+        for i in cart.items.all():
+            item = OrderItem.objects.create(
+                order=order,
+                product=i.product,
+                quantity=i.qty,
+                price=i.price,
+            )
+            item.save()
+
+        # cart.clear()
+        order_serializer = OrderSerializer(order)
+        return Response(
+            {"message": "order placed successfully", "order": order_serializer.data},
+            status=status.HTTP_200_OK,
+        )
 
 
 class OrderDetailAPIView(generics.RetrieveAPIView):

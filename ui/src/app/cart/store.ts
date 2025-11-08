@@ -7,7 +7,7 @@ import { float } from "@/utils";
 export type CartItemType = {
   id: string;
   product: Product;
-  quantity: number;
+  qty: number;
   price: number;
   amount: number;
 };

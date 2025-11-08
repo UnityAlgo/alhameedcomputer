@@ -46,11 +46,11 @@ const useCartQuery = () => {
   });
 };
 
-const useAddCartMutation = () => {
+const useCartMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (payload: { product: string; quantity: number; action: string }) => {
+    mutationFn: async (payload: { product: string; qty: number, action: "add" | "remove" }) => {
       const request = await axiosClient.post(`api/customer/cart`, payload);
       return request.data;
     },
@@ -71,7 +71,7 @@ const useUpdateCartItem = () => {
     onMutate: async (variables) => {
       await queryClient.cancelQueries({ queryKey: ["get-cart"] });
       const previousCart = queryClient.getQueryData<Cart>(["get-cart"]);
-      
+
       if (previousCart) {
         queryClient.setQueryData<Cart>(["get-cart"], {
           ...previousCart,
@@ -135,4 +135,4 @@ const useRemoveCartItem = () => {
   });
 };
 
-export { useCartQuery, useAddCartMutation, useUpdateCartItem, useRemoveCartItem };
+export { useCartQuery, useCartMutation, useUpdateCartItem, useRemoveCartItem };

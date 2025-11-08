@@ -1,9 +1,9 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient, UseQueryResult } from "@tanstack/react-query";
 import { axiosClient } from "@/api";
 
-export interface Address {
+export interface TypeAddress {
   id: string;
   title: string;
   default: boolean;
@@ -19,56 +19,46 @@ export interface Address {
   created_at?: string;
 }
 
-
-// -------- Fetch Addresses (list) --------
-export const useAddresses = () => {
+export const useAddressQuery = ({
+  enabled = false,
+  id
+}: {
+  enabled: boolean;
+  id?: string;
+}): UseQueryResult<TypeAddress[]> => {
   return useQuery({
-    queryKey: ["addresses"],
+    queryKey: ["get-address", id],
     queryFn: async () => {
-      const res = await axiosClient.get("api/addresses");
+      if (id) {
+        const res = await axiosClient.get("api/user/address?id=" + id);
+        return res.data;
+      }
+
+      const res = await axiosClient.get("api/user/address");
       return res.data;
     },
+    enabled,
   });
 };
 
-// -------- Create Address --------
-export const useCreateAddress = () => {
+export const useAddressMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (newAddress: Omit<Address, "id">) => {
-      const res = await axiosClient.post("api/addresses", newAddress);
-      return res.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["addresses"] });
-    },
-  });
-};
 
-// -------- Update Address --------
-export const useUpdateAddress = () => {
-  const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (updated: Address) => {
-      const res = await axiosClient.put(`api/addresses/${updated.id}`, updated);
-      return res.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["addresses"] });
-    },
-  });
-};
-// -------- Delete Address --------
+    mutationFn: async (payload: TypeAddress) => {
+      if (payload.id) {
+        const response = await axiosClient.put("api/user/address", payload);
+        return response.data;
+      }
 
-export const useDeleteAddress = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (id: string) => {
-      const res = await axiosClient.delete(`api/addresses/${id}`);
-      return res.data;
+      const response = await axiosClient.post("api/user/address", payload);
+      return response.data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["addresses"] });
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["get-address"] });
+      if (variables.id) {
+        queryClient.setQueryData(["get-address", variables.id], data);
+      }
     },
   });
 };

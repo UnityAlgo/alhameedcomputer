@@ -9,7 +9,7 @@ from apps.ecommerce.models.product import Product
 from apps.ecommerce.models.customer import Customer
 from apps.ecommerce.serializers.cart import (
     CartSerializer,
-    AddToCartSerializer,
+    CartUpdateSerializer,
     UpdateCartItemSerializer,
 )
 
@@ -45,35 +45,39 @@ class CartAPIView(APIView):
         )
 
     @transaction.atomic
-    def post(self, request, *args, **kwargs):
-        serializer = AddToCartSerializer(data=request.data)
+    def post(self, *args, **kwargs):
+        request_data: dict = self.request.data
+        serializer = CartUpdateSerializer(data=request_data)
+
         serializer.is_valid(raise_exception=True)
 
-        customer = get_object_or_404(Customer, user=request.user)
+        customer = get_object_or_404(Customer, user=self.request.user)
         cart, _ = Cart.objects.get_or_create(customer=customer)
+        product = get_object_or_404(Product, id=serializer.validated_data["product"])
 
-        product = get_object_or_404(Product, id=serializer.validated_data["product_id"])
-        quantity = serializer.validated_data["quantity"]
+        if serializer.validated_data.get("action") == "add":
+            quantity = serializer.validated_data["qty"]
+            cart_item, created = CartItem.objects.get_or_create(
+                cart=cart,
+                product=product,
+                defaults={"qty": quantity, "price": product.get_price()},
+            )
 
-        cart_item, created = CartItem.objects.get_or_create(
-            cart=cart,
-            product=product,
-            defaults={"quantity": quantity, "price": product.get_price()},
-        )
+            if quantity == 0:
+                cart_item.delete()
+                
+            if not created:
+                cart_item.qty = quantity
+                cart_item.save()
 
-        if not created:
-            cart_item.quantity += quantity
-            cart_item.save()
-
-            message = "Cart updated successfully"
-        else:
-            message = "Item added to cart"
+        elif serializer.validated_data.get("action") == "remove":
+            CartItem.objects.filter(cart=cart, product=product).delete()
 
         cart.save()
 
-        cart_serializer = CartSerializer(cart, context={"request": request})
+        cart_serializer = CartSerializer(cart, context={"request": self.request})
         return Response(
-            {"message": message, "cart": cart_serializer.data},
+            {"cart": cart_serializer.data},
             status=status.HTTP_200_OK,
         )
 

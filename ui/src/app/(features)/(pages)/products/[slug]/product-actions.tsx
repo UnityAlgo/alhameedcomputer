@@ -1,78 +1,54 @@
 "use client";
 
 import { useState } from "react";
-import QuantitySelector from "@/components/products/QuantitySelector";
 import type { Product } from "@/app/(features)/(pages)/products/types";
-import AddToCartButton from "@/components/products/AddToCartButton";
-import BuyNowButton from "@/components/products/BuyButton";
-import { useAddCartMutation } from "@/api/cart";
+import { useCartMutation } from "@/api/cart";
 import toast from "react-hot-toast";
 import { Spinner } from "@/components/ui/spinner";
 import { useRouter } from "next/navigation";
 import useAuthStore from "@/features/auth";
-import { useCartStore } from "@/app/cart/store";
-
 interface ProductDetailsProps {
   product: Product;
 }
 
 export const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   const [isLoading, setLoading] = useState(false);
-  const addToCart = useAddCartMutation();
+  const cart = useCartMutation();
   const { isAuthenticated, user } = useAuthStore();
-  const { addItem } = useCartStore()
   const router = useRouter();
 
   const handleAddToCart = () => {
-
-    addItem({
-      id: product.id,
-      product: product,
-      quantity: 1,
-      price: product.price,
-      amount: product.price,
-    });
-
-    toast.success(product.product_name.slice(0, 15) + `.. added to cart! 🛒`);
-
-    setTimeout(() => {
-      router.push("/cart");
-    }, 500)
-
-    return
     if (!isAuthenticated) {
-      return
+      toast.error("Please login to add items to cart.");
+      router.push("/login?redirect=/products/" + product.slug);
+      return;
     }
 
-    setLoading(true);
-    addToCart.mutate(
-      {
-        product_id: product.id,
-        quantity: 1
-      },
+    cart.mutate({
+      "product": product.id,
+      "qty": 1,
+      "action": "add"
+    },
       {
         onSuccess: () => {
-          toast.success(product.product_name + ` added to cart! 🛒`);
-          setLoading(false);
+          toast.success("Added to cart successfully!");
+          setTimeout(() => {
+            router.push("/cart");
+          }, 500)
         },
-        onError: (error: any) => {
-          toast.error(
-            error?.response?.data?.detail || "Failed to add to cart"
-          );
-          setLoading(false);
+        onError: () => {
+          toast.error("Server error! Please try again.");
         },
+        onSettled: () => setLoading(false)
       }
-    );
+    )
   };
 
   return (
     <div className="py-4">
       <div className="flex gap-4 items-center mb-8">
 
-        {/* <button className="bg-sucess text-primary-foreground py-2 px-6 rounded-md">Buy now</button> */}
         <button className="bg-sucess text-primary-foreground py-2 px-6 rounded-md" onClick={handleAddToCart}>
-
-          {/* Add to cart  */}
           {isLoading ? <><Spinner color="light" size="md" /> Adding</> : <span>Add to cart</span>}
         </button>
 

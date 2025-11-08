@@ -2,7 +2,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Checkbox } from "@/components/ui/checkbox";
-// import { RangeSelector } from "@/components/ui/range";
 
 interface MinMaxRange {
     min: number;
@@ -26,11 +25,8 @@ interface SearchFilterProps {
 const SearchFilter: React.FC<SearchFilterProps> = ({
     attributes,
     onFiltersChange,
-    priceMin = 0,
-    priceMax = 1000,
     defaultPriceRange = { min: 0, max: 1000 }
 }) => {
-    console.log(attributes)
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
@@ -55,6 +51,23 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
         };
     });
 
+    // Sort function: selected items first, then alphabetically
+    const sortBySelection = (items: Array<{ name: string, id: string }>, selectedIds: string[]) => {
+        return [...items].sort((a, b) => {
+            const aSelected = selectedIds.includes(a.id);
+            const bSelected = selectedIds.includes(b.id);
+            
+            // If one is selected and other is not, selected comes first
+            if (aSelected && !bSelected) return -1;
+            if (!aSelected && bSelected) return 1;
+            
+            // If both have same selection status, sort alphabetically
+            return a.name.localeCompare(b.name);
+        });
+    };
+
+    const sortedBrands = sortBySelection(brands, filterState.selectedBrands);
+    const sortedCategories = sortBySelection(categories, filterState.selectedCategories);
 
     const createSearchParams = useCallback((filters: FilterState) => {
         const params = new URLSearchParams();
@@ -153,7 +166,6 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
         onFiltersChange?.(filterState);
     }, []);
 
-
     return (
         <div className="space-y-6">
             {/* Filter Header */}
@@ -169,54 +181,6 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
                 )}
             </div>
 
-            {/* Active Filters Summary
-            {hasActiveFilters && (
-                <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                    <div className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-2">
-                        Active Filters:
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                        {(filterState.priceRange.min !== defaultPriceRange.min ||
-                            filterState.priceRange.max !== defaultPriceRange.max) && (
-                                <span className="inline-flex items-center px-2 py-1 bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-100 text-xs rounded-full">
-                                    {formatPrice(filterState.priceRange.min)} - {formatPrice(filterState.priceRange.max)}
-                                </span>
-                            )}
-                        {filterState.selectedBrands.map(brandId => {
-                            const brand = brands.find(b => b.id === brandId);
-                            return brand ? (
-                                <span key={brandId} className="inline-flex items-center px-2 py-1 bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100 text-xs rounded-full">
-                                    {brand.name}
-                                </span>
-                            ) : null;
-                        })}
-                        {filterState.selectedCategories.map(categoryId => {
-                            const category = categories.find(c => c.id === categoryId);
-                            return category ? (
-                                <span key={categoryId} className="inline-flex items-center px-2 py-1 bg-purple-100 dark:bg-purple-800 text-purple-800 dark:text-purple-100 text-xs rounded-full">
-                                    {category.name}
-                                </span>
-                            ) : null;
-                        })}
-                    </div>
-                </div>
-            )} */}
-
-            {/* Price Range Filter */}
-            {/* <div className="border-b border-gray-200 dark:border-gray-700 pb-6">
-                <div className="font-bold mb-4">Price Range</div>
-                <RangeSelector
-                    label="Price"
-                    min={priceMin}
-                    max={priceMax}
-                    step={10}
-                    value={filterState.priceRange}
-                    onValueChange={handlePriceRangeChange}
-                    formatValue={formatPrice}
-                    showValues={true}
-                />
-            </div> */}
-
             {/* Brand Filter */}
             {brands.length > 0 && (
                 <div className="border-b border-gray-200 dark:border-gray-700 pb-6">
@@ -229,7 +193,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
                         )}
                     </div>
                     <div className="space-y-3 max-h-60 overflow-y-auto">
-                        {brands.map(brand => (
+                        {sortedBrands.map(brand => (
                             <div key={brand.id} className="flex items-center gap-2">
                                 <Checkbox
                                     id={`brand-${brand.id}`}
@@ -262,7 +226,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
                         )}
                     </div>
                     <div className="space-y-3 max-h-60 overflow-y-auto">
-                        {categories.map(category => (
+                        {sortedCategories.map(category => (
                             <div key={category.id} className="flex items-center gap-2">
                                 <Checkbox
                                     id={`category-${category.id}`}
@@ -282,18 +246,6 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
                     </div>
                 </div>
             )}
-
-            {/* <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-                <div className="text-sm text-gray-600 dark:text-gray-400">
-                    {filterState.selectedBrands.length + filterState.selectedCategories.length > 0 ? (
-                        <>
-                            {filterState.selectedBrands.length + filterState.selectedCategories.length} filter{filterState.selectedBrands.length + filterState.selectedCategories.length !== 1 ? 's' : ''} applied
-                        </>
-                    ) : (
-                        'No filters applied'
-                    )}
-                </div>
-            </div> */}
         </div>
     );
 };

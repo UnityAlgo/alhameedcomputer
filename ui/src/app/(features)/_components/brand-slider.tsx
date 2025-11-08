@@ -1,9 +1,10 @@
 "use client";
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import Image from 'next/image';
-import { useBrandsList } from "@/api/brand";
+// import { useBrandsList } from "@/api/brand";
 
 const BrandSlider = () => {
+    return <></>
     const sliderRef = useRef<HTMLDivElement>(null);
     const animationRef = useRef<number | null>(null);
     const startTimeRef = useRef<number | null>(null);

@@ -18,21 +18,26 @@ class Cart(BaseModel):
     def calculate_totals(self):
         self.grand_total = sum(item.amount for item in self.items.all())
         self.total_amount = sum(item.amount for item in self.items.all())
-        self.total_qty = sum(item.quantity for item in self.items.all())
+        self.total_qty = sum(item.qty for item in self.items.all())
 
     def save(self, *args, **kwargs):
         self.calculate_totals()
         super().save(*args, **kwargs)
+    
+    def clear(self):
+        self.items.all().delete()
+        self.calculate_totals()
+        self.save()
 
-    def add_item(self, product, quantity, price=None):
+    def add_item(self, product, qty, price=None):
         item, created = CartItem.objects.get_or_create(
             cart=self,
             product=product,
-            defaults={"quantity": quantity, "price": price},
+            defaults={"qty": qty, "price": price},
         )
 
         if not created:
-            item.quantity += quantity
+            item.qty += qty
             item.save()
 
         self.calculate_totals()
@@ -44,18 +49,18 @@ class CartItem(BaseModel):
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name="cart_items"
     )
-    quantity = models.DecimalField(max_digits=10, decimal_places=2)
+    qty = models.DecimalField(max_digits=10, decimal_places=2)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return f"{self.product.product_name} - {self.quantity}"
+        return f"{self.product.product_name} - {self.qty}"
 
     def calculate_total_amount(self):
         if not self.price:
             self.price = self.product.get_price()
 
-        self.amount = self.price * self.quantity
+        self.amount = self.price * self.qty
 
     def save(self, *args, **kwargs):
         self.calculate_total_amount()

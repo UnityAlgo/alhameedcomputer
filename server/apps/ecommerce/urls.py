@@ -1,3 +1,4 @@
+from apps.ecommerce.api import OrderAPIView, OrderCheckoutAPIView
 from apps.ecommerce.api.product.public import ProductAPIView
 
 from django.urls import path
@@ -8,12 +9,13 @@ from apps.ecommerce.api.review.views import (
     ProductReviewListCreateAPIView,
 )
 from apps.ecommerce.api.cart.main import CartAPIView
-from apps.ecommerce.api.order.views import (
-    OrderAPIView,
-    OrderDetailAPIView,
-    OrderCreateAPIView,
-    OrderCancelAPIView,
-)
+
+# from apps.ecommerce.api.order.views import (
+#     OrderAPIView,
+#     OrderDetailAPIView,
+#     OrderCreateAPIView,
+#     OrderCancelAPIView,
+# )
 from apps.ecommerce.api.wishlist.views import (
     WishlistRetrieveAPIView,
     WishlistAddItemAPIView,
@@ -25,8 +27,9 @@ from apps.ecommerce.api.brand.views import BrandListAPIView, BrandDetailAPIView
 from apps.ecommerce.api.customer.views import ProfileAPIView
 
 from apps.ecommerce.api.address.views import (
-    AddressListCreateAPIView,
-    AddressDetailAPIView,
+    AddressAPIView,
+    # AddressListCreateAPIView,
+    # AddressDetailAPIView,
 )
 
 urlpatterns = [
@@ -36,14 +39,16 @@ urlpatterns = [
     path("api/categories", CategoryAPIView.as_view()),
     path("api/categories/<uuid:pk>/", CategoryDetailAPIView.as_view()),
     path("api/customer/cart", CartAPIView.as_view()),
+    path("api/orders/checkout", OrderCheckoutAPIView.as_view()),
     path("api/orders", OrderAPIView.as_view()),
-    path("api/orders/create/", OrderCreateAPIView.as_view()),
-    # path("api/orders/<uuid:pk>/", OrderDetailAPIView.as_view()),
-    path(
-        "api/orders/<uuid:pk>/cancel/",
-        OrderCancelAPIView.as_view(),
-        name="order-cancel",
-    ),
+    #
+    # path("api/orders/create/", OrderCreateAPIView.as_view()),
+    # # path("api/orders/<uuid:pk>/", OrderDetailAPIView.as_view()),
+    # path(
+    #     "api/orders/<uuid:pk>/cancel/",
+    #     OrderCancelAPIView.as_view(),
+    #     name="order-cancel",
+    # ),
     # Reviews
     path(
         "api/products/<uuid:product_id>/reviews",
@@ -72,10 +77,8 @@ urlpatterns = [
     # Customer Profile
     path("api/profile", ProfileAPIView.as_view(), name="customer-profile"),
     # Address Management
-    path(
-        "api/addresses", AddressListCreateAPIView.as_view(), name="address-list-create"
-    ),
-    path(
-        "api/addresses/<uuid:pk>", AddressDetailAPIView.as_view(), name="address-detail"
-    ),
+    path("api/user/address", AddressAPIView.as_view()),
+    # path(
+    #     "api/user/address/<uuid:pk>", AddressDetailAPIView.as_view(), name="address-detail"
+    # ),
 ]

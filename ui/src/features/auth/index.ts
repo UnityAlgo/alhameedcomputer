@@ -61,9 +61,9 @@ const decodeUser = (tokens: AuthTokens | null): User | null => {
 };
 
 export const useAuthStore = create<AuthStore>((set, get) => ({
-    tokens: null,
-    user: null,
-    isAuthenticated: false,
+    tokens: getAuthTokens(),
+    user: getAuthTokens() ? decodeUser(getAuthTokens()) : null,
+    isAuthenticated: getAuthTokens() ? true : false,
     isInitialized: false,
 
     login: (tokens: AuthTokens) => {

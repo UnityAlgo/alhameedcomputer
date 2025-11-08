@@ -102,7 +102,7 @@ class CartAdmin(ModelAdmin):
 
 @admin.register(CartItem)
 class CartItemAdmin(ModelAdmin):
-    list_display = ("cart", "product", "quantity", "price", "amount")
+    list_display = ("cart", "product", "qty", "price", "amount")
     search_fields = ("product__product_name", "cart__customer__user__email")
     ordering = ("-id",)
 
@@ -227,56 +227,56 @@ class PaymentMethodAdmin(ModelAdmin):
         return mark_safe('<span style="color: red;">●</span> Inactive')
 
 
-@admin.register(ShippingRule)
-class ShippingRuleAdmin(ModelAdmin):
-    list_display = [
-        "name",
-        "shipping_amount_display",
-        "min_order_amount",
-        "max_order_amount",
-        "free_shipping_threshold",
-        "is_active_badge",
-    ]
-    list_filter = [
-        "is_active",
-        "min_order_amount",
-        "created_at",
-    ]
-    search_fields = ["name"]
-    fieldsets = (
-        (
-            "Basic Information",
-            {
-                "fields": ("name", "is_active"),
-            },
-        ),
-        (
-            "Pricing",
-            {
-                "fields": (
-                    "shipping_amount",
-                    "free_shipping_threshold",
-                ),
-            },
-        ),
-        (
-            "Order Amount Range",
-            {
-                "fields": ("min_order_amount", "max_order_amount"),
-                "description": "Define the order amount range for this shipping rule",
-            },
-        ),
-    )
+admin.site.register(ShippingRule)
+# class ShippingRuleAdmin(ModelAdmin):
+#     list_display = [
+#         "name",
+#         "shipping_amount_display",
+#         "min_order_amount",
+#         "max_order_amount",
+#         "free_shipping_threshold",
+#         "is_active_badge",
+#     ]
+#     list_filter = [
+#         "is_active",
+#         "min_order_amount",
+#         "created_at",
+#     ]
+#     search_fields = ["name"]
+#     fieldsets = (
+#         (
+#             "Basic Information",
+#             {
+#                 "fields": ("name", "is_active"),
+#             },
+#         ),
+#         (
+#             "Pricing",
+#             {
+#                 "fields": (
+#                     "shipping_amount",
+#                     "free_shipping_threshold",
+#                 ),
+#             },
+#         ),
+#         (
+#             "Order Amount Range",
+#             {
+#                 "fields": ("min_order_amount", "max_order_amount"),
+#                 "description": "Define the order amount range for this shipping rule",
+#             },
+#         ),
+#     )
 
-    @display(description="Shipping Cost", ordering="shipping_amount")
-    def shipping_amount_display(self, obj):
-        return f"Rs{obj.shipping_amount}"
+#     @display(description="Shipping Cost", ordering="shipping_amount")
+#     def shipping_amount_display(self, obj):
+#         return f"Rs{obj.shipping_amount}"
 
-    @display(description="Status", label=True)
-    def is_active_badge(self, obj):
-        if obj.is_active:
-            return mark_safe('<span style="color: green;">●</span> Active')
-        return mark_safe('<span style="color: red;">●</span> Inactive')
+#     @display(description="Status", label=True)
+#     def is_active_badge(self, obj):
+#         if obj.is_active:
+#             return mark_safe('<span style="color: green;">●</span> Active')
+#         return mark_safe('<span style="color: red;">●</span> Inactive')
 
 
 @admin.register(Order)

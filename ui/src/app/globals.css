@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+
 
 @theme {
   --font-poppins: var(--font-poppins), sans-serif;
@@ -14,6 +16,17 @@
   --color-warning: #fbbf24;
   --color-destructive: #ca2a30;
 }
+
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button,
+input[type='number'] {
+  -webkit-appearance: none;
+  -moz-appearance: textfield !important;
+  /* --color-input: #a7a7a7; */
+  margin: 0;
+}
+
+
 
 html {
   scroll-behavior: smooth;
@@ -39,4 +52,44 @@ html {
 
 .ql-editor ol {
   padding-left: 0 !important;
+}
+
+@layer base {
+  * {
+    border-color: #ebebea;
+  }
+}
+
+
+@theme {
+  --color-accent: #f7f7f7;
+  --color-accent-foreground: #2f2f2f;
+  --color-primary: #020202;
+  --color-primary-foreground: #f3f3f3;
+
+  --color-ring: #a1a1a1;
+  --color-destructive: oklch(0.577 0.245 27.325);
+  --color-destructive-foreground: #ffffff;
+
+  --color-secondary: oklch(0.967 0.001 286.375);
+
+  --color-secondary-foreground: #2f2f2f;
+  --color-muted: #f7f7f7;
+  --color-muted-foreground: #8e8e8e;
+
+  --color-muted: #f3f4f6;
+  --color-hover-bg: #ede9fe;
+  --color-background: #ffffff;
+  --color-sidebar: #f9fafb;
+  --color-foreground: #1f2937;
+  --color-popover: var(--color-background);
+
+
+
+  --font-poppins: 'Poppins', sans-serif;
+  --font-sans: "Geist", sans-serif;
+  --font-roboto: 'Roboto', sans-serif;
+
+  --color-input: #d1d5db;
+  --color-muted-foreground: #6b7280;
 }

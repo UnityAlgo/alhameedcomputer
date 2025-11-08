@@ -5,6 +5,7 @@ from .product import Product, BaseModel
 from .customer import Customer
 from apps.user_auth.models.base import Address
 from .product import PriceList
+from .shipping_rule import ShippingRule
 
 
 class OrderStatus(models.TextChoices):
@@ -25,57 +26,16 @@ class DeliveryStatus(models.TextChoices):
     CANCELED = "canceled", "Canceled"
 
 
-class PaymentMethod(BaseModel):
-    name = models.CharField(max_length=100)
+class PaymentMethod(models.Model):
+    name = models.CharField(
+        max_length=100, unique=True, null=False, blank=False, primary_key=True
+    )
     is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
-
-
-class ShippingRule(BaseModel):
-    name = models.CharField(max_length=255)
-    shipping_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    min_order_amount = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        default=0,
-        help_text="Minimum order amount for this shipping rule to apply",
-    )
-    max_order_amount = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        null=True,
-        blank=True,
-        help_text="Maximum order amount for this shipping rule (leave blank for no limit)",
-    )
-    is_active = models.BooleanField(default=True)
-    free_shipping_threshold = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        null=True,
-        blank=True,
-        help_text="Order amount above which shipping is free",
-    )
-
-    class Meta:
-        ordering = ["min_order_amount"]
-
-    def __str__(self):
-        return f"{self.name} - ${self.shipping_amount}"
-
-    # def applies_to_order(self, order_amount):
-    #     """Check if this shipping rule applies to the given order amount"""
-    #     if not self.is_active:
-    #         return False
-    #     if order_amount < self.min_order_amount:
-    #         return False
-    #     if self.max_order_amount and order_amount > self.max_order_amount:
-    #         return False
-    #     return True
-
-    def calculate_shipping_cost(self):
-        return self.shipping_amount
 
 
 class Order(BaseModel):
@@ -124,7 +84,7 @@ class Order(BaseModel):
 
     def generate_order_id(self):
         count = Order.objects.count() + 1
-        return f"ORD-{timezone.now().strftime('%Y%m%d')}-{str(count).zfill(5)}"
+        return f"ORD-{str(count).zfill(5)}"
 
     def calculate_shipping(self):
         if not self.shipping_rule:
@@ -187,7 +147,8 @@ class OrderItem(BaseModel):
 
     def save(self, *args, **kwargs):
         if not self.price:
-            self.price = self.product.final_price
+            self.price = self.product.get_price()
+
         self.calculate_total_amount()
         super().save(*args, **kwargs)
         if self.order:

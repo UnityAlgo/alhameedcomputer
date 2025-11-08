@@ -1,7 +1,8 @@
 "use client";
 
+import axios from "axios";
 import Link from "next/link";
-import { useState, useRef, FormEvent, KeyboardEvent, ReactEventHandler, useEffect } from "react";
+import { useState, useRef, FormEvent, KeyboardEvent, useEffect } from "react";
 import {
   Loader2,
   LogOut,
@@ -12,10 +13,9 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
-import axios from "axios";
 import { API_URL } from "@/api";
 import useAuthStore from "@/features/auth";
-import { logout as serverLogout } from "@/app/lib/logout";
+
 
 export const Header = () => {
   const { isAuthenticated, user, logout } = useAuthStore();
@@ -24,12 +24,10 @@ export const Header = () => {
   return (
     <>
       <header className="shadow-sm">
-        <div className="md:flex md:items-center md:justify-between max-w-6xl mx-auto px-2 md:px-4 py-4 grid grid-cols-2 gap-2">
-
+        <div className="md:flex md:items-center md:justify-between max-w-6xl mx-auto px-2 md:px-4  grid grid-cols-2 gap-2">
           <Link href="/">
-            <img alt="Al Hameed Computers" className="h-16 w-16 object-cover hidden md:block" src="/logo.png" />
+            <img alt="Al Hameed Computers" className="h-24 w-24 object-cover hidden md:block" src="/logo.png" />
             <img alt="Al Hameed Computers" className="md:hidden w-32" src="/m-logo.png" />
-
           </Link>
 
           <div className="col-span-2 order-3 md:order-none" >
@@ -64,7 +62,7 @@ export const Header = () => {
                     </li>
 
                     <li className="border-t border-accent">
-                      <button 
+                      <button
                         onClick={logout}
                         className="w-full text-left px-4 py-2 text-red-700 items-center flex gap-2 cursor-pointer outline-none disabled:opacity-50"
                       >
@@ -222,7 +220,6 @@ const Searchbar = () => {
   };
 
   const showDropdown = isOpen && (suggestions.length > 0 || isLoading || error);
-  // const showDropdown = true;
 
   return (
     <form

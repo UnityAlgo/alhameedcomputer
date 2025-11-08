@@ -34,9 +34,6 @@ class SearchProductAPIView(APIView):
         if max_price:
             queryset_filters &= Q(price__lte=max_price)
 
-        if request.get("brands"):
-            brands = request.get("brands").split(",")
-            queryset_filters &= Q(brand__id__in=brands)
 
         product_queryset = (
             Product.objects.filter(queryset_filters)
@@ -44,8 +41,14 @@ class SearchProductAPIView(APIView):
             .order_by("-created_at")
         )
 
-        brands = Brand.objects.all().distinct()
+        
         categories = Category.objects.all().distinct()
+        brands = Brand.objects.filter(id__in=product_queryset.values("brand")).distinct()
+
+        if request.get("brands"):
+            product_queryset = product_queryset.filter(brand__id__in=request.get("brands").split(","))
+
+
 
         paginator = ProductPagination(page_size=10)
         paginated_products = paginator.paginate_queryset(product_queryset, self.request)

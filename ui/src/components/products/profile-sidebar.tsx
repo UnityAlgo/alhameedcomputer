@@ -1,82 +1,76 @@
 'use client'
 import { usePathname } from "next/navigation";
-import { useAuth } from "@/hooks/index";
-
 import Link from "next/link";
 import {
   User,
   Package,
   MapPin,
-  Heart,
   LogOut,
-  LayoutDashboardIcon,
-  KeyRound,
 } from "lucide-react";
 import useAuthStore from "@/features/auth";
 
-const ProfileSidebar = () => {
-  const { isAuthenticated, user, logout } = useAuthStore();
+export const Sidebar = () => {
+  const { logout, user } = useAuthStore();
   const pathname = usePathname();
+
+  if (!user) {
+    return null;
+  }
 
   const tabs = [
     { id: "overview", label: "Profile", icon: User, href: "/profile" },
-    // { id: "change_password", label: "Change Password", icon: KeyRound, href: "/change_password" },
-    { id: "orders", label: "Orders", icon: Package, href: "/orders" },
-    { id: "addresses", label: "Addresses", icon: MapPin, href: "/addresses" },
-    // { id: "wishlist", label: "Wishlist", icon: Heart, href: "/wishlist" },
+    { id: "orders", label: "Orders", icon: Package, href: "/profile/orders" },
+    { id: "addresses", label: "Addresses", icon: MapPin, href: "/profile/address" },
     { id: "logout", label: "Logout", icon: LogOut, action: logout },
   ];
 
   return (
-    <div className="overflow-hidden hide-scrollbar">
-      <nav
-        className="
-          flex sm:flex-col 
-          overflow-x-auto lg:overflow-visible 
-          bg-white rounded-lg shadow-sm border border-gray-200"
-      >
-        <h2
-          className="flex justify-center items-center gap-2 sm:justify-start p-4 text-base font-semibold"
-        >
-          <LayoutDashboardIcon className="h-5 w-5 text-blue-600"/>
-          Overview
+    <div className="w-full">
+      {/* Greeting Section */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-4">
+        <h2 className="text-base font-semibold text-gray-900">
+          Hello, {user.full_name || user.username}
         </h2>
-        {tabs.map((tab) => {
-          const Icon = tab.icon;
+      </div>
 
-          if (tab.id === "logout") {
+      {/* Navigation */}
+      <nav className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <div className="flex sm:flex-col overflow-x-auto sm:overflow-visible">
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+
+            if (tab.id === "logout") {
+              return (
+                <button
+                  key={tab.id}
+                  onClick={tab.action}
+                  className="flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors text-red-600 hover:bg-red-50 w-full whitespace-nowrap"
+                >
+                  <Icon className="h-5 w-5 flex-shrink-0" />
+                  <span>Logout</span>
+                </button>
+              );
+            }
+
+            const isActive = pathname === tab.href;
+
             return (
-              <button
+              <Link
                 key={tab.id}
-                onClick={tab.action}
-                className="flex items-center space-x-2 px-4 py-3 text-sm font-medium transition-colors text-red-600 hover:bg-red-50 w-full text-left cursor-pointer"
+                href={tab.href}
+                className={`flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors whitespace-nowrap
+                  ${isActive
+                    ? "bg-blue-50 text-blue-700 border-l-4 sm:border-l-4 border-blue-700"
+                    : "text-gray-700 hover:bg-gray-50 border-l-4 border-transparent"
+                  }`}
               >
-                <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
+                <Icon className="h-5 w-5 flex-shrink-0" />
                 <span>{tab.label}</span>
-              </button>
+              </Link>
             );
-          }
-
-          const isActive = pathname === tab.href;
-
-          return (
-            <Link
-              key={tab.id}
-              href={tab.href!}
-              className={`flex items-center space-x-2 px-4 py-3 text-sm font-medium transition-colors 
-                ${isActive
-                  ? "bg-blue-50 text-blue-700 border-b-2 sm:border-b-0 sm:border-r-2 border-blue-700"
-                  : "text-gray-600 hover:bg-gray-50"
-                }`}
-            >
-              <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
-              <span>{tab.label}</span>
-            </Link>
-          );
-        })}
+          })}
+        </div>
       </nav>
     </div>
   );
 };
-
-export default ProfileSidebar;
