@@ -3,25 +3,12 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { ProductType } from "@/components/products/product-card";
 
-type ProductParams = {
-  search?: string;
-  category?: string;
-  brand?: string;
-  min_price?: number;
-  max_price?: number;
-  rating?: number;
-  in_stock?: boolean;
-  sort?: string;
-};
 
-
-export const useProductsList = (params?: ProductParams) => {
+export const useProductsList = (params: string = "") => {
   return useQuery({
-    queryKey: ["get-products", params],
-    queryFn: async (): Promise<ProductType[]> => {
-      const { data } = await axios.get(`${API_URL}api/products`, {
-        params,
-      });
+    queryKey: ["get-products"],
+    queryFn: async (): Promise<Record<string, ProductType[]>> => {
+      const { data } = await axios.get(`${API_URL}api/products${params}`);
       return data;
     },
     staleTime: 1000 * 60 * 5,

@@ -81,7 +81,7 @@ const AddressDialog = ({ onSelect }: { onSelect: (address: TypeAddress) => void 
           Confirm Address
         </Button>
         <Button variant="outline" asChild>
-          <Link href="/account/addresses/new">Add New</Link>
+          <Link href="/profile/address/new">Add New</Link>
         </Button>
       </div>
     </div>
@@ -98,6 +98,8 @@ const useCheckoutMutation = () => {
     retry: 2,
   })
 }
+
+
 export const CartSummary: React.FC<CartSummaryProps> = ({ cart }) => {
   const router = useRouter();
   const [selectedAddress, setSelectedAddress] = useState<TypeAddress | null>(null);
@@ -127,10 +129,13 @@ export const CartSummary: React.FC<CartSummaryProps> = ({ cart }) => {
       onSuccess: (data) => {
         toast.success("Order placed successfully");
 
-        // setTimeout(() => {
-        //   router.push("/profile/orders");
-        // }, 500)
-
+        setTimeout(() => {
+          router.push("/profile/orders");
+        }, 500)
+      },
+      onError: (error: any) => {
+        toast.error("Failed to place order please try again later");
+        toast.success("You can also place an order by calling us at +92 302 9779392.");
       }
     })
 
@@ -145,6 +150,7 @@ export const CartSummary: React.FC<CartSummaryProps> = ({ cart }) => {
           <span>{cart.items.length} {cart.items.length === 1 ? 'item' : 'items'}</span>
         </div>
       </div>
+
 
       <div className="space-y-3 mb-6">
         <div className="flex justify-between text-sm">

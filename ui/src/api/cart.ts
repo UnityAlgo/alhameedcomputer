@@ -96,7 +96,6 @@ const useUpdateCartItem = () => {
       if (context?.previousCart) {
         queryClient.setQueryData(["get-cart"], context.previousCart);
       }
-      console.error("Update cart item error:", error);
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["get-cart"] });

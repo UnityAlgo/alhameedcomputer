@@ -30,9 +30,6 @@ const useOrderQuery = (): UseQueryResult<TypeOrder[]> => {
 
 const Index = () => {
   const { data, error, isLoading } = useOrderQuery();
-
-  console.log(data, error);
-
   return (
     <div className="py-6">
       <div className="mb-4 ">

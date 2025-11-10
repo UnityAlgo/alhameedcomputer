@@ -8,7 +8,7 @@ from apps.ecommerce.serializers.product import ProductSerializer, ProductListSer
 class ProductAPIView(APIView):
     def get(self, *args, **kwargs):
         request = self.request
-        print(request.GET.get("slug"))
+
         if request.GET.get("slug"):
             try:
                 product_queryset = Product.objects.annotate(price=price_subquery).get(
@@ -30,4 +30,19 @@ class ProductAPIView(APIView):
         serializer = ProductListSerializer(
             product_queryset, many=True, context={"request": self.request}
         )
-        return Response(serializer.data)
+        types = request.GET.get("type")
+        print(types)
+        data = {}
+
+        if types:
+            if "deals" in types:
+                deals_queryset = Product.objects.filter(category__name="Deals")[:20]
+                deals_serializer = ProductListSerializer(
+                    deals_queryset, many=True, context={"request": self.request}
+                )
+                data["deals"] = deals_serializer.data
+
+            if "products" in types:
+                data["products"] = serializer.data
+
+        return Response(data=data if data else serializer.data)

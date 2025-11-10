@@ -13,7 +13,6 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
     const { data: address, isLoading } = useAddressQuery({ enabled: !isNew, id });
     const mutation = useAddressMutation();
 
-    console.log(address);
 
     const handleSubmit = (values: TypeAddress) => {
         const payload = isNew ? values : { ...values, id: address?.id };

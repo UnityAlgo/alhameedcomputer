@@ -3,8 +3,7 @@
 import React, { useState } from "react";
 import { MapPin, Mail, Phone, Home, Building2, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
-// import { input } from "@/components/ui/input";
-// import { label } from "@/components/ui/label";
+
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
@@ -32,8 +31,8 @@ type AddressFormData = {
 };
 
 type AddressFormProps = {
-  onSubmit: (data: AddressFormData) => void;
-  initialData?: Partial<AddressFormData>;
+  onSubmit: (data: TypeAddress) => void;
+  initialData?: Partial<TypeAddress>;
   isLoading?: boolean;
 };
 
@@ -70,8 +69,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
 }) => {
 
 
-  console.log(initialData)
-  const [formData, setFormData] = useState<AddressFormData>(() => ({
+  const [formData, setFormData] = useState<TypeAddress>(() => ({
     title: initialData?.title || "",
     default: initialData?.default || false,
     address_type: initialData?.address_type || "home",
@@ -117,7 +115,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
     }
 
 
-    if (!formData.phone_number.trim()) {
+    if (!formData.phone_number?.trim()) {
       newErrors.phone_number = "Phone number is required";
     }
 
@@ -221,7 +219,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
           </label>
           <Select
             value={formData.country}
-            onValueChange={(value) => handleChange("country", value)}
+            onValueChange={(value: string) => handleChange("country", value)}
             defaultValue={"Pakistan"}
             disabled={true}
           >
@@ -244,7 +242,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
           </label>
           <Select
             value={formData.state}
-            onValueChange={(value) => handleChange("state", value)}
+            onValueChange={(value: string) => handleChange("state", value)}
           >
             <SelectTrigger className={errors.state ? "border-destructive" : ""}>
               <SelectValue placeholder="Select state" />

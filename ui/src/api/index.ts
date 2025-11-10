@@ -45,8 +45,6 @@ axiosClient.interceptors.response.use(
                 const { refresh } = tokens;
                 const response = await axios.post(API_URL + "api/login/refresh", { refresh });
 
-                console.warn(response.statusText);
-
                 if (response.status === 200 && response.data.access) {
                     const updatedTokens = { access: response.data.access, refresh };
                     safeLocalStorage.setItem("tokens", JSON.stringify(updatedTokens));

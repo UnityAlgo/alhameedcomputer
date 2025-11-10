@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient, UseQueryResult } from "@tanstack
 import { axiosClient } from "@/api";
 
 export interface TypeAddress {
-  id: string;
+  id?: string;
   title: string;
   default: boolean;
   address_type: string;

@@ -7,8 +7,7 @@ import { Spinner } from '@/components/ui/spinner';
 
 
 const ProductsGird = () => {
-    const { data, isLoading, error } = useProductsList();
-
+    const { data, isLoading, error } = useProductsList("?type=deals,products");
     if (isLoading) {
         return <div className='py-16 flex justify-center flex-col items-center'>
             <Spinner size='lg' className='mb-4' />
@@ -16,7 +15,12 @@ const ProductsGird = () => {
         </div>;
     }
 
-    if (!data || !data.length || error) {
+
+
+    const deals = data["deals"];
+    const products = data["products"];
+
+    if (!products || !products.length || error) {
         return (<div className="flex justify-center py-16">
             <div className='text-center'>
                 <img src={"https://cdn-icons-png.flaticon.com/512/17597/17597096.png"} className='w-32 h-32 mx-auto' />
@@ -25,18 +29,37 @@ const ProductsGird = () => {
         </div>)
     }
 
-    return (
-        <section className="py-8">
-            <div className='mb-4 font-semibold'>
-                NEW ARRIVALS
-            </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 gap-2" >
-                {data.map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                ))}
-            </div>
-        </section>
+    return (
+        <div>
+            {
+                deals?.length ?
+                    <section className="py-8">
+                        <div className='mb-4 font-semibold'>
+                            Our Deals
+                        </div>
+
+                        <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 gap-2" >
+                            {deals.map((product) => (
+                                <ProductCard key={product.id} product={product} />
+                            ))}
+                        </div>
+                    </section> : <></>
+            }
+
+            {products ? <section className="py-8">
+                <div className='mb-4 font-semibold'>
+                    HOT SALE
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 gap-2" >
+                    {products.map((product) => (
+                        <ProductCard key={product.id} product={product} />
+                    ))}
+                </div>
+            </section> : <></>}
+
+        </div>
     );
 };
 

@@ -129,10 +129,6 @@ const Page = () => {
             }
         }
 
-        console.log('FormData contents:');
-        for (let pair of payload.entries()) {
-            console.log(pair[0] + ':', pair[1]);
-        }
 
         mutation.mutate(payload);
     }
@@ -151,7 +147,6 @@ const Page = () => {
                     <ImageInputAvator defaultValue={typeof formData.image === 'string' ? formData.image : undefined}
 
                         onChange={(file) => {
-                            console.log(file)
                             setFormData(prev => ({ ...prev, image: file }))
                         }} />
                 </div>
