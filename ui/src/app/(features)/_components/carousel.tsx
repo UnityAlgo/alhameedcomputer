@@ -2,12 +2,20 @@
 
 import React, { useRef, useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import Link from "next/link";
 
 type Slide = {
     img: string;
+    sm: string;
+    href?: string;
 };
 
 const HERO_SLIDES: Slide[] = [
+  {
+        img: "/images/cover-0.jpg",
+        sm: "/images/cover-sm-0.jpg",
+        "href": "/search?categories=4b694f5d-f853-4775-99ef-cdca44668b40"
+    },
     {
         img: "/images/cover-1.jpeg",
         sm: "/images/cover-sm-1.jpg",
@@ -68,17 +76,19 @@ const Carousel = ({ slides, autoPlay=true }: { slides: Slide[], autoPlay?: boole
       >
         {slides.map((s, i) => (
           <div key={i} className="min-w-full relative h-[250px] md:h-[360px]">
+            <Link href={s.href || "#"}>
             <img
               src={s.img}
               alt={`Slide ${i + 1}`}
               className="w-full h-full object-cover hidden sm:block"
-            />
+              />
 
             <img
               src={s.sm}
               alt={`Slide ${i + 1}`}
               className="w-full h-full object-cover sm:hidden"
-            />
+              />
+              </Link>
           </div>
         ))}
       </div>
