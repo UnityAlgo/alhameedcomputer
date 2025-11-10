@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { twMerge } from 'tailwind-merge'
 import * as React from "react"
+import moment from "moment";
 
 const MOBILE_BREAKPOINT = 768
 
@@ -67,5 +68,20 @@ export const safeLocalStorage = {
     },
 };
 
+export const formatDate = (dateString: string, format = "MMMM Do, YYYY"): string => {
+    return moment(dateString).format(format);
+}
 
+
+
+export const validatePhoneNumber = (phone: string): boolean => {
+  const cleaned = phone.replace(/[\s\-()]/g, '');
+  const patterns = [
+    /^\+92[3-9]\d{9}$/,
+    /^92[3-9]\d{9}$/,
+    /^0?3[0-9]\d{8}$/
+  ];
+
+  return patterns.some(pattern => pattern.test(cleaned));
+};
 export { float, formatCurrency, decimal, useIsMobile, cn, integer, isActiveURL };

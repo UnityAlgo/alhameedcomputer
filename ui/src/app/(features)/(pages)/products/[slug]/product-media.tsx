@@ -81,13 +81,13 @@ export const ProductMedia = ({
               : "opacity-100 translate-x-0"
           }`}
         >
-          <Image
+          <img
             src={carouselItems[selectedImage]}
             alt={product.product_name || "Product image"}
-            width={600}
-            height={600}
+            // width={600}
+            // height={600}
             className="w-full h-full object-contain p-4"
-            priority={selectedImage === 0}
+            // priority={selectedImage === 0}
           />
         </div>
 

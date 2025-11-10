@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useOrders } from "@/api/orders";
-import BuyNowButton from "@/components/products/BuyButton";
 import { API_URL } from "@/api";
 import { formatCurrency } from "@/utils";
 

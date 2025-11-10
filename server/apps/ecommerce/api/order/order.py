@@ -33,7 +33,9 @@ class OrderAPIView(APIView):
         if order_id:
             try:
                 orders_queryset = Order.objects.get(id=order_id)
-                serializer = OrderSerializer(orders_queryset)
+                serializer = OrderSerializer(
+                    orders_queryset, context={"request": self.request}
+                )
             except Order.DoesNotExist:
                 return Response(
                     {"detail": "Order not found"}, status=status.HTTP_404_NOT_FOUND
@@ -43,7 +45,9 @@ class OrderAPIView(APIView):
             orders_queryset = Order.objects.filter(customer=customer).order_by(
                 "-order_date"
             )
-            serializer = OrderSerializer(orders_queryset, many=True)
+            serializer = OrderSerializer(
+                orders_queryset, many=True, context={"request": self.request}
+            )
         return Response(serializer.data)
 
 

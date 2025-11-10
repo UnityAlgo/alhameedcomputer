@@ -22,11 +22,11 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <>
       <Header />
-      <main className="max-w-6xl mx-auto px-2 md:px-4 py-4 grid grid-cols-1 sm:grid-cols-6 gap-4">
-        <div className="col-span-1 sm:col-span-2">
+      <main className="max-w-6xl mx-auto px-2 md:px-4 py-4 grid grid-cols-1 sm:grid-cols-8 gap-4">
+        <div className="hidden sm:col-span-2 sm:block ">
           <Sidebar />
         </div>
-        <div className="col-span-1 sm:col-span-4 w-full bg-white rounded-lg shadow-sm border border-gray-200 min-h-[60vh]">{children}</div>
+        <div className="col-span-1 sm:col-span-6 w-full min-h-[60vh] px-2">{children}</div>
       </main>
       <Footer />
     </>

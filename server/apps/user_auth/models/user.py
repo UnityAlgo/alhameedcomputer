@@ -38,6 +38,8 @@ class User(AbstractUser):
     dob = models.DateField(null=True, blank=True)
     username = models.CharField(max_length=50, unique=False, null=False)
     mobile = models.CharField(max_length=50, unique=True, null=True, blank=True)
+    image = models.ImageField(null=True, blank=True)
+
     objects = UserManager()
 
     USERNAME_FIELD = "email"

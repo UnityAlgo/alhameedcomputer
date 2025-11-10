@@ -4,69 +4,77 @@ import Link from "next/link";
 import {
   User,
   Package,
-  MapPin,
-  LogOut,
 } from "lucide-react";
 import useAuthStore from "@/features/auth";
+import { cn } from "@/utils";
 
 export const Sidebar = () => {
-  const { logout, user } = useAuthStore();
+  const { user } = useAuthStore();
   const pathname = usePathname();
 
   if (!user) {
     return null;
   }
 
-  const tabs = [
-    { id: "overview", label: "Profile", icon: User, href: "/profile" },
-    { id: "orders", label: "Orders", icon: Package, href: "/profile/orders" },
-    { id: "addresses", label: "Addresses", icon: MapPin, href: "/profile/address" },
-    { id: "logout", label: "Logout", icon: LogOut, action: logout },
+  const rows = [
+    {
+      label: "Manage My Account", icon: User, href: "/profile",
+      childrens: [
+        { label: "My Profile", href: "/profile" },
+        { label: "Edit Profile", href: "/profile/edit-profile" },
+        { label: "Change Password", href: "/profile/change-password" },
+        { label: "Address Book", href: "/profile/address" },
+      ]
+    },
+    {
+      id: "orders", label: "My Orders", icon: Package, href: "/profile/orders",
+      childrens: [
+        { label: "Pending Orders", href: "/profile/orders?status=pending" },
+        { label: "My Returns", href: "/profile/orders?status=returned" },
+        { label: "My Cancellations", href: "/profile/orders?status=cancelled" },
+      ]
+    },
   ];
 
   return (
-    <div className="w-full">
-      {/* Greeting Section */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-4">
-        <h2 className="text-base font-semibold text-gray-900">
+    <div className="w-full px-4 py-6">
+
+      <div className="mb-4">
+        <h2 className="text-base font-semibold">
           Hello, {user.full_name || user.username}
         </h2>
       </div>
 
-      {/* Navigation */}
-      <nav className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <nav className="overflow-hidden">
         <div className="flex sm:flex-col overflow-x-auto sm:overflow-visible">
-          {tabs.map((tab) => {
-            const Icon = tab.icon;
-
-            if (tab.id === "logout") {
-              return (
-                <button
-                  key={tab.id}
-                  onClick={tab.action}
-                  className="flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors text-red-600 hover:bg-red-50 w-full whitespace-nowrap"
-                >
-                  <Icon className="h-5 w-5 flex-shrink-0" />
-                  <span>Logout</span>
-                </button>
-              );
-            }
-
-            const isActive = pathname === tab.href;
+          {rows.map((i, idx) => {
+            const Icon = i.icon;
+            const isActive = pathname === i.href;
 
             return (
-              <Link
-                key={tab.id}
-                href={tab.href}
-                className={`flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors whitespace-nowrap
-                  ${isActive
-                    ? "bg-blue-50 text-blue-700 border-l-4 sm:border-l-4 border-blue-700"
-                    : "text-gray-700 hover:bg-gray-50 border-l-4 border-transparent"
-                  }`}
+              <div className="py-2" key={idx}
               >
-                <Icon className="h-5 w-5 flex-shrink-0" />
-                <span>{tab.label}</span>
-              </Link>
+                <div
+                  className={cn("flex items-center gap-2 p-2 py-1 text-sm font-medium transition-colors whitespace-nowrap rounded-md",
+                    isActive
+                      ? "text-blue-700"
+                      : "",
+                    i.childrens ? "hover:bg-accent" : ""
+                  )}
+                >
+                  <Icon className="size-4 flex-shrink-0" />
+                  <span>{i.label}</span>
+                </div>
+                {i.childrens && (
+                  <div className="ml-6 mt-1 ">
+                    {i.childrens.map((child, j) => (
+                      <Link key={j} className="block text-xs py-1 px-2 hover:bg-accent rounded-md" href={child.href}>
+                        {child.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
             );
           })}
         </div>
