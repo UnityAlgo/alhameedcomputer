@@ -21,7 +21,7 @@ export const generateMetadata = async ({ params }: { params: { slug: string } })
     const metaData = product.meta_data || {};
     const title = metaData.title || productName.slice(0, 60)
     const description = metaData.description || product.description
-    const images = [product.cover_image, ...(product.images || [])]
+    const images = [product.cover_image, ...(product.image || [])]
       .filter(Boolean)
       .map(img => ({
         url: img,
@@ -82,7 +82,7 @@ export const generateMetadata = async ({ params }: { params: { slug: string } })
   }
 };
 
-export default async function ProductPage({ params }: ProductPageProps) {
+export default async function Page({ params }: ProductPageProps) {
   const { slug } = await params;
   const response = await axios.get(`${API_URL}api/products?slug=${slug}`);
   const product = response.data;
@@ -163,7 +163,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-16">
             <div className="space-y-4">
-              <ProductMedia images={product.images} product={product} />
+              <ProductMedia image={product.image} product={product} />
             </div>
 
             <div className="space-y-6">

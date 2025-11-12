@@ -4,12 +4,18 @@ import axios from "axios";
 import Link from "next/link";
 import { useState, useRef, FormEvent, KeyboardEvent, useEffect } from "react";
 import {
+  Heart,
   Loader2,
   LogOut,
+  MapPin,
   Menu,
+  MessageSquareHeart,
+  Package,
   Search,
   ShoppingCart,
   UserRound,
+  UserRoundCog,
+  X,
 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -42,16 +48,80 @@ export const Header = () => {
             </Link>
           </div>
           {isActive && (
-            <div className="absolute bg-white w-60 h-full z-60">
-              <div>
-
+            <div className="absolute top-0 left-0 bg-white rounded-md shadow-md w-60 h-full z-50">
+              <div className="flex justify-between gap-2 px-2 pt-2 pb-4 border-b border-accent items-center">
+                <Link href="/" className="">
+                  <img alt="Al Hameed Computers" className="w-28 object-contain" src="/m-logo.png" />
+                </Link>
+                <button>
+                  <X size={22} onClick={() => setIsActive(false)} />
+                </button>
               </div>
-              <ul>
-                <li className="flex items-center gap-2 px-4">
-                  <UserRound className="size-5" />
-                  <Link href="/profile" className="hover:bg-gray-100">
-                    Your Profile
-                  </Link>
+              <ul className="text-sm text-gray-700">
+                {isAuthenticated && user ? (
+                  <>
+                    <div className="my-4 px-2">
+                      <h2 className="text-base font-semibold">
+                        Hello, {user.full_name || user.username}
+                      </h2>
+                    </div>
+                    <h4 className="font-bold px-2 py-2 border-t border-accent">Settings</h4>
+                    <li>
+                      <Link href="/profile" className="flex gap-2 px-4 py-2 hover:bg-gray-100">
+                        <UserRoundCog className="h-4.5 w-4.5" />
+                        Your Profile
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/profile/orders" className="flex gap-2 px-4 py-2 hover:bg-gray-100">
+                        <Package className="h-4.5 w-4.5" />
+                        Your Orders
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/profile/orders" className="flex gap-2 px-4 py-2 hover:bg-gray-100">
+                        <MessageSquareHeart className="h-4.5 w-4.5" />
+                        Your Reviews
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/profile/orders" className="flex gap-2 px-4 py-2 hover:bg-gray-100">
+                        <MapPin className="h-4.5 w-4.5" />
+                        Address Book
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/profile/orders" className="flex gap-2 px-4 py-2 hover:bg-gray-100">
+                        <Heart className="h-4.5 w-4.5" />
+                        Wishlist
+                      </Link>
+                    </li>
+
+                  </>
+                ) : null
+                }
+                <li className="border-t border-accent">
+                  {isAuthenticated ? (
+                    <button
+                      onClick={logout}
+                      className="w-full text-left px-4 py-2 text-red-700 items-center flex gap-2 cursor-pointer outline-none disabled:opacity-50"
+                    >
+                      <LogOut className="h-4.5 w-4.5" />
+                      Logout
+                    </button>
+                  ) : (
+                    <>
+                      <div className="px-2 py-4">
+                        <h2 className="text-base font-semibold">
+                          Welcome to Al Hameed Computers!
+                        </h2>
+                      </div>
+                      <Link href="/login" className="flex gap-2 px-4 py-2 hover:bg-gray-100">
+                        <LogOut className="h-4.5 w-4.5" />
+                        Sign In
+                      </Link>
+                    </>
+                  )}
                 </li>
               </ul>
             </div>

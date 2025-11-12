@@ -8,17 +8,25 @@ interface Product {
   product_name?: string;
 }
 
+
+type MediaFile = {
+  image: string | null;
+  video: string | null;
+}
 export const ProductMedia = ({
-  images,
+  files,
   product,
 }: {
-  images: string[];
+  files: MediaFile[];
   product: Product;
 }) => {
+  
+  // const image = files.map(file => file.image);
   const carouselItems = [
     product.cover_image,
-    ...(images || []),
+    ...(files || []),
   ].filter((img): img is string => Boolean(img));
+
 
   const [selectedImage, setSelectedImage] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -73,22 +81,19 @@ export const ProductMedia = ({
     <div className="space-y-4">
       <div className="relative group aspect-square bg-white rounded-xl border border-gray-200 overflow-hidden">
         <div
-          className={`w-full h-full transition-all duration-300 ${
-            isTransitioning
-              ? direction === "right"
-                ? "opacity-0 translate-x-8"
-                : "opacity-0 -translate-x-8"
-              : "opacity-100 translate-x-0"
-          }`}
+          className={`w-full h-full transition-all duration-300 ${isTransitioning
+            ? direction === "right"
+              ? "opacity-0 translate-x-8"
+              : "opacity-0 -translate-x-8"
+            : "opacity-100 translate-x-0"
+            }`}
         >
           <img
             src={carouselItems[selectedImage]}
             alt={product.product_name || "Product image"}
-            // width={600}
-            // height={600}
             className="w-full h-full object-contain p-4"
-            // priority={selectedImage === 0}
           />
+
         </div>
 
         {carouselItems.length > 1 && (
@@ -124,18 +129,17 @@ export const ProductMedia = ({
       {carouselItems.length > 1 && (
         <div className="relative">
           <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-            {carouselItems.map((img, index) => (
+            {carouselItems.map((item, index) => (
               <button
                 key={index}
                 onClick={() => handleThumbnailClick(index)}
-                className={`relative flex-shrink-0 w-20 h-20 rounded-lg border-2 overflow-hidden transition-all duration-200 ${
-                  index === selectedImage
-                    ? ""
-                    : "border-gray-200 hover:border-gray-300 hover:scale-105"
-                }`}
+                className={`relative flex-shrink-0 w-20 h-20 rounded-lg border-2 overflow-hidden transition-all duration-200 ${index === selectedImage
+                  ? ""
+                  : "border-gray-200 hover:border-gray-300 hover:scale-105"
+                  }`}
               >
                 <img
-                  src={img}
+                  src={item}
                   alt={`Thumbnail ${index + 1}`}
                   className="object-contain p-1"
                 />
