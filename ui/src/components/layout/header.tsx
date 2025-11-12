@@ -6,6 +6,7 @@ import { useState, useRef, FormEvent, KeyboardEvent, useEffect } from "react";
 import {
   Loader2,
   LogOut,
+  Menu,
   Search,
   ShoppingCart,
   UserRound,
@@ -19,16 +20,42 @@ import useAuthStore from "@/features/auth";
 
 export const Header = () => {
   const { isAuthenticated, user, logout } = useAuthStore();
+  const [isActive, setIsActive] = useState(false);
 
 
   return (
     <>
       <header className="shadow-sm">
         <div className="md:flex md:items-center md:justify-between max-w-6xl mx-auto px-2 md:px-4  grid grid-cols-2 gap-2">
-          <Link href="/">
-            <img alt="Al Hameed Computers" className="h-24 w-24 object-cover hidden md:block" src="/logo.png" />
-            <img alt="Al Hameed Computers" className="md:hidden w-32" src="/m-logo.png" />
+          <Link href="/" className="hidden md:block">
+            <img alt="Al Hameed Computers" className="h-24 w-24 object-cover" src="/logo.png" />
           </Link>
+          <div className="flex items-center gap-2 md:hidden">
+            <button
+              onClick={() => setIsActive(!isActive)}
+              className=""
+            >
+              <Menu className="h-7 w-7" />
+            </button  >
+            <Link href="/">
+              <img alt="Al Hameed Computers" className="w-36 h-auto" src="/m-logo.png" />
+            </Link>
+          </div>
+          {isActive && (
+            <div className="absolute bg-white w-60 h-full z-60">
+              <div>
+
+              </div>
+              <ul>
+                <li className="flex items-center gap-2 px-4">
+                  <UserRound className="size-5" />
+                  <Link href="/profile" className="hover:bg-gray-100">
+                    Your Profile
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          )}
 
           <div className="col-span-2 order-3 md:order-none" >
             <Searchbar />

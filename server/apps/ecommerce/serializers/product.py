@@ -21,7 +21,7 @@ class BrandSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
     brand = BrandSerializer(read_only=True)
-    images = serializers.SerializerMethodField()
+    media = serializers.SerializerMethodField()
     cover_image = serializers.SerializerMethodField()
     price = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
     meta_data = serializers.SerializerMethodField()
@@ -40,33 +40,33 @@ class ProductSerializer(serializers.ModelSerializer):
             "is_listing_item",
             "rating",
             "cover_image",
-            "images",
+            "media",
             "created_at",
             "updated_at",
-            "meta_data"
+            "meta_data",
         ]
 
     def get_meta_data(self, obj: Product):
         return {
             "description": obj.meta_description,
             "title": obj.meta_title,
-            "keywords": obj.meta_keywords
+            "keywords": obj.meta_keywords,
         }
-    
-    def get_images(self, obj: Product):
+
+    def get_media(self, obj: Product):
         request = self.context.get("request")
-        images = []
-        for image_obj in obj.images.all():
-            if not image_obj.image:
+        media = []
+        for i in obj.images.all():
+            if not i.image and not i.video:
                 continue
             url = (
-                request.build_absolute_uri(image_obj.image.url)
+                request.build_absolute_uri(i.image.url)
                 if request
-                else image_obj.image.url
+                else i.image.url
             )
-            images.append(url)
+            media.append(url)
 
-        return images
+        return media
 
     def get_cover_image(self, obj: Product):
         if not obj.cover_image:

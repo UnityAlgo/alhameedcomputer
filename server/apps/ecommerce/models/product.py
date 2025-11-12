@@ -82,8 +82,9 @@ class ProductImage(BaseModel):
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name="images"
     )
-    image = models.ImageField(upload_to="products/")
+    image = models.ImageField(upload_to="products/", null=True, blank=True)
     display_order = models.PositiveIntegerField(default=0)
+    video = models.FileField(upload_to="products/", null=True, blank=True)
 
     def __str__(self):
         return f"{self.product.product_name} - Image {self.display_order}"
