@@ -163,7 +163,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-16">
             <div className="space-y-4">
-              <ProductMedia images={product.images} product={product} />
+              <ProductMedia 
+              files={product.media}
+              // images={product.images} 
+              product={product} 
+              />
             </div>
 
             <div className="space-y-6">

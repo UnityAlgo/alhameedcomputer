@@ -59,12 +59,18 @@ class ProductSerializer(serializers.ModelSerializer):
         for i in obj.images.all():
             if not i.image and not i.video:
                 continue
-            url = (
-                request.build_absolute_uri(i.image.url)
-                if request
-                else i.image.url
-            )
-            media.append(url)
+            image = None
+            video = None
+            if i.image:
+                image = (
+                    request.build_absolute_uri(i.image.url) if request else i.image.url
+                )
+
+            if i.video:
+                video = (
+                    request.build_absolute_uri(i.video.url) if request else i.video.url
+                )
+            media.append({"video": video, "image": image})
 
         return media
 
