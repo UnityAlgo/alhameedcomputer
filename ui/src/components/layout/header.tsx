@@ -4,8 +4,11 @@ import axios from "axios";
 import Link from "next/link";
 import { useState, useRef, FormEvent, KeyboardEvent, useEffect } from "react";
 import {
+  FileUser,
   Heart,
+  House,
   Loader2,
+  LogIn,
   LogOut,
   MapPin,
   Menu,
@@ -116,9 +119,25 @@ export const Header = () => {
                           Welcome to Al Hameed Computers!
                         </h2>
                       </div>
-                      <Link href="/login" className="flex gap-2 px-4 py-2 hover:bg-gray-100">
-                        <LogOut className="h-4.5 w-4.5" />
-                        Sign In
+                      {/* <h4 className="font-bold px-2 py-2 border-t border-accent">Categories</h4>
+                      <li>
+                        <Link href="/profile" className="flex gap-2 px-4 py-2 hover:bg-gray-100">
+                          <UserRoundCog className="h-4.5 w-4.5" />
+                          Your Profile
+                        </Link>
+                      </li> */}
+
+                      <Link href="/" className="flex gap-2 px-4 py-2 border-t border-accent">
+                        <House className="h-4.5 w-4.5" />
+                        Back To Home
+                      </Link>
+                      <Link href="/register" className="flex gap-2 px-4 py-2">
+                        <FileUser className="h-4.5 w-4.5" />
+                        Register
+                      </Link>
+                      <Link href="/login" className="flex gap-2 px-4 py-2">
+                        <LogIn className="h-4.5 w-4.5" />
+                        Log In
                       </Link>
                     </>
                   )}
@@ -127,7 +146,7 @@ export const Header = () => {
             </div>
           )}
 
-          <div className="col-span-2 order-3 md:order-none" >
+          <div className="col-span-2 order-3 md:order-none pb-2" >
             <Searchbar />
           </div>
 

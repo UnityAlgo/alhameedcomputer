@@ -189,7 +189,7 @@ const Index = () => {
             <h1 className="text-xl font-semibold">Create Your Account</h1>
           </div>
           <form onSubmit={handleSubmit}>
-            <div className="mb-6">
+            <div className="mb-6 px-4">
               {
                 formsLayout.map((field, index) => (
                   <div key={index} >
@@ -220,7 +220,7 @@ const Index = () => {
                 {error && <div className="text-sm text-destructive mt-1">{error}</div>}
               </div>
             </div>
-            <div>
+            <div className="px-4">
               <button
                 disabled={mutation.isPending}
                 type="submit"

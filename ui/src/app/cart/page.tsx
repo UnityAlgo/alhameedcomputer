@@ -5,19 +5,14 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { toast } from "react-hot-toast";
-import {
-  useUpdateCartItem,
-  useRemoveCartItem,
-  useAddCartMutation,
-  useCartMutation,
-} from "@/api/cart";
+import {  useCartMutation} from "@/api/cart";
 import { useCreateOrder } from "@/api/orders";
 import { float, integer } from "@/utils";
 import { Spinner } from "@/components/ui/spinner";
 import { EmptyCart } from "./empty-cart";
 import { CartItem } from "./cart-item";
 import { CartSummary } from "./cart-summary";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { axiosClient } from "@/api";
 
 const SHIPPING_COST = 500;
@@ -49,7 +44,7 @@ export interface CartType {
 }
 
 
-const useCartQuery = () => {
+const useCartQuery = (): UseQueryResult<CartType> => {
   return useQuery({
     queryKey: ["get-cart"],
     queryFn: async () => {
@@ -73,7 +68,7 @@ const Page = () => {
     return (
       <div className="py-16 flex justify-center flex-col items-center">
         <Spinner size="lg" className="mb-4" />
-        <div className="text-gray-600">Loading your cart...</div>
+        <div>Loading your cart...</div>
       </div>
     );
   }

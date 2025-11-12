@@ -134,7 +134,7 @@ const Page = () => {
     }
 
     return (
-        <main className="min-h-screen py-6 px-2 sm:px-4">
+        <main className="min-h-screen py-6">
             <div className="mb-6">
                 <h1 className="font-bold">
                     Update Your Profile
@@ -143,7 +143,7 @@ const Page = () => {
             </div>
 
             <form onSubmit={handleSubmit}>
-                <div className="mb-6">
+                <div className="flex justify-center items-center md:justify-start mb-6">
                     <ImageInputAvator defaultValue={typeof formData.image === 'string' ? formData.image : undefined}
 
                         onChange={(file) => {
@@ -194,7 +194,7 @@ const Page = () => {
 
                 <div className="mt-4">
                     {error && <p className="text-destructive text-sm mb-2">{error}</p>}
-                    <Button type="submit" size="sm" disabled={mutation.isPending}>
+                    <Button type="submit" size="sm" className="w-full md:w-auto" disabled={mutation.isPending}>
                         Update Profile
                         {mutation.isPending && <Spinner />}
                     </Button>

@@ -25,7 +25,7 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
     }
 
     return (
-        <div className="p-4">
+        <div className="py-4">
             <header className="mb-6">
                 <div className="border-b border-input font-bold">
                     {id === "new" ? "Add new Address" : "Edit Address"}

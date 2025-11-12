@@ -163,15 +163,12 @@ export default async function Page({ params }: ProductPageProps) {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-16">
             <div className="space-y-4">
-<<<<<<< HEAD
-              <ProductMedia image={product.image} product={product} />
-=======
-              <ProductMedia 
-              files={product.media}
-              // images={product.images} 
-              product={product} 
+
+              <ProductMedia
+                files={product.media}
+                // images={product.images} 
+                product={product}
               />
->>>>>>> 761b5e8d9ea29c17e4dbb93b612c815a2d2f8c30
             </div>
 
             <div className="space-y-6">
@@ -216,7 +213,7 @@ export default async function Page({ params }: ProductPageProps) {
           </div>
 
           {product.description && (
-            <div className="border-t pt-8 mt-8">
+            <div className="border-t pt-8 mt-8 overflow-x-hidden">
               <h2 className="text-xl md:text-2xl font-bold mb-6">Product Description</h2>
               <div
                 dangerouslySetInnerHTML={{ __html: product.description }}

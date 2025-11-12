@@ -45,9 +45,9 @@ const Index = () => {
   }
 
   return (
-    <div className="px-4 py-16 sm:p-6">
+    <div className="">
 
-      <div className="p-4 rounded-lg">
+      <div className="py-6 rounded-lg">
         <div className="flex flex-col sm:flex-row items-center space-x-4 space-y-4 sm:space-y-0">
           <div className="relative">
             <img src={profileData.image || "https://cdn-icons-png.flaticon.com/512/552/552721.png"} alt="" className="h-12 w-12" />
