@@ -1,11 +1,17 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
+import { ChevronLeft, ChevronRight, Play, ZoomIn } from "lucide-react";
+import { cn } from "@/utils";
 
 interface Product {
   cover_image: string;
   product_name?: string;
+}
+
+type MediaItem = {
+  image: string | null
+  video: string | null
 }
 
 
@@ -14,21 +20,26 @@ type MediaFile = {
   video: string | null;
 }
 export const ProductMedia = ({
+  // images,
   files,
   product,
 }: {
-  files: MediaFile[];
-  product: Product;
+  files: MediaItem[]; product: Product;
 }) => {
-  
-  // const image = files.map(file => file.image);
-  const carouselItems = [
-    product.cover_image,
-    ...(files || []),
-  ].filter((img): img is string => Boolean(img));
+
+  const carouselItems: MediaItem[] = [
+    {
+      image: product.cover_image,
+      video: null
+    }
+  ]
+
+  files?.forEach(file => {
+    carouselItems.push(file);
+  })
 
 
-  const [selectedImage, setSelectedImage] = useState(0);
+  const [selected, setSelected] = useState(4)
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [direction, setDirection] = useState<"left" | "right">("right");
 
@@ -36,21 +47,21 @@ export const ProductMedia = ({
     if (isTransitioning) return;
     setDirection("left");
     setIsTransitioning(true);
-    setSelectedImage((prev) => (prev === 0 ? carouselItems.length - 1 : prev - 1));
+    setSelected((prev) => (prev === 0 ? carouselItems.length - 1 : prev - 1));
   };
 
   const handleNext = () => {
     if (isTransitioning) return;
     setDirection("right");
     setIsTransitioning(true);
-    setSelectedImage((prev) => (prev === carouselItems.length - 1 ? 0 : prev + 1));
+    setSelected((prev) => (prev === carouselItems.length - 1 ? 0 : prev + 1));
   };
 
   const handleThumbnailClick = (index: number) => {
-    if (isTransitioning || index === selectedImage) return;
-    setDirection(index > selectedImage ? "right" : "left");
+    if (isTransitioning || index === selected) return;
+    setDirection(index > selected ? "right" : "left");
     setIsTransitioning(true);
-    setSelectedImage(index);
+    setSelected(index);
   };
 
   useEffect(() => {
@@ -67,7 +78,7 @@ export const ProductMedia = ({
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedImage, isTransitioning]);
+  }, [selected, isTransitioning]);
 
   if (carouselItems.length === 0) {
     return (
@@ -88,11 +99,18 @@ export const ProductMedia = ({
             : "opacity-100 translate-x-0"
             }`}
         >
-          <img
-            src={carouselItems[selectedImage]}
-            alt={product.product_name || "Product image"}
-            className="w-full h-full object-contain p-4"
-          />
+          {
+            carouselItems[selected]?.image ? <img
+              src={carouselItems[selected].image}
+              alt={product.product_name || "Product image"}
+              // width={600}
+              // height={600}
+              className="w-full h-full object-contain p-2"
+            // priority={selected === 0}
+            /> : carouselItems[selected].video ? <>
+              <video className="h-full w-full object-contain p-2" autoPlay muted={true} src={carouselItems[selected].video}></video></>
+              : <></>
+          }
 
         </div>
 
@@ -121,7 +139,7 @@ export const ProductMedia = ({
 
         {carouselItems.length > 1 && (
           <div className="absolute bottom-3 right-3 bg-black/60 text-white text-sm px-3 py-1 rounded-full">
-            {selectedImage + 1} / {carouselItems.length}
+            {selected + 1} / {carouselItems.length}
           </div>
         )}
       </div>
@@ -129,21 +147,29 @@ export const ProductMedia = ({
       {carouselItems.length > 1 && (
         <div className="relative">
           <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-            {carouselItems.map((item, index) => (
-              <button
+            {carouselItems.map((file, index) => (
+              file.image ? <button
                 key={index}
                 onClick={() => handleThumbnailClick(index)}
-                className={`relative flex-shrink-0 w-20 h-20 rounded-lg border-2 overflow-hidden transition-all duration-200 ${index === selectedImage
+                className={`relative flex-shrink-0 w-20 h-20 rounded-lg border-2 overflow-hidden transition-all duration-200 ${index === selected
                   ? ""
                   : "border-gray-200 hover:border-gray-300 hover:scale-105"
                   }`}
               >
                 <img
-                  src={item}
+                  src={file.image}
                   alt={`Thumbnail ${index + 1}`}
                   className="object-contain p-1"
                 />
               </button>
+                : file.video ? <button
+                  key={index}
+                  onClick={() => handleThumbnailClick(index)}
+                  className={cn("relative flex-shrink-0 w-20 h-20 rounded-lg border-2 overflow-hidden cursor-pointer")}
+                >
+                  <Play className="absolute size-5 m-auto inset-0 stroke-accent-foreground fill-accent" />
+                  <video className="h-full w-full object-contain" muted={true} src={file.video}></video>
+                </button> : <></>
             ))}
           </div>
         </div>
