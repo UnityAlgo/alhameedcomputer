@@ -42,7 +42,7 @@ export const Header = () => {
           <div className="flex items-center gap-2 md:hidden">
             <button
               onClick={() => setIsActive(!isActive)}
-              className=""
+              className="mt-1.5"
             >
               <Menu className="h-7 w-7" />
             </button  >
