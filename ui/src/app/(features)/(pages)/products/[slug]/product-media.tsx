@@ -39,7 +39,7 @@ export const ProductMedia = ({
   })
 
 
-  const [selected, setSelected] = useState(4)
+  const [selected, setSelected] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [direction, setDirection] = useState<"left" | "right">("right");
 
@@ -103,11 +103,8 @@ export const ProductMedia = ({
             carouselItems[selected]?.image ? <img
               src={carouselItems[selected].image}
               alt={product.product_name || "Product image"}
-              // width={600}
-              // height={600}
               className="w-full h-full object-contain p-2"
-            // priority={selected === 0}
-            /> : carouselItems[selected].video ? <>
+            /> : carouselItems[selected]?.video ? <>
               <video className="h-full w-full object-contain p-2" autoPlay muted={true} src={carouselItems[selected].video}></video></>
               : <></>
           }

@@ -1,4 +1,26 @@
-'use client'
+"use client";
+
+const rows = [
+  {
+    label: "Manage My Account", icon: User, href: "/profile",
+    childrens: [
+      { label: "My Profile", href: "/profile" },
+      { label: "Edit Profile", href: "/profile/edit-profile" },
+      { label: "Change Password", href: "/profile/change-password" },
+      { label: "Address Book", href: "/profile/address" },
+    ]
+  },
+  {
+    id: "orders", label: "My Orders", icon: Package, href: "/profile/orders",
+    childrens: [
+      { label: "Pending Orders", href: "/profile/orders?status=pending" },
+      { label: "My Returns", href: "/profile/orders?status=returned" },
+      { label: "My Cancellations", href: "/profile/orders?status=cancelled" },
+    ]
+  },
+];
+
+
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import {
@@ -13,32 +35,11 @@ export const Sidebar = () => {
   const pathname = usePathname();
 
   if (!user) {
-    return null;
+    return <></>;
   }
-
-  const rows = [
-    {
-      label: "Manage My Account", icon: User, href: "/profile",
-      childrens: [
-        { label: "My Profile", href: "/profile" },
-        { label: "Edit Profile", href: "/profile/edit-profile" },
-        { label: "Change Password", href: "/profile/change-password" },
-        { label: "Address Book", href: "/profile/address" },
-      ]
-    },
-    {
-      id: "orders", label: "My Orders", icon: Package, href: "/profile/orders",
-      childrens: [
-        { label: "Pending Orders", href: "/profile/orders?status=pending" },
-        { label: "My Returns", href: "/profile/orders?status=returned" },
-        { label: "My Cancellations", href: "/profile/orders?status=cancelled" },
-      ]
-    },
-  ];
 
   return (
     <div className="w-full px-4 py-6">
-
       <div className="mb-4">
         <h2 className="text-base font-semibold">
           Hello, {user.full_name || user.username}

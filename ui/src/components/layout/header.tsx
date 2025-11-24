@@ -60,7 +60,8 @@ export const Header = () => {
                   <X size={22} onClick={() => setIsActive(false)} />
                 </button>
               </div>
-              <ul className="text-sm text-gray-700">
+              {/* 
+              <ul className="text-sm">
                 {isAuthenticated && user ? (
                   <>
                     <div className="my-4 px-2">
@@ -119,13 +120,6 @@ export const Header = () => {
                           Welcome to Al Hameed Computers!
                         </h2>
                       </div>
-                      {/* <h4 className="font-bold px-2 py-2 border-t border-accent">Categories</h4>
-                      <li>
-                        <Link href="/profile" className="flex gap-2 px-4 py-2 hover:bg-gray-100">
-                          <UserRoundCog className="h-4.5 w-4.5" />
-                          Your Profile
-                        </Link>
-                      </li> */}
 
                       <Link href="/" className="flex gap-2 px-4 py-2 border-t border-accent">
                         <House className="h-4.5 w-4.5" />
@@ -142,7 +136,9 @@ export const Header = () => {
                     </>
                   )}
                 </li>
-              </ul>
+              </ul> */}
+
+
             </div>
           )}
 
@@ -155,7 +151,7 @@ export const Header = () => {
               <ShoppingCart className="size-5" />
             </Link>
 
-            {isAuthenticated && user ? (
+            {/* {isAuthenticated && user ? (
               <Popover>
                 <PopoverTrigger asChild>
                   <div className="flex gap-2 items-center cursor-pointer">
@@ -192,7 +188,7 @@ export const Header = () => {
               </Popover>
             ) :
               <Link href="/login" className="text-sm">Sign In</Link>
-            }
+            } */}
           </div>
 
         </div>

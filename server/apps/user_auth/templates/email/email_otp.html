@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your OTP Code</title>
+    <style>
+        body {
+            background-color: #f4f4f7;
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .email-wrapper {
+            width: 100%;
+            background-color: #f4f4f7;
+            padding: 20px;
+        }
+
+        .email-content {
+            max-width: 450px;
+            background: #ffffff;
+            margin: auto;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333333;
+            margin-bottom: 10px;
+        }
+
+        .user-greeting {
+            font-size: 16px;
+            color: #333333;
+            margin-bottom: 5px;
+        }
+
+        .warning {
+            color: #c00000;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .message {
+            font-size: 16px;
+            color: #555555;
+            margin: 15px 0;
+        }
+
+        .otp-box {
+            font-size: 32px;
+            font-weight: bold;
+            color: #ffffff;
+            background-color: #4a90e2;
+            padding: 12px 20px;
+            text-align: center;
+            border-radius: 6px;
+            letter-spacing: 4px;
+            margin: 20px auto;
+            display: inline-block;
+        }
+
+        .footer {
+            font-size: 12px;
+            color: #888888;
+            text-align: center;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="email-wrapper">
+        <div class="email-content">
+
+            <div class="title">Your OTP Code</div>
+
+            <div class="user-greeting">Dear {{ user.full_name }},</div>
+
+            <div class="warning">DON'T SHARE THIS WITH ANYONE</div>
+
+            <p class="message">
+                If you made this request, please enter the 6-digit code on the Email Verification Page.
+                This code is valid for <strong>5 minutes</strong>.
+            </p>
+
+            <div class="otp-box">{{ otp }}</div>
+
+            <p class="message">
+                If you did not request this code, you can safely ignore this email.
+            </p>
+
+            <div class="footer">
+                &copy; {{ year }} UnityAlgo. All rights reserved.
+            </div>
+
+        </div>
+    </div>
+</body>
+
+</html>

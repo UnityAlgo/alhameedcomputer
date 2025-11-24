@@ -116,6 +116,16 @@ REST_FRAMEWORK = {
     ),
 }
 
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    }
+}
+
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=7),
@@ -162,3 +172,12 @@ UNFOLD_ADMIN_CONFIG = {
     "SITE_URL": "/",
     "THEME": "dark",
 }
+
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "hussainrizvi486@gmail.com"
+EMAIL_HOST_PASSWORD = env("GOOGLE_APP_PASSWORD", default="wgig gnan akpa svce")
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
