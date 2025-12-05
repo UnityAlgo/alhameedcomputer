@@ -1,6 +1,7 @@
 from uuid import uuid4
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.http import HttpRequest
 
 
 class UserManager(BaseUserManager):
@@ -40,6 +41,8 @@ class User(AbstractUser):
     mobile = models.CharField(max_length=50, unique=True, null=True, blank=True)
     image = models.ImageField(null=True, blank=True)
 
+    two_factor_enabled = models.BooleanField(default=False)
+
     objects = UserManager()
 
     USERNAME_FIELD = "email"
@@ -47,3 +50,43 @@ class User(AbstractUser):
 
     def __str__(self) -> str:
         return str(self.email)
+
+    def create_login_activity(
+        self, request: HttpRequest, successful: bool = True
+    ) -> "LoginActivity":
+        ip_address = (request.META.get("REMOTE_ADDR", ""),)
+        user_agent = (request.META.get("HTTP_USER_AGENT", ""),)
+        location = (request.META.get("GEOIP_CITY", ""),)
+        device = (request.META.get("DEVICE_TYPE", ""),)
+
+        activity = LoginActivity.objects.create(
+            user=self,
+            ip_address=ip_address,
+            user_agent=user_agent,
+            device=device,
+            location=location,
+            successful=successful,
+        )
+        return activity
+
+
+class LoginActivity(models.Model):
+    id = models.CharField(
+        default=uuid4, primary_key=True, editable=False, unique=True, max_length=999
+    )
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    user_agent = models.TextField(null=True, blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    location = models.CharField(max_length=255, null=True, blank=True)
+    successful = models.BooleanField(default=True)
+    device = models.CharField(max_length=255, null=True, blank=True)
+
+    def __str__(self) -> str:
+        return f"LoginActivity for {self.user.email} at {self.timestamp}"
+
+    class Meta:
+        ordering = ["-timestamp"]
+        indexes = [
+            models.Index(fields=["user", "timestamp"]),
+        ]

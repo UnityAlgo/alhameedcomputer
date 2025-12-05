@@ -9,6 +9,7 @@ from apps.ecommerce.api.review.views import (
     ProductReviewListCreateAPIView,
 )
 from apps.ecommerce.api.cart.main import CartAPIView
+from apps.ecommerce.api.public.main import LandingPageAPIView
 
 # from apps.ecommerce.api.order.views import (
 #     OrderAPIView,
@@ -33,9 +34,11 @@ from apps.ecommerce.api.address.views import (
 )
 
 urlpatterns = [
+    path("api/v1/landing-page", LandingPageAPIView.as_view()),
+    path("api/v1/public/search", SearchProductAPIView.as_view()),
+    path("api/v1/public/search/suggestions", SuggestionsAPIView.as_view()),
+    #
     path("api/products", ProductAPIView.as_view()),
-    path("api/products/search", SearchProductAPIView.as_view()),
-    path("api/products/suggestions", SuggestionsAPIView.as_view()),
     path("api/categories", CategoryAPIView.as_view()),
     path("api/categories/<uuid:pk>/", CategoryDetailAPIView.as_view()),
     path("api/customer/cart", CartAPIView.as_view()),

@@ -17,8 +17,8 @@ const ProductsGird = () => {
 
 
 
-    const deals = data["deals"];
-    const products = data["products"];
+    const deals = data?.["deals"];
+    const products = data?.["products"];
 
     if (!products || !products.length || error) {
         return (<div className="flex justify-center py-16">
@@ -39,7 +39,7 @@ const ProductsGird = () => {
                             Our Deals
                         </div>
 
-                        <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 gap-2" >
+                        <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-2" >
                             {deals.map((product) => (
                                 <ProductCard key={product.id} product={product} />
                             ))}
@@ -52,7 +52,7 @@ const ProductsGird = () => {
                     HOT SALE
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 gap-2" >
+                <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-2" >
                     {products.map((product) => (
                         <ProductCard key={product.id} product={product} />
                     ))}

@@ -1,7 +1,9 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.utils import timezone
+from django.db.models import Q, Subquery, OuterRef
 
-from apps.ecommerce.models.product import Product, price_subquery
+from apps.ecommerce.models.product import Product, ProductPrice
 from apps.ecommerce.serializers.product import ProductSerializer, ProductListSerializer
 
 
@@ -11,9 +13,23 @@ class ProductAPIView(APIView):
 
         if request.GET.get("slug"):
             try:
-                product_queryset = Product.objects.annotate(price=price_subquery).get(
-                    slug=request.GET.get("slug")
-                )
+                product_queryset = Product.objects.annotate(
+                    price=Subquery(
+                        ProductPrice.objects.filter(
+                            product=OuterRef("pk"),
+                        )
+                        .filter(
+                            Q(valid_from__lte=timezone.now())
+                            | (
+                                Q(valid_from__isnull=True)
+                                & Q(valid_to__gte=timezone.now())
+                            )
+                            | Q(valid_to__isnull=True)
+                        )
+                        .order_by("-valid_from")
+                        .values("price")[:1]
+                    )
+                ).get(slug=request.GET.get("slug"))
                 serializer = ProductSerializer(
                     product_queryset, context={"request": self.request}
                 )
@@ -23,7 +39,20 @@ class ProductAPIView(APIView):
 
         product_queryset = (
             Product.objects.filter(published=True)
-            .annotate(price=price_subquery)
+            .annotate(
+                price=Subquery(
+                    ProductPrice.objects.filter(
+                        product=OuterRef("pk"),
+                    )
+                    .filter(
+                        Q(valid_from__lte=timezone.now())
+                        | (Q(valid_from__isnull=True) & Q(valid_to__gte=timezone.now()))
+                        | Q(valid_to__isnull=True)
+                    )
+                    .order_by("-valid_from")
+                    .values("price")[:1]
+                )
+            )
             .order_by("-featured")[:30]
         )
 
@@ -31,7 +60,6 @@ class ProductAPIView(APIView):
             product_queryset, many=True, context={"request": self.request}
         )
         types = request.GET.get("type")
-        print(types)
         data = {}
 
         if types:

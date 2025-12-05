@@ -19,7 +19,7 @@ export const CategorySlider: React.FC<{
   showDots?: boolean;
 }> = ({ autoPlayInterval = 3000, showDots = true }) => {
   const { data: categories = [], isLoading, isError } = useCategories();
-  
+
   const plugin = useRef(
     Autoplay({ delay: autoPlayInterval, stopOnInteraction: true })
   );
@@ -51,6 +51,9 @@ export const CategorySlider: React.FC<{
 
   return (
     <div className="mt-8 w-full px-4 sm:px-8 md:px-12">
+      <div className="mb-4">
+        <h1 className="font-semibold">Shop by Category</h1>
+      </div>
       <Carousel
         plugins={[plugin.current]}
         className="w-full"
@@ -67,13 +70,13 @@ export const CategorySlider: React.FC<{
               key={index}
               className="pl-2 md:pl-4 basis-1/2 sm:basis-1/4 md:basis-1/5 lg:basis-1/6"
             >
-              <Link href={`search?categories=${category.id}`}>
-                <div className="h-full flex flex-col items-center p-2 sm:p-4 rounded-xl bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-300 hover:scale-[1.02] cursor-pointer group hover:shadow-lg border border-transparent hover:border-blue-200/60">
+              <Link href={"search?categories=" + category.id}>
+                <div className="h-full flex flex-col items-center p-2 sm:p-4 rounded-xl bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-300  cursor-pointer group border ">
                   <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 mb-2 sm:mb-3 rounded-lg overflow-hidden flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 flex-shrink-0">
                     <img
-                      src={category.image}
+                      src="https://www.shutterstock.com/image-vector/category-symbols-featuring-square-grids-600nw-2614452525.jpg"
                       alt={category.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      className="w-full h-full object-cover transition-transform duration-500"
                       loading="lazy"
                     />
                   </div>

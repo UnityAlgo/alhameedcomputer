@@ -8,6 +8,13 @@ from .base import BaseModel, UOM, Currency
 from .category import Category
 
 
+class ProductType(models.TextChoices):
+    TEMPLATE = "template", "Template"
+    VARIANT = "variant", "Variant"
+    DEFAULT = "default", "Default"
+    ...
+
+
 class Brand(BaseModel):
     name = models.CharField(max_length=255, unique=True)
     description = models.TextField(null=True, blank=True)
@@ -18,8 +25,11 @@ class Brand(BaseModel):
 
 
 class Product(BaseModel):
-    product_name = models.TextField()
+    product_type = models.CharField(
+        max_length=20, choices=ProductType.choices, default=ProductType.DEFAULT
+    )
     slug = models.SlugField(blank=True)
+    product_name = models.TextField()
     short_description = RichTextField(null=True, blank=True)
     description = RichTextField(null=True, blank=True)
     category = models.ForeignKey(Category, null=True, on_delete=models.SET_NULL)
@@ -29,12 +39,14 @@ class Product(BaseModel):
         UOM, on_delete=models.SET_NULL, related_name="products", null=True, blank=True
     )
     rating = models.FloatField(default=0.0)
+
+    meta_keywords = models.TextField(default="", blank=True)
+    meta_title = models.CharField(max_length=60, default="", blank=True)
+    meta_description = models.CharField(max_length=160, default="", blank=True)
+
     published = models.BooleanField(default=False)
     featured = models.BooleanField(default=False)
     is_listing_item = models.BooleanField(default=False)
-    meta_keywords = models.TextField(default="",blank=True)
-    meta_title = models.CharField(max_length=60,default="",blank=True)
-    meta_description = models.CharField(max_length=160,default="",blank=True)
 
     def __str__(self):
         return self.product_name
@@ -44,17 +56,6 @@ class Product(BaseModel):
             self.slug = slugify(self.product_name.lower()[:60])
 
         super().save(*args, **kwargs)
-
-    def update_rating(self):
-        avg_rating = self.reviews.aggregate(avg=Avg("rating"))["avg"]
-        self.rating = avg_rating if avg_rating else 0.0
-        self.save(update_fields=["rating"])
-
-    @property
-    def all_images(self):
-        return (
-            self.images.all().order_by("display_order").values_list("image", flat=True)
-        )
 
     def get_price(self, price_list=None):
         queryset_filter = Q()
@@ -78,6 +79,19 @@ class Product(BaseModel):
         return Decimal(0)
 
 
+class ProductVariantAttribute(BaseModel):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    attribute = models.CharField(max_length=50)
+    value = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.product.product_name
+
+    def save(self, *args, **kwargs):
+        if self.product.product_type != ProductType.TEMPLATE:
+            raise ValueError("Variant attributes can be added in template items")
+
+
 class ProductImage(BaseModel):
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name="images"
@@ -88,6 +102,15 @@ class ProductImage(BaseModel):
 
     def __str__(self):
         return f"{self.product.product_name} - Image {self.display_order}"
+
+    def delete(self, *args, **kwargs):
+        if self.image:
+            self.image.delete(save=False)
+
+        if self.video:
+            self.video.delete(save=False)
+
+        return super().delete(*args, **kwargs)
 
 
 class PriceList(BaseModel):
@@ -128,4 +151,12 @@ class ProductPrice(BaseModel):
         return self.valid_from <= now
 
 
-price_subquery = ProductPrice.objects.filter(product=OuterRef("id")).values("price")[:1]
+price_subquery = (
+    ProductPrice.objects.filter(
+        Q(valid_from__lte=timezone.now())
+        | Q(valid_from__isnull=True) & Q(valid_to__gte=timezone.now())
+        | Q(valid_to__isnull=True)
+    )
+    .order_by("-valid_from")
+    .first()
+)

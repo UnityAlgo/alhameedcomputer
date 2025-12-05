@@ -75,7 +75,7 @@ const Carousel = ({ slides, autoPlay=true }: { slides: Slide[], autoPlay?: boole
         style={{ transform: `translateX(-${index * 100}%)` }}
       >
         {slides.map((s, i) => (
-          <div key={i} className="min-w-full relative h-[250px] md:h-[360px]">
+          <div key={i} className="min-w-full relative h-[250px] md:h-[300px]">
             <Link href={s.href || "#"}>
             <img
               src={s.img}
@@ -133,37 +133,3 @@ export const LandingSection = () => {
         <><Carousel slides={slides} /></>
     )
 }
-
-
-// export default function Carousel() {
-    
-//     // const scrollRef = useRef<HTMLDivElement>(null);
-
-//     // const scroll = (dir: "left" | "right") => {
-//     //     if (!scrollRef.current) return;
-//     //     const { clientWidth } = scrollRef.current;
-//     //     scrollRef.current.scrollBy({
-//     //         left: dir === "right" ? clientWidth : -clientWidth,
-//     //         behavior: "smooth",
-//     //     });
-//     // };
-
-//     return (
-//         <section className="">
-//             <HeroCarousel slides={slides} />
-//             {/* 
-//             <Link
-//                 href="/products"
-//                 className="relative rounded-xl overflow-hidden bg-gray-100 h-[150px] md:h-[360px] hidden md:block"
-//             >
-//                 <img
-//                     src="/images/carousel-2-1.webp"
-//                     alt="pc build"
-                   
-//                     className="object-cover"
-//                 />
-//             </Link> */}
-//         </section>
-//     );
-// };
-

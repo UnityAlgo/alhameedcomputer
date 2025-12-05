@@ -22,6 +22,7 @@ from .models.order import (
 from .models.cart import Cart, CartItem
 from .models.review import ProductReview
 from .models.base import UOM
+from .models.website import Banner
 from apps.user_auth.models.base import Address
 
 from django.utils.html import format_html
@@ -30,6 +31,7 @@ from django.utils.safestring import mark_safe
 from unfold.admin import ModelAdmin, TabularInline, StackedInline
 from unfold.decorators import display
 
+admin.site.register(Banner)
 
 # ---------- CATEGORY ----------
 @admin.register(Category)
